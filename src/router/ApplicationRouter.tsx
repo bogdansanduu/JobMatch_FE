@@ -1,12 +1,12 @@
 import React from "react";
-import { createBrowserRouter, Navigate, RouteObject } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 
-import App from "../App";
 import NotFoundPage from "../pages/NotFoundPage";
 import AccessDeniedPage from "../pages/AccessDeniedPage";
 import NotImplementedPage from "../pages/NotImplementedPage";
 import LoginPage from "../pages/LoginPage";
 import AuthWrapper from "./AuthWrapper";
+import NotAuthWrapper from "./NotAuthWrapper";
 
 const ApplicationRouter = createBrowserRouter([
   {
@@ -18,7 +18,6 @@ const ApplicationRouter = createBrowserRouter([
         path: "",
         element: <Navigate to={"/home"} />,
       },
-      //TODO
       {
         path: "/home",
         element: <div>Home</div>,
@@ -34,8 +33,14 @@ const ApplicationRouter = createBrowserRouter([
     ],
   },
   {
-    path: "/login",
-    element: <LoginPage />,
+    path: "/",
+    element: <NotAuthWrapper />,
+    children: [
+      {
+        path: "/login",
+        element: <LoginPage />,
+      },
+    ],
   },
 ]);
 

@@ -12,9 +12,12 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import isEmail from "validator/lib/isEmail";
+import { useAppDispatch } from "../store/hooks";
+import { login } from "../store/slices/AuthSlice";
+import { useNavigate } from "react-router-dom";
 
 const theme = createTheme();
-const SignIn = ({ setToken }: any) => {
+const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [emailDirty, setEmailDirty] = useState(false);
@@ -23,6 +26,9 @@ const SignIn = ({ setToken }: any) => {
   const [passwordDirty, setPasswordDirty] = useState(false);
 
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const handleEmailChange = (event: any) => {
     const val = event.target.value;
@@ -39,22 +45,8 @@ const SignIn = ({ setToken }: any) => {
   const handleSubmit = async (event: any) => {
     event.preventDefault();
 
-    return;
-
-    // try {
-    //     const data = await signIn({
-    //         email: email,
-    //         password: password,
-    //     });
-    //     const { token, user } = data;
-    //
-    //     if (token !== null && user !== null) {
-    //         setToken(token);
-    //         dispatch(SET_CURRENT_USER(user));
-    //     }
-    // } catch (e) {
-    //     alert("INCORRECT LOGIN INFORMATION");
-    // }
+    dispatch(login({ email, password }));
+    navigate("/home");
   };
 
   useEffect(() => {
@@ -116,7 +108,7 @@ const SignIn = ({ setToken }: any) => {
               sx={{ mt: 3, mb: 2 }}
               onClick={handleSubmit}
             >
-              Sign In
+              Log In
             </Button>
           </Box>
         </Box>
@@ -124,4 +116,4 @@ const SignIn = ({ setToken }: any) => {
     </ThemeProvider>
   );
 };
-export default SignIn;
+export default LoginPage;

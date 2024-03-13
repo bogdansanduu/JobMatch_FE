@@ -1,23 +1,28 @@
-import React, { PropsWithChildren, useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
-import { getCurrentUser } from "../store/slices/UserSlice";
-import { useAppSelector } from "../store/hooks";
-import { logout } from "../store/slices/AuthSlice";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { getLoggedUser, getToken, logout } from "../store/slices/AuthSlice";
 
 //TODO get rid of any
 const AuthWrapper = ({ children }: any) => {
-  const currentUser = useAppSelector(getCurrentUser);
+  const dispatch = useAppDispatch();
+
+  const loggedUser = useAppSelector(getLoggedUser);
+  const jwt = useAppSelector(getToken);
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    const localStorageToken = localStorage.getItem("token");
-
-    if (!localStorageToken || !currentUser) {
-      logout();
+    if (!jwt || !loggedUser) {
+      dispatch(logout());
       navigate("/login");
     }
-  }, [currentUser]);
+
+    if (jwt && loggedUser) {
+      navigate("/home");
+    }
+  }, [loggedUser]);
 
   return <Outlet />;
 };

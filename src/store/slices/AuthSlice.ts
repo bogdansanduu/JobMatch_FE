@@ -1,6 +1,7 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { EMPTY_USER, UserType } from "./UserSlice";
 import { RootState } from "../store";
+import { loginCaca } from "../../api/AuthApi";
 
 export interface AuthState {
   jwtToken: string;
@@ -11,6 +12,15 @@ const initialState: AuthState = {
   jwtToken: "",
   loggedUser: null,
 };
+
+export const login = createAsyncThunk(
+  "auth/login",
+  async (data: { email: string; password: string }, { dispatch }) => {
+    const response = await loginCaca(data);
+
+    return response.data;
+  }
+);
 
 export const AuthSlice = createSlice({
   name: "auth",
@@ -28,6 +38,16 @@ export const AuthSlice = createSlice({
 
       localStorage.removeItem("token");
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(login.fulfilled, (state, action) => {
+      state.jwtToken = action.payload.access_token;
+      state.loggedUser = action.payload.user;
+    });
+    builder.addCase(login.rejected, (state) => {
+      state.jwtToken = "";
+      state.loggedUser = null;
+    });
   },
 });
 
