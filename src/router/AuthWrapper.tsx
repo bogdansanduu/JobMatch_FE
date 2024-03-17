@@ -3,6 +3,8 @@ import { Outlet, useNavigate } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { getLoggedUser, getToken, logout } from "../store/slices/AuthSlice";
+import SidebarNav from "../components/navigation/SidebarNav";
+import { White } from "../utils/constants/colorPallete";
 
 //TODO get rid of any
 const AuthWrapper = ({ children }: any) => {
@@ -24,7 +26,16 @@ const AuthWrapper = ({ children }: any) => {
     }
   }, [loggedUser]);
 
-  return <Outlet />;
+  return (
+    <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
+      <SidebarNav />
+      <div
+        style={{ flex: 1, overflow: "auto", backgroundColor: White.OffWhite }}
+      >
+        <Outlet />
+      </div>
+    </div>
+  );
 };
 
 export default AuthWrapper;

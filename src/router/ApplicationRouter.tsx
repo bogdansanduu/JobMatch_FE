@@ -1,6 +1,8 @@
 import React from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 
+import { AppRoutes } from "../utils/constants/routes";
+
 import NotFoundPage from "../pages/NotFoundPage";
 import AccessDeniedPage from "../pages/AccessDeniedPage";
 import NotImplementedPage from "../pages/NotImplementedPage";
@@ -19,15 +21,27 @@ const ApplicationRouter = createBrowserRouter([
         element: <Navigate to={"/home"} />,
       },
       {
-        path: "/home",
+        path: AppRoutes.Home,
         element: <div>Home</div>,
       },
       {
-        path: "/profile",
+        path: AppRoutes.MyNetwork,
         element: <NotImplementedPage />,
       },
       {
-        path: "/access_denied",
+        path: AppRoutes.Jobs,
+        element: <NotImplementedPage />,
+      },
+      {
+        path: AppRoutes.Messages,
+        element: <NotImplementedPage />,
+      },
+      {
+        path: AppRoutes.Notifications,
+        element: <NotImplementedPage />,
+      },
+      {
+        path: AppRoutes.AccessDenied,
         element: <AccessDeniedPage />,
       },
     ],

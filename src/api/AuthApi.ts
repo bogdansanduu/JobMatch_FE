@@ -12,15 +12,22 @@ interface RegisterParams {
   lastName: string;
 }
 
-//use environment variable
-const authApi = axios.create({
-  baseURL: "http://localhost:8080/auth",
-});
+class AuthApi {
+  private authApi;
 
-export const register = (data: RegisterParams) => {
-  return authApi.post("/register", data);
-};
+  constructor() {
+    this.authApi = axios.create({
+      baseURL: "http://localhost:8080/auth",
+    });
+  }
 
-export const loginCaca = (data: LoginParams) => {
-  return authApi.post("/login", data);
-};
+  register(data: RegisterParams) {
+    return this.authApi.post("/register", data);
+  }
+
+  login(data: LoginParams) {
+    return this.authApi.post("/login", data);
+  }
+}
+
+export default AuthApi;

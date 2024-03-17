@@ -1,22 +1,25 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { EMPTY_USER, UserType } from "./UserSlice";
+
+import { UserType } from "./UserSlice";
 import { RootState } from "../store";
-import { loginCaca } from "../../api/AuthApi";
+import AuthApi from "../../api/AuthApi";
 
 export interface AuthState {
-  jwtToken: string;
+  jwtToken: string | null;
   loggedUser: UserType | null;
 }
 
 const initialState: AuthState = {
-  jwtToken: "",
+  jwtToken: null,
   loggedUser: null,
 };
+
+const authApi = new AuthApi();
 
 export const login = createAsyncThunk(
   "auth/login",
   async (data: { email: string; password: string }, { dispatch }) => {
-    const response = await loginCaca(data);
+    const response = await authApi.login(data);
 
     return response.data;
   }
@@ -33,8 +36,8 @@ export const AuthSlice = createSlice({
       state.loggedUser = action.payload;
     },
     logout: (state) => {
-      state.jwtToken = "";
-      state.loggedUser = EMPTY_USER;
+      state.jwtToken = null;
+      state.loggedUser = null;
 
       localStorage.removeItem("token");
     },
@@ -45,6 +48,7 @@ export const AuthSlice = createSlice({
       state.loggedUser = action.payload.user;
     });
     builder.addCase(login.rejected, (state) => {
+      console.log("Login failed");
       state.jwtToken = "";
       state.loggedUser = null;
     });
