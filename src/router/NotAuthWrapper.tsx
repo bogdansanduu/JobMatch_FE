@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
+import { AppRoutes } from "../utils/constants/routes";
+
 import { useAppSelector } from "../store/hooks";
 import { getLoggedUser, getToken } from "../store/slices/AuthSlice";
 
@@ -12,7 +14,7 @@ const NotAuthWrapper = () => {
 
   useEffect(() => {
     if (jwt && loggedUser) {
-      navigate("/home");
+      navigate(AppRoutes.Home);
     }
   }, [loggedUser]);
 

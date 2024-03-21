@@ -5,13 +5,13 @@ import { RootState } from "../store";
 import AuthApi from "../../api/AuthApi";
 
 export interface AuthState {
-  jwtToken: string | null;
-  loggedUser: UserType | null;
+  accessToken?: string;
+  loggedUser?: UserType;
 }
 
 const initialState: AuthState = {
-  jwtToken: null,
-  loggedUser: null,
+  accessToken: undefined,
+  loggedUser: undefined,
 };
 
 const authApi = new AuthApi();
@@ -30,32 +30,29 @@ export const AuthSlice = createSlice({
   initialState,
   reducers: {
     setToken: (state, action: PayloadAction<string>) => {
-      state.jwtToken = action.payload;
+      state.accessToken = action.payload;
     },
     setUser: (state, action: PayloadAction<UserType>) => {
       state.loggedUser = action.payload;
     },
     logout: (state) => {
-      state.jwtToken = null;
-      state.loggedUser = null;
-
-      localStorage.removeItem("token");
+      state.accessToken = undefined;
+      state.loggedUser = undefined;
     },
   },
   extraReducers: (builder) => {
     builder.addCase(login.fulfilled, (state, action) => {
-      state.jwtToken = action.payload.access_token;
+      state.accessToken = action.payload.accessToken;
       state.loggedUser = action.payload.user;
     });
     builder.addCase(login.rejected, (state) => {
-      console.log("Login failed");
-      state.jwtToken = "";
-      state.loggedUser = null;
+      state.accessToken = undefined;
+      state.loggedUser = undefined;
     });
   },
 });
 
 export const { setToken, setUser, logout } = AuthSlice.actions;
-export const getToken = (state: RootState) => state.auth.jwtToken;
+export const getToken = (state: RootState) => state.auth.accessToken;
 export const getLoggedUser = (state: RootState) => state.auth.loggedUser;
 export default AuthSlice.reducer;

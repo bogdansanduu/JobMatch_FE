@@ -9,6 +9,7 @@ import NotImplementedPage from "../pages/NotImplementedPage";
 import LoginPage from "../pages/LoginPage";
 import AuthWrapper from "./AuthWrapper";
 import NotAuthWrapper from "./NotAuthWrapper";
+import HomePage from "../pages/HomePage";
 
 const ApplicationRouter = createBrowserRouter([
   {
@@ -22,7 +23,7 @@ const ApplicationRouter = createBrowserRouter([
       },
       {
         path: AppRoutes.Home,
-        element: <div>Home</div>,
+        element: <HomePage />,
       },
       {
         path: AppRoutes.MyNetwork,
