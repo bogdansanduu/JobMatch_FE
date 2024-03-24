@@ -10,6 +10,7 @@ import LoginPage from "../pages/LoginPage";
 import AuthWrapper from "./AuthWrapper";
 import NotAuthWrapper from "./NotAuthWrapper";
 import HomePage from "../pages/HomePage";
+import MyNetworkPage from "../pages/MyNetworkPage";
 
 const ApplicationRouter = createBrowserRouter([
   {
@@ -27,7 +28,7 @@ const ApplicationRouter = createBrowserRouter([
       },
       {
         path: AppRoutes.MyNetwork,
-        element: <NotImplementedPage />,
+        element: <MyNetworkPage />,
       },
       {
         path: AppRoutes.Jobs,

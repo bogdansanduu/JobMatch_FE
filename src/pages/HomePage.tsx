@@ -1,13 +1,12 @@
 import React, { useEffect } from "react";
+import AppApi from "../api/AppApi";
 
-import useSendAuthRequest from "../api/AppApi";
+const baseApi = AppApi.getBaseApi();
 
 const HomePage = () => {
-  const sendAuthRequest = useSendAuthRequest();
-
   useEffect(() => {
     (async () => {
-      const data = await sendAuthRequest("GET", "/users");
+      const data = await baseApi.sendRequest("GET", "/helloWorld");
       console.log(data);
     })();
   }, []);

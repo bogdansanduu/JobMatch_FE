@@ -1,6 +1,4 @@
-import axios from "axios";
-import { wrapper } from "axios-cookiejar-support";
-import { CookieJar } from "tough-cookie";
+import BaseApi from "./BaseApi";
 
 interface LoginParams {
   email: string;
@@ -15,34 +13,22 @@ interface RegisterParams {
 }
 
 class AuthApi {
-  private authApi;
+  private baseApi: BaseApi;
 
   constructor() {
-    const jar = new CookieJar();
-
-    this.authApi = wrapper(
-      axios.create({
-        baseURL: "http://localhost:8080/auth",
-        jar,
-        withCredentials: true,
-      })
-    );
+    this.baseApi = new BaseApi("auth");
   }
 
   register(data: RegisterParams) {
-    return this.authApi.post("/register", data);
+    return this.baseApi.sendRequest("POST", "/register", data);
   }
 
   login(data: LoginParams) {
-    return this.authApi.post("/login", data);
+    return this.baseApi.sendRequest("POST", "/login", data);
   }
 
   logout() {
-    return this.authApi.post("/logout");
-  }
-
-  refreshToken() {
-    return this.authApi.post("/refreshToken");
+    return this.baseApi.sendRequest("POST", "/logout");
   }
 }
 

@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { UserType } from "./UserSlice";
 import { RootState } from "../store";
-import AuthApi from "../../api/AuthApi";
+import AppApi from "../../api/AppApi";
 
 export interface AuthState {
   accessToken?: string;
@@ -14,16 +14,18 @@ const initialState: AuthState = {
   loggedUser: undefined,
 };
 
-const authApi = new AuthApi();
+const authApi = AppApi.getAuthApi();
 
 export const login = createAsyncThunk(
   "auth/login",
   async (data: { email: string; password: string }, { dispatch }) => {
-    const response = await authApi.login(data);
-
-    return response.data;
+    return await authApi.login(data);
   }
 );
+
+export const logout = createAsyncThunk("auth/logout", async () => {
+  await authApi.logout();
+});
 
 export const AuthSlice = createSlice({
   name: "auth",
@@ -35,12 +37,9 @@ export const AuthSlice = createSlice({
     setUser: (state, action: PayloadAction<UserType>) => {
       state.loggedUser = action.payload;
     },
-    logout: (state) => {
-      state.accessToken = undefined;
-      state.loggedUser = undefined;
-    },
   },
   extraReducers: (builder) => {
+    //LOGIN
     builder.addCase(login.fulfilled, (state, action) => {
       state.accessToken = action.payload.accessToken;
       state.loggedUser = action.payload.user;
@@ -49,10 +48,20 @@ export const AuthSlice = createSlice({
       state.accessToken = undefined;
       state.loggedUser = undefined;
     });
+
+    //LOGOUT
+    builder.addCase(logout.fulfilled, (state) => {
+      state.accessToken = undefined;
+      state.loggedUser = undefined;
+    });
+    builder.addCase(logout.rejected, (state) => {
+      state.accessToken = undefined;
+      state.loggedUser = undefined;
+    });
   },
 });
 
-export const { setToken, setUser, logout } = AuthSlice.actions;
+export const { setToken, setUser } = AuthSlice.actions;
 export const getToken = (state: RootState) => state.auth.accessToken;
 export const getLoggedUser = (state: RootState) => state.auth.loggedUser;
 export default AuthSlice.reducer;
