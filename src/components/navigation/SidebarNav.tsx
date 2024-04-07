@@ -45,7 +45,7 @@ const pages = [
   {
     title: "Messages",
     icon: <ForumIcon sx={{ height: "22px", width: "22px" }} />,
-    route: AppRoutes.Messages,
+    route: AppRoutes.Messaging,
   },
   {
     title: "Notifications",
@@ -78,107 +78,109 @@ const SidebarNav = () => {
   const handleSignOut = () => {
     localStorage.clear();
     dispatch(logout());
-    navigate("/login");
+    navigate(AppRoutes.Login);
   };
 
   return (
     <AppBar
       position="static"
-      sx={{ backgroundColor: White.PureWhite }}
+      sx={{ backgroundColor: White.PureWhite, height: "5vh" }}
       elevation={0}
     >
-      <Container maxWidth="xl">
-        <Toolbar disableGutters sx={{ alignItems: "center" }} variant="dense">
-          <Box sx={{ padding: "4px" }}>
-            <img
-              src={logo}
-              alt={"LinkedIn"}
-              style={{
-                height: 32,
-                width: 32,
-                borderRadius: "4px",
-              }}
-            />
-          </Box>
-          <TextField
-            variant="standard"
-            margin="normal"
-            placeholder="Search"
-            sx={{
-              backgroundColor: Blue.VoyagerBlue,
-              borderRadius: "6px",
-              marginTop: 0,
-              marginBottom: 0,
-              marginLeft: "4px",
-            }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start" sx={{ paddingLeft: "4px" }}>
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-              disableUnderline: true,
+      <Toolbar
+        disableGutters
+        sx={{ alignItems: "center", height: "inherit" }}
+        variant="dense"
+      >
+        <Box sx={{ padding: "4px" }}>
+          <img
+            src={logo}
+            alt={"LinkedIn"}
+            style={{
+              height: 32,
+              width: 32,
+              borderRadius: "4px",
             }}
           />
-          <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: "flex" }}>
-            {pages.map(({ title, icon, route }) => (
-              <IconButton
-                key={title}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  color: GrayColors.Gray6,
-                  padding: "4px",
-                  "&:hover": {
-                    color: GrayColors.Gray9,
-                  },
-                }}
-                onClick={() => handleClick(route)}
-                disableRipple
-              >
-                {icon}
-                <BodyText4>{title}</BodyText4>
-              </IconButton>
-            ))}
-          </Box>
-          {/*TODO REMOVE AND ADD IT IN THE USER MENU*/}
-          <Button
-            size={"small"}
-            variant="contained"
-            sx={{ height: "25px" }}
-            onClick={handleSignOut}
-          >
-            Sign Out
-          </Button>
-          <Tooltip title="Open settings">
-            <IconButton onClick={handleOpenUserMenu} sx={{ padding: 0 }}>
-              <Avatar alt="User Avatar" src="/static/images/avatar/2.jpg" />
+        </Box>
+        <TextField
+          variant="standard"
+          margin="normal"
+          placeholder="Search"
+          sx={{
+            backgroundColor: Blue.VoyagerBlue,
+            borderRadius: "6px",
+            marginTop: 0,
+            marginBottom: 0,
+            marginLeft: "4px",
+          }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start" sx={{ paddingLeft: "4px" }}>
+                <SearchIcon />
+              </InputAdornment>
+            ),
+            disableUnderline: true,
+          }}
+        />
+        <Box sx={{ flexGrow: 1 }} />
+        <Box sx={{ display: "flex" }}>
+          {pages.map(({ title, icon, route }) => (
+            <IconButton
+              key={title}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                color: GrayColors.Gray6,
+                padding: "4px",
+                "&:hover": {
+                  color: GrayColors.Gray9,
+                },
+              }}
+              onClick={() => handleClick(route)}
+              disableRipple
+            >
+              {icon}
+              <BodyText4>{title}</BodyText4>
             </IconButton>
-          </Tooltip>
-          <Menu
-            id="menu-appbar"
-            anchorEl={anchorElUser}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            open={Boolean(anchorElUser)}
-            onClose={handleCloseUserMenu}
-          >
-            {settings.map((setting) => (
-              <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                {setting}
-              </MenuItem>
-            ))}
-          </Menu>
-        </Toolbar>
-      </Container>
+          ))}
+        </Box>
+        {/*TODO REMOVE AND ADD IT IN THE USER MENU*/}
+        <Button
+          size={"small"}
+          variant="contained"
+          sx={{ height: "25px" }}
+          onClick={handleSignOut}
+        >
+          Sign Out
+        </Button>
+        <Tooltip title="Open settings">
+          <IconButton onClick={handleOpenUserMenu} sx={{ padding: 0 }}>
+            <Avatar alt="User Avatar" src="/static/images/avatar/2.jpg" />
+          </IconButton>
+        </Tooltip>
+        <Menu
+          id="menu-appbar"
+          anchorEl={anchorElUser}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          keepMounted
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          open={Boolean(anchorElUser)}
+          onClose={handleCloseUserMenu}
+        >
+          {settings.map((setting) => (
+            <MenuItem key={setting} onClick={handleCloseUserMenu}>
+              {setting}
+            </MenuItem>
+          ))}
+        </Menu>
+      </Toolbar>
     </AppBar>
   );
 };

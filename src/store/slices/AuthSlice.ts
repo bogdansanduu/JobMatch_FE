@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { UserType } from "./UserSlice";
 import { RootState } from "../store";
-import AppApi from "../../api/AppApi";
+import AppApi from "../../server/api/AppApi";
 
 export interface AuthState {
   accessToken?: string;
@@ -14,16 +14,19 @@ const initialState: AuthState = {
   loggedUser: undefined,
 };
 
-const authApi = AppApi.getAuthApi();
-
+//TODO add types
 export const login = createAsyncThunk(
   "auth/login",
   async (data: { email: string; password: string }, { dispatch }) => {
+    const authApi = AppApi.getAuthApi();
+
     return await authApi.login(data);
   }
 );
 
 export const logout = createAsyncThunk("auth/logout", async () => {
+  const authApi = AppApi.getAuthApi();
+
   await authApi.logout();
 });
 

@@ -1,40 +1,66 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { getLoggedUser, getToken, logout } from "../store/slices/AuthSlice";
-import SidebarNav from "../components/navigation/SidebarNav";
+
+import { AppRoutes } from "../utils/constants/routes";
 import { White } from "../utils/constants/colorPallete";
 
-//TODO get rid of any
-const AuthWrapper = ({ children }: any) => {
-  const dispatch = useAppDispatch();
+import SidebarNav from "../components/navigation/SidebarNav";
+import { LoadingContainer, SpinnerContainer } from "./styledComponents";
 
+const AuthWrapper = () => {
+  const [loading, setLoading] = useState(true);
+
+  const dispatch = useAppDispatch();
   const loggedUser = useAppSelector(getLoggedUser);
-  const jwt = useAppSelector(getToken);
+  const accessToken = useAppSelector(getToken);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!jwt || !loggedUser) {
-      dispatch(logout());
-      navigate("/login");
-    }
+    setLoading(true);
 
-    if (jwt && loggedUser) {
-      navigate("/home");
-    }
-  }, [loggedUser]);
+    (async () => {
+      if (!accessToken || !loggedUser) {
+        await dispatch(logout());
+        navigate(AppRoutes.Login);
+      }
+
+      if (accessToken && loggedUser) {
+        navigate(AppRoutes.Home);
+      }
+    })();
+
+    setLoading(false);
+  }, [loggedUser, accessToken]);
+
+  if (loading || !loggedUser || !accessToken)
+    return (
+      <LoadingContainer>
+        <SpinnerContainer>
+          <CircularProgress size={120} />
+        </SpinnerContainer>
+      </LoadingContainer>
+    );
+
+  // <div style={{ display: "flex", flexDirection: "column" }}>
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
+    <>
       <SidebarNav />
       <div
-        style={{ flex: 1, overflow: "auto", backgroundColor: White.OffWhite }}
+        style={{
+          overflow: "auto",
+          backgroundColor: White.OffWhite,
+          height: "95vh",
+        }}
       >
         <Outlet />
       </div>
-    </div>
+    </>
   );
 };
 

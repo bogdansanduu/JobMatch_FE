@@ -20,7 +20,7 @@ class AuthApi {
   }
 
   register(data: RegisterParams) {
-    return this.baseApi.sendRequest("POST", "/register", data);
+    return this.baseApi.sendRequest("PUT", "/register", data);
   }
 
   login(data: LoginParams) {

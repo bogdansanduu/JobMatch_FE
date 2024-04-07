@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import AppApi from "../api/AppApi";
+import AppApi from "../server/api/AppApi";
 
 const baseApi = AppApi.getBaseApi();
 

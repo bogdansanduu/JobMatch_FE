@@ -11,6 +11,8 @@ import AuthWrapper from "./AuthWrapper";
 import NotAuthWrapper from "./NotAuthWrapper";
 import HomePage from "../pages/HomePage";
 import MyNetworkPage from "../pages/MyNetworkPage";
+import RegisterPage from "../pages/RegisterPage";
+import MessagingPage from "../pages/MessagingPage";
 
 const ApplicationRouter = createBrowserRouter([
   {
@@ -20,7 +22,7 @@ const ApplicationRouter = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <Navigate to={"/home"} />,
+        element: <Navigate to={AppRoutes.Home} />,
       },
       {
         path: AppRoutes.Home,
@@ -35,8 +37,8 @@ const ApplicationRouter = createBrowserRouter([
         element: <NotImplementedPage />,
       },
       {
-        path: AppRoutes.Messages,
-        element: <NotImplementedPage />,
+        path: AppRoutes.Messaging,
+        element: <MessagingPage />,
       },
       {
         path: AppRoutes.Notifications,
@@ -53,8 +55,12 @@ const ApplicationRouter = createBrowserRouter([
     element: <NotAuthWrapper />,
     children: [
       {
-        path: "/login",
+        path: AppRoutes.Login,
         element: <LoginPage />,
+      },
+      {
+        path: AppRoutes.Register,
+        element: <RegisterPage />,
       },
     ],
   },

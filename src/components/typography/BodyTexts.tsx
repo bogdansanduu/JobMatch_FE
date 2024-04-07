@@ -8,14 +8,13 @@ interface BodyProps {
   fontWeight?: string;
   color?: string;
   letterSpacing?: string;
-  testTransform?: string;
+  textTransform?: string;
   fontFamily?: string;
   lineHeight?: string;
   fontStyle?: string;
 }
 
 const BaseBodyText = styled.div`
-  font-family: "Roboto", serif;
   font-style: normal;
   font-weight: normal;
   color: ${TypographyColors.DarkTextPrimary};
@@ -31,8 +30,8 @@ const BodyText1 = styled(BaseBodyText)<BodyProps>`
 `;
 
 const BodyText2 = styled(BaseBodyText)<BodyProps>`
-  font-size: 16px;
-  line-height: 24px;
+  font-size: 24px;
+  line-height: 28px;
   letter-spacing: ${(props) => props.letterSpacing || "-0.18px"};
   font-weight: ${(props) => props.fontWeight};
   color: ${(props) => props.color};
@@ -43,10 +42,9 @@ const BodyText3 = styled(BaseBodyText)<BodyProps>`
   font-size: 14px;
   line-height: ${(props) => props.lineHeight || "20px"};
   letter-spacing: ${(props) => props.letterSpacing || "-0.18px"};
-  font-weight: ${(props) => props.fontWeight};
-  color: ${(props) => props.color};
-  text-transform: ${(props) => props.testTransform};
-  font-family: ${(props) => props.fontFamily};
+  font-weight: ${(props) => props.fontWeight || 400};
+  color: ${(props) => props.color || GrayColors.Gray5};
+  text-transform: ${(props) => props.textTransform};
   font-style: ${(props) => props.fontStyle};
 `;
 

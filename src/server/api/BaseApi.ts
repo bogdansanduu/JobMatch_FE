@@ -7,8 +7,8 @@ import axios, {
 import { wrapper } from "axios-cookiejar-support";
 import { CookieJar } from "tough-cookie";
 
-import { store } from "../store/store";
-import { setToken } from "../store/slices/AuthSlice";
+import { store } from "../../store/store";
+import { setToken } from "../../store/slices/AuthSlice";
 
 export class BaseApi {
   private readonly axiosInstance: AxiosInstance;
