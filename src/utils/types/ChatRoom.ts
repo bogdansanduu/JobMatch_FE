@@ -9,7 +9,7 @@ export interface UserToRoom {
 export interface ChatRoomType {
   id: number;
   name: string;
-  hostId: number;
+  host: UserType;
   userToRooms: UserToRoom[];
   oneOnOne: boolean;
 }

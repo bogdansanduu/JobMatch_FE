@@ -1,47 +1,32 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  Avatar,
-  Box,
-  Divider,
-  Icon,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemButton,
-  ListItemText,
-  Stack,
-  Typography,
-} from "@mui/material";
-import UpcomingIcon from "@mui/icons-material/Upcoming";
+import { Box } from "@mui/material";
 
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { getAllUsers, getUsers, UserType } from "../store/slices/UserSlice";
+import { getAllUsers, UserType } from "../store/slices/UserSlice";
 import { getLoggedUser } from "../store/slices/AuthSlice";
 
-import { ChatRoomType } from "../utils/types/ChatRoom";
-import {
-  extractRoomInfo,
-  extractUserNameFromMessage,
-} from "../components/messaging/utils";
-import { MessageType } from "../utils/types/MessageType";
-import InputEmojiField from "../components/messaging/InputEmojiField";
-import AppApi from "../server/api/AppApi";
 import {
   SocketEventsClient,
   SocketEventsServer,
 } from "../utils/constants/socketEvents";
-import { BodyText2 } from "../components/typography/BodyTexts";
-import { GrayColors } from "../utils/constants/colorPallete";
+
+import { ChatRoomType } from "../utils/types/ChatRoom";
+import { MessageType } from "../utils/types/MessageType";
+import AppApi from "../server/api/AppApi";
+import NoConversationSelected from "../components/messaging/NoConversationSelected";
+import Conversation from "../components/messaging/Conversation";
+import ConversationsList from "../components/messaging/ConversationsList";
 
 const MessagingPage = () => {
   const socket = AppApi.getSocketApi();
 
   const dispatch = useAppDispatch();
-  const allUsers = useAppSelector(getUsers);
   const currentUser = useAppSelector(getLoggedUser);
 
   const [messages, setMessages] = useState<MessageType[]>([]);
-  const [selectedRoom, setSelectedRoom] = useState<ChatRoomType | null>(null);
+  const [selectedRoom, setSelectedRoom] = useState<ChatRoomType | undefined>(
+    undefined
+  );
   const [availableRooms, setAvailableRooms] = useState<ChatRoomType[]>([]);
   const [joinedChat, setJoinedChat] = useState(false);
 
@@ -50,6 +35,8 @@ const MessagingPage = () => {
   useEffect(() => {
     socket.connect();
 
+    dispatch(getAllUsers());
+
     return () => {
       socket.off(SocketEventsServer.ALL_ROOMS_FOR_USER);
       socket.off(SocketEventsServer.CREATED_ONE_ON_ONE_ROOM);
@@ -57,7 +44,8 @@ const MessagingPage = () => {
       socket.off(SocketEventsServer.ALL_MESSAGES_FOR_ROOM);
       socket.off(SocketEventsServer.MESSAGE_ROOM);
 
-      socket.disconnect();
+      socket.off(SocketEventsServer.JOINED_ROOM);
+
       socket.disconnect();
     };
   }, []);
@@ -94,15 +82,17 @@ const MessagingPage = () => {
             : [...oldRooms, room];
         });
 
-        setSelectedRoom(room);
-        setJoinedChat(true);
+        if (room.host.id === currentUser?.id) {
+          setSelectedRoom(room);
+          setJoinedChat(true);
+        }
       }
     );
-  }, [socket]);
 
-  useEffect(() => {
-    dispatch(getAllUsers());
-  }, []);
+    socket.on(SocketEventsServer.JOINED_ROOM, (room: ChatRoomType) => {
+      // console.log(room);
+    });
+  }, [socket]);
 
   useEffect(() => {
     scrollToBottom();
@@ -132,116 +122,18 @@ const MessagingPage = () => {
     setJoinedChat(true);
   };
 
-  console.log(availableRooms);
-
   return (
     <Box sx={{ display: "flex", height: "inherit" }}>
-      <List sx={{ flex: 1, maxWidth: "300px" }}>
-        <Stack direction="row" sx={{ overflowX: "auto", width: "inherit" }}>
-          {Array.isArray(allUsers) &&
-            allUsers.map((user) => (
-              <ListItem key={user.id}>
-                <ListItemButton onClick={() => handleSelectUser(user)}>
-                  <ListItemAvatar>
-                    <Avatar
-                      alt={`${user.firstName} ${user.lastName}`}
-                      src={user.profilePicture}
-                    />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={`${user.firstName} ${user.lastName}`}
-                  />
-                </ListItemButton>
-              </ListItem>
-            ))}
-        </Stack>
-
-        <Divider textAlign={"center"} sx={{ padding: "16px 0px" }}>
-          Current Chats
-        </Divider>
-
-        {availableRooms.map((room) => {
-          const roomData = extractRoomInfo(room, currentUser);
-          const isSelected = selectedRoom?.id === room.id;
-
-          return (
-            <ListItemButton
-              key={room.id}
-              selected={isSelected}
-              onClick={() => handleRoomSelection(room)}
-              sx={{
-                paddingLeft: isSelected ? "4px" : "0",
-                borderLeft: isSelected ? "4px solid green" : "none",
-              }}
-            >
-              <ListItemAvatar>
-                <Avatar alt={roomData.roomName} src={roomData.roomPicture} />
-              </ListItemAvatar>
-              <ListItemText primary={roomData.roomName} />
-            </ListItemButton>
-          );
-        })}
-      </List>
+      <ConversationsList
+        selectedRoom={selectedRoom}
+        availableRooms={availableRooms}
+        handleRoomSelection={handleRoomSelection}
+        handleSelectUser={handleSelectUser}
+      />
       {joinedChat && selectedRoom ? (
-        <div
-          style={{
-            flex: 5,
-            display: "flex",
-            flexDirection: "column",
-            height: "inherit",
-          }}
-        >
-          <BodyText2
-            fontWeight={"500"}
-            style={{ display: "flex", justifyContent: "center" }}
-          >
-            {extractRoomInfo(selectedRoom, currentUser).roomName}
-          </BodyText2>
-          <Divider />
-          <List
-            style={{
-              padding: "16px",
-              overflow: "auto",
-              flex: 1,
-            }}
-          >
-            {messages.map((message) => (
-              <div key={message.id}>
-                <ListItem style={{ marginBottom: "8px" }}>
-                  <Typography
-                    style={{ marginRight: "8px" }}
-                    variant="body2"
-                    color="textSecondary"
-                  >
-                    {extractUserNameFromMessage(message)}:
-                  </Typography>
-                  {message.text}
-                </ListItem>
-                <ListItem sx={{ alignItems: "center", gap: "8px" }}>
-                  <Typography variant="caption" color="textSecondary">
-                    {new Date(message.createdAt).toLocaleTimeString()}
-                  </Typography>
-                </ListItem>
-                <Divider style={{ marginTop: "8px", marginBottom: "8px" }} />
-              </div>
-            ))}
-            <div ref={messagesEndRef} />
-          </List>
-          <InputEmojiField currentRoom={selectedRoom} />
-        </div>
+        <Conversation messages={messages} selectedRoom={selectedRoom} />
       ) : (
-        <Box textAlign="center" mt={10} sx={{ flex: 3 }}>
-          <UpcomingIcon
-            sx={{ height: "55px", width: "55px", color: GrayColors.Gray8 }}
-          />
-
-          <Typography variant="h5" gutterBottom>
-            No conversation selected
-          </Typography>
-          <Typography variant="body1" color="textSecondary" gutterBottom>
-            Start a conversation by selecting a user / conversation
-          </Typography>
-        </Box>
+        <NoConversationSelected />
       )}
     </Box>
   );
