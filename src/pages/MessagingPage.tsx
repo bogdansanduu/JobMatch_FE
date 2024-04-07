@@ -3,6 +3,7 @@ import {
   Avatar,
   Box,
   Divider,
+  Icon,
   List,
   ListItem,
   ListItemAvatar,
@@ -11,6 +12,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import UpcomingIcon from "@mui/icons-material/Upcoming";
 
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { getAllUsers, getUsers, UserType } from "../store/slices/UserSlice";
@@ -18,7 +20,7 @@ import { getLoggedUser } from "../store/slices/AuthSlice";
 
 import { ChatRoomType } from "../utils/types/ChatRoom";
 import {
-  extractRoomName,
+  extractRoomInfo,
   extractUserNameFromMessage,
 } from "../components/messaging/utils";
 import { MessageType } from "../utils/types/MessageType";
@@ -29,6 +31,7 @@ import {
   SocketEventsServer,
 } from "../utils/constants/socketEvents";
 import { BodyText2 } from "../components/typography/BodyTexts";
+import { GrayColors } from "../utils/constants/colorPallete";
 
 const MessagingPage = () => {
   const socket = AppApi.getSocketApi();
@@ -129,6 +132,8 @@ const MessagingPage = () => {
     setJoinedChat(true);
   };
 
+  console.log(availableRooms);
+
   return (
     <Box sx={{ display: "flex", height: "inherit" }}>
       <List sx={{ flex: 1, maxWidth: "300px" }}>
@@ -155,15 +160,27 @@ const MessagingPage = () => {
           Current Chats
         </Divider>
 
-        {availableRooms.map((room) => (
-          <ListItemButton
-            key={room.id}
-            selected={selectedRoom?.id === room.id}
-            onClick={() => handleRoomSelection(room)}
-          >
-            {extractRoomName(room, currentUser)}
-          </ListItemButton>
-        ))}
+        {availableRooms.map((room) => {
+          const roomData = extractRoomInfo(room, currentUser);
+          const isSelected = selectedRoom?.id === room.id;
+
+          return (
+            <ListItemButton
+              key={room.id}
+              selected={isSelected}
+              onClick={() => handleRoomSelection(room)}
+              sx={{
+                paddingLeft: isSelected ? "4px" : "0",
+                borderLeft: isSelected ? "4px solid green" : "none",
+              }}
+            >
+              <ListItemAvatar>
+                <Avatar alt={roomData.roomName} src={roomData.roomPicture} />
+              </ListItemAvatar>
+              <ListItemText primary={roomData.roomName} />
+            </ListItemButton>
+          );
+        })}
       </List>
       {joinedChat && selectedRoom ? (
         <div
@@ -178,7 +195,7 @@ const MessagingPage = () => {
             fontWeight={"500"}
             style={{ display: "flex", justifyContent: "center" }}
           >
-            {extractRoomName(selectedRoom, currentUser)}
+            {extractRoomInfo(selectedRoom, currentUser).roomName}
           </BodyText2>
           <Divider />
           <List
@@ -213,7 +230,18 @@ const MessagingPage = () => {
           <InputEmojiField currentRoom={selectedRoom} />
         </div>
       ) : (
-        <div style={{ flex: 3 }}>Start a conversation</div>
+        <Box textAlign="center" mt={10} sx={{ flex: 3 }}>
+          <UpcomingIcon
+            sx={{ height: "55px", width: "55px", color: GrayColors.Gray8 }}
+          />
+
+          <Typography variant="h5" gutterBottom>
+            No conversation selected
+          </Typography>
+          <Typography variant="body1" color="textSecondary" gutterBottom>
+            Start a conversation by selecting a user / conversation
+          </Typography>
+        </Box>
       )}
     </Box>
   );
