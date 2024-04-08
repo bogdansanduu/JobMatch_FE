@@ -22,6 +22,9 @@ class SocketApi {
       query: {
         ...(loggedUser && { userId: loggedUser.id }),
       },
+      extraHeaders: {
+        Authorization: `Bearer ${store.getState().auth.accessToken}`,
+      },
     });
 
     this.socket.connect();
