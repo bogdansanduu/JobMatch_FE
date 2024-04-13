@@ -1,10 +1,13 @@
 import React from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, SxProps, Typography } from "@mui/material";
 import ChatIcon from "@mui/icons-material/Chat";
 
-const NoMessages = () => {
+interface NoMessagesProps {
+  containerStyle?: SxProps;
+}
+const NoMessages = ({ containerStyle }: NoMessagesProps) => {
   return (
-    <Box textAlign="center" mt={10} sx={{ flex: 3 }}>
+    <Box textAlign="center" mt={10} sx={{ flex: 3, ...containerStyle }}>
       <ChatIcon
         sx={{
           height: "55px",

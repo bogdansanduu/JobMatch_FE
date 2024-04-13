@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 
-import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { getAllUsers, UserType } from "../store/slices/UserSlice";
+import { useAppSelector } from "../store/hooks";
+import { UserType } from "../store/slices/UserSlice";
 import { getLoggedUser } from "../store/slices/AuthSlice";
 
 import {
@@ -11,7 +11,6 @@ import {
 } from "../utils/constants/socketEvents";
 
 import { ChatRoomType } from "../utils/types/ChatRoom";
-import { MessageType } from "../utils/types/MessageType";
 import AppApi from "../server/api/AppApi";
 import NoConversationSelected from "../components/messaging/NoConversationSelected";
 import Conversation from "../components/messaging/Conversation";
@@ -20,29 +19,20 @@ import ConversationsList from "../components/messaging/ConversationsList";
 const MessagingPage = () => {
   const socket = AppApi.getSocketApi();
 
-  const dispatch = useAppDispatch();
   const currentUser = useAppSelector(getLoggedUser);
 
-  const [messages, setMessages] = useState<MessageType[]>([]);
   const [selectedRoom, setSelectedRoom] = useState<ChatRoomType | undefined>(
     undefined
   );
   const [availableRooms, setAvailableRooms] = useState<ChatRoomType[]>([]);
   const [joinedChat, setJoinedChat] = useState(false);
 
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     socket.connect();
-
-    dispatch(getAllUsers());
 
     return () => {
       socket.off(SocketEventsServer.ALL_ROOMS_FOR_USER);
       socket.off(SocketEventsServer.CREATED_ONE_ON_ONE_ROOM);
-
-      socket.off(SocketEventsServer.ALL_MESSAGES_FOR_ROOM);
-      socket.off(SocketEventsServer.MESSAGE_ROOM);
 
       socket.off(SocketEventsServer.JOINED_ROOM);
 
@@ -61,17 +51,6 @@ const MessagingPage = () => {
         setAvailableRooms(rooms);
       }
     );
-
-    socket.on(
-      SocketEventsServer.ALL_MESSAGES_FOR_ROOM,
-      (messages: MessageType[]) => {
-        setMessages(messages);
-      }
-    );
-
-    socket.on(SocketEventsServer.MESSAGE_ROOM, (message: MessageType) => {
-      setMessages((messages) => [...messages, message]);
-    });
 
     socket.on(
       SocketEventsServer.CREATED_ONE_ON_ONE_ROOM,
@@ -93,14 +72,6 @@ const MessagingPage = () => {
       // console.log(room);
     });
   }, [socket]);
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
 
   const handleSelectUser = (recipient: UserType) => {
     socket.emit(SocketEventsClient.CREATE_ONE_ON_ONE_ROOM, {
@@ -131,7 +102,7 @@ const MessagingPage = () => {
         handleSelectUser={handleSelectUser}
       />
       {joinedChat && selectedRoom ? (
-        <Conversation messages={messages} selectedRoom={selectedRoom} />
+        <Conversation selectedRoom={selectedRoom} />
       ) : (
         <NoConversationSelected />
       )}

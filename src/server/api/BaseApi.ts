@@ -55,7 +55,7 @@ export class BaseApi {
             data: { accessToken: newAccessToken },
           } = await this.axiosInstance.request({
             baseURL: process.env.REACT_APP_API_URL,
-            url: "/auth/refreshToken",
+            url: "/auth/refresh-token",
             method: "POST",
           });
 

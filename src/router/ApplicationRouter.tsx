@@ -13,6 +13,7 @@ import HomePage from "../pages/HomePage";
 import MyNetworkPage from "../pages/MyNetworkPage";
 import RegisterPage from "../pages/RegisterPage";
 import MessagingPage from "../pages/MessagingPage";
+import UserPage from "../pages/UserPage";
 
 const ApplicationRouter = createBrowserRouter([
   {
@@ -39,6 +40,15 @@ const ApplicationRouter = createBrowserRouter([
       {
         path: AppRoutes.Messaging,
         element: <MessagingPage />,
+      },
+      {
+        path: AppRoutes.UserProfile,
+        children: [
+          {
+            path: ":userId",
+            element: <UserPage />,
+          },
+        ],
       },
       {
         path: AppRoutes.Notifications,

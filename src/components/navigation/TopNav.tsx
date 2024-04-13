@@ -1,30 +1,29 @@
-import * as React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
-import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import SearchIcon from "@mui/icons-material/Search";
 import HomeIcon from "@mui/icons-material/Home";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import WorkIcon from "@mui/icons-material/Work";
 import ForumIcon from "@mui/icons-material/Forum";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import { AppBar, InputAdornment, TextField } from "@mui/material";
+import { AppBar } from "@mui/material";
 import Button from "@mui/material/Button";
 
 import { useAppDispatch } from "../../store/hooks";
 
 import logo from "../../assets/linkedLogo.png";
-import { Blue, GrayColors, White } from "../../utils/constants/colorPallete";
+import { GrayColors, White } from "../../utils/constants/colorPallete";
 import { AppRoutes } from "../../utils/constants/routes";
 
 import { BodyText4 } from "../typography/BodyTexts";
 import { logout } from "../../store/slices/AuthSlice";
+import SearchPopover from "../popover/SearchPopover";
 
 const pages = [
   {
@@ -55,10 +54,8 @@ const pages = [
 ];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
-const SidebarNav = () => {
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-    null
-  );
+const TopNav = () => {
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -80,6 +77,16 @@ const SidebarNav = () => {
     dispatch(logout());
     navigate(AppRoutes.Login);
   };
+
+  // const debouncedHandleSearch = debounce(
+  //   async (event: React.ChangeEvent<HTMLInputElement>) => {
+  //     const searchTerm = event.target.value;
+  //     const users = await userApi.searchByNameAndEmail(searchTerm);
+  //
+  //     console.log(users);
+  //   },
+  //   500
+  // );
 
   return (
     <AppBar
@@ -103,26 +110,7 @@ const SidebarNav = () => {
             }}
           />
         </Box>
-        <TextField
-          variant="standard"
-          margin="normal"
-          placeholder="Search"
-          sx={{
-            backgroundColor: Blue.VoyagerBlue,
-            borderRadius: "6px",
-            marginTop: 0,
-            marginBottom: 0,
-            marginLeft: "4px",
-          }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start" sx={{ paddingLeft: "4px" }}>
-                <SearchIcon />
-              </InputAdornment>
-            ),
-            disableUnderline: true,
-          }}
-        />
+        <SearchPopover />
         <Box sx={{ flexGrow: 1 }} />
         <Box sx={{ display: "flex" }}>
           {pages.map(({ title, icon, route }) => (
@@ -185,4 +173,4 @@ const SidebarNav = () => {
   );
 };
 
-export default SidebarNav;
+export default TopNav;

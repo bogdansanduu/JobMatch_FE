@@ -15,6 +15,8 @@ export type UserType = {
   firstName: string;
   lastName: string;
   profilePicture: string;
+  following: UserType[];
+  followers: UserType[];
 };
 
 export const EMPTY_USER: UserType = {
@@ -23,6 +25,8 @@ export const EMPTY_USER: UserType = {
   firstName: "",
   lastName: "",
   profilePicture: "",
+  following: [],
+  followers: [],
 };
 
 const initialState: UserState = {
@@ -30,12 +34,27 @@ const initialState: UserState = {
   users: [],
 };
 
-export const getAllUsers = createAsyncThunk(
-  "user/getAllUsers",
-  async (_, { dispatch }) => {
+export const getAllUsers = createAsyncThunk("user/getAllUsers", async (_) => {
+  const userApi = AppApi.getUserApi();
+
+  return await userApi.getAllUsers();
+});
+
+export const getUserById = createAsyncThunk(
+  "user/getUserById",
+  async (id: number) => {
     const userApi = AppApi.getUserApi();
 
-    return await userApi.getAllUsers();
+    return await userApi.getUserById(id);
+  }
+);
+
+export const addConnection = createAsyncThunk(
+  "user/addConnection",
+  async ({ userId, contactId }: { userId: number; contactId: number }) => {
+    const userApi = AppApi.getUserApi();
+
+    return await userApi.addContact(userId, contactId);
   }
 );
 
@@ -51,11 +70,26 @@ export const UserSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    //GET ALL USERS
     builder.addCase(getAllUsers.fulfilled, (state, action) => {
       state.users = action.payload;
     });
     builder.addCase(getAllUsers.rejected, (state) => {
       state.users = [];
+    });
+    //GET USER BY ID
+    builder.addCase(getUserById.fulfilled, (state, action) => {
+      state.currentUser = action.payload;
+    });
+    builder.addCase(getUserById.rejected, (state) => {
+      state.currentUser = EMPTY_USER;
+    });
+    //ADD CONNECTION
+    builder.addCase(addConnection.fulfilled, (state, action) => {
+      console.log("Connection added");
+    });
+    builder.addCase(addConnection.rejected, (state) => {
+      console.log("Error adding connection");
     });
   },
 });

@@ -7,4 +7,6 @@ export enum AppRoutes {
   MyNetwork = "/my-network",
   Jobs = "/jobs",
   Notifications = "/notifications",
+
+  UserProfile = "/profile",
 }
