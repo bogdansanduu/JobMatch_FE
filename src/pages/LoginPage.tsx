@@ -141,16 +141,22 @@ const LoginPage = () => {
           >
             Log In
           </Button>
-          <Grid container justifyContent="flex-end">
-            <Grid item>
-              <Link href={AppRoutes.Register} variant="body2">
-                Don't have an account? Register
-              </Link>
-            </Grid>
-          </Grid>
+          <Box
+            sx={{
+              mt: 5,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "4px",
+            }}
+          >
+            <Link href={AppRoutes.Register} variant="body2">
+              Don't have an account? Register
+            </Link>
+            <Copyright />
+          </Box>
         </Box>
       </Box>
-      <Copyright sx={{ mt: 5 }} />
     </Container>
   );
 };

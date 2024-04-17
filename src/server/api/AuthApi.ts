@@ -10,6 +10,11 @@ interface RegisterParams {
   password: string;
   firstName: string;
   lastName: string;
+  //TODO add profile picture to register step
+  profilePicture?: string;
+  country: string;
+  state: string;
+  city: string;
 }
 
 class AuthApi {
@@ -29,6 +34,10 @@ class AuthApi {
 
   logout() {
     return this.baseApi.sendRequest("POST", "/logout");
+  }
+
+  refreshAccessToken() {
+    return this.baseApi.sendRequest("POST", "/refresh-token");
   }
 }
 

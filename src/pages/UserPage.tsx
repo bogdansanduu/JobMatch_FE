@@ -120,22 +120,37 @@ const UserPage = () => {
           avatar={<Avatar src={user.profilePicture} />}
         />
         <CardContent>
-          <Typography variant={"body2"} gutterBottom>
-            User Info
+          <Typography variant={"body2"} color={"text.secondary"} gutterBottom>
+            {`${user.country}, ${user.city}, ${user.state}`}
+          </Typography>
+          <Typography variant={"body2"} color={"text.info"} gutterBottom>
+            {`${user.followers.length} connections`}
           </Typography>
         </CardContent>
+        state
         <CardActions sx={{ marginLeft: "auto" }}>
           {isFollowing ? (
-            <Button size="small" color="error" onClick={handleRemoveConnection}>
+            <Button
+              variant={"outlined"}
+              size="small"
+              color="error"
+              onClick={handleRemoveConnection}
+            >
               Unfollow
             </Button>
           ) : (
-            <Button size="small" onClick={handleAddConnection}>
+            <Button
+              variant={"contained"}
+              size="small"
+              onClick={handleAddConnection}
+            >
               Add Connection
             </Button>
           )}
 
-          <Button size="small">Message</Button>
+          <Button variant={"contained"} size="small">
+            Message
+          </Button>
         </CardActions>
       </Card>
 

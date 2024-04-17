@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { Box } from "@mui/material";
 
-import { useAppSelector } from "../store/hooks";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { UserType } from "../store/slices/UserSlice";
-import { getLoggedUser } from "../store/slices/AuthSlice";
+import { getLoggedUser, refreshToken } from "../store/slices/AuthSlice";
 
 import {
   SocketEventsClient,
@@ -18,9 +18,11 @@ import ConversationsList from "../components/messaging/ConversationsList";
 
 const MessagingPage = () => {
   const socket = AppApi.getSocketApi();
+  const dispatch = useAppDispatch();
 
   const currentUser = useAppSelector(getLoggedUser);
 
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
   const [selectedRoom, setSelectedRoom] = useState<ChatRoomType | undefined>(
     undefined
   );
@@ -43,6 +45,12 @@ const MessagingPage = () => {
   useEffect(() => {
     socket.emit(SocketEventsClient.GET_ALL_ROOMS_FOR_USER, {
       userId: currentUser?.id,
+    });
+
+    socket.on("connect_error", async (error) => {
+      //TODO TEMPORARY FIX
+      await dispatch(refreshToken());
+      window.location.reload();
     });
 
     socket.on(

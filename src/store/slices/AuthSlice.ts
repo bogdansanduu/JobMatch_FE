@@ -30,6 +30,16 @@ export const logout = createAsyncThunk("auth/logout", async () => {
   await authApi.logout();
 });
 
+export const refreshToken = createAsyncThunk("auth/refreshToken", async () => {
+  const authApi = AppApi.getAuthApi();
+
+  const { accessToken } = await authApi.refreshAccessToken();
+
+  console.log(accessToken);
+
+  return accessToken;
+});
+
 export const AuthSlice = createSlice({
   name: "auth",
   initialState,
@@ -58,6 +68,15 @@ export const AuthSlice = createSlice({
       state.loggedUser = undefined;
     });
     builder.addCase(logout.rejected, (state) => {
+      state.accessToken = undefined;
+      state.loggedUser = undefined;
+    });
+
+    //REFRESH TOKEN
+    builder.addCase(refreshToken.fulfilled, (state, action) => {
+      state.accessToken = action.payload;
+    });
+    builder.addCase(refreshToken.rejected, (state) => {
       state.accessToken = undefined;
       state.loggedUser = undefined;
     });

@@ -17,6 +17,9 @@ export type UserType = {
   profilePicture: string;
   following: UserType[];
   followers: UserType[];
+  country: string;
+  city: string;
+  state: string;
 };
 
 export const EMPTY_USER: UserType = {
@@ -27,6 +30,9 @@ export const EMPTY_USER: UserType = {
   profilePicture: "",
   following: [],
   followers: [],
+  country: "",
+  city: "",
+  state: "",
 };
 
 const initialState: UserState = {

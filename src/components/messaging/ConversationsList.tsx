@@ -41,10 +41,6 @@ const ConversationsList = ({
   ];
   const uniqueConnections = Array.from(new Set(followingAndFollowers));
 
-  useEffect(() => {
-    console.log(currentUser);
-  }, [currentUser]);
-
   return (
     <Box
       sx={{
@@ -104,7 +100,7 @@ const ConversationsList = ({
               selected={isSelected}
               onClick={() => handleRoomSelection(room)}
               sx={{
-                paddingLeft: isSelected ? "4px" : "0",
+                paddingLeft: "4px",
                 borderLeft: isSelected ? "4px solid green" : "none",
               }}
             >

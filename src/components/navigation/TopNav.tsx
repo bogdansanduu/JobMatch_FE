@@ -137,7 +137,7 @@ const TopNav = () => {
         <Button
           size={"small"}
           variant="contained"
-          sx={{ height: "25px" }}
+          color={"warning"}
           onClick={handleSignOut}
         >
           Sign Out
