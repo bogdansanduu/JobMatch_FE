@@ -35,8 +35,6 @@ export const refreshToken = createAsyncThunk("auth/refreshToken", async () => {
 
   const { accessToken } = await authApi.refreshAccessToken();
 
-  console.log(accessToken);
-
   return accessToken;
 });
 

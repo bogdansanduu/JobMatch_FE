@@ -5,6 +5,7 @@ import { persistReducer, persistStore } from "redux-persist";
 import userReducer from "./slices/UserSlice";
 import authReducer from "./slices/AuthSlice";
 import uiReducer from "./slices/UISlice";
+import postReducer from "./slices/PostSlice";
 
 const persistConfig = {
   key: "root",
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   user: userReducer,
   auth: authReducer,
   ui: uiReducer,
+  post: postReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
