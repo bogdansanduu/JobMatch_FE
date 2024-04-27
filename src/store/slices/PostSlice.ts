@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { UserType } from "./UserSlice";
 import AppApi from "../../server/api/AppApi";
 import { RootState } from "../store";
-import { CreatePostDto } from "../../server/api/PostApi";
+import { CommentPostDto, CreatePostDto } from "../../server/api/PostApi";
 
 export interface PostState {
   currentPost?: PostType;
@@ -17,6 +17,11 @@ export type LikeType = {
 export type CommentType = {
   id: number;
   author: UserType;
+  likes: LikeType[];
+  post: {
+    id: number;
+  };
+  content: string;
 };
 
 export type PostType = {
@@ -69,6 +74,41 @@ export const unlikePost = createAsyncThunk(
   }
 );
 
+export const commentPost = createAsyncThunk(
+  "post/commentPost",
+  async ({
+    postId,
+    userId,
+    commentData,
+  }: {
+    postId: number;
+    userId: number;
+    commentData: CommentPostDto;
+  }) => {
+    const postApi = AppApi.getPostApi();
+
+    return await postApi.commentPost(postId, userId, commentData);
+  }
+);
+
+export const likeComment = createAsyncThunk(
+  "post/likeComment",
+  async ({ commentId, userId }: { commentId: number; userId: number }) => {
+    const commentApi = AppApi.getCommentApi();
+
+    return await commentApi.likeComment(commentId, userId);
+  }
+);
+
+export const unlikeComment = createAsyncThunk(
+  "post/unlikeComment",
+  async ({ commentId, userId }: { commentId: number; userId: number }) => {
+    const commentApi = AppApi.getCommentApi();
+
+    return await commentApi.unlikeComment(commentId, userId);
+  }
+);
+
 export const PostSlice = createSlice({
   name: "post",
   initialState,
@@ -114,6 +154,39 @@ export const PostSlice = createSlice({
         if (post.id === action.payload.id) {
           return action.payload;
         }
+        return post;
+      });
+    });
+    //COMMENT POST
+    builder.addCase(commentPost.fulfilled, (state, action) => {
+      state.posts = state.posts.map((post) => {
+        if (post.id === action.payload.id) {
+          return action.payload;
+        }
+        return post;
+      });
+    });
+    //LIKE COMMENT
+    builder.addCase(likeComment.fulfilled, (state, action) => {
+      state.posts = state.posts.map((post) => {
+        post.comments = post.comments.map((comment) => {
+          if (comment.id === action.payload.id) {
+            return action.payload;
+          }
+          return comment;
+        });
+        return post;
+      });
+    });
+    //UNLIKE COMMENT
+    builder.addCase(unlikeComment.fulfilled, (state, action) => {
+      state.posts = state.posts.map((post) => {
+        post.comments = post.comments.map((comment) => {
+          if (comment.id === action.payload.id) {
+            return action.payload;
+          }
+          return comment;
+        });
         return post;
       });
     });

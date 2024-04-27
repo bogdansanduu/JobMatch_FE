@@ -22,8 +22,6 @@ import AppApi from "../server/api/AppApi";
 import { LoadingContainer, SpinnerContainer } from "../router/styledComponents";
 import CircularProgress from "@mui/material/CircularProgress";
 
-interface UserPageProps {}
-
 const UserPage = () => {
   const userApi = AppApi.getUserApi();
 
@@ -127,7 +125,6 @@ const UserPage = () => {
             {`${user.followers.length} connections`}
           </Typography>
         </CardContent>
-        state
         <CardActions sx={{ marginLeft: "auto" }}>
           {isFollowing ? (
             <Button

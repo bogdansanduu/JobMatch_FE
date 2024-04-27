@@ -6,6 +6,10 @@ export interface CreatePostDto {
   picture?: string;
 }
 
+export interface CommentPostDto {
+  content: string;
+}
+
 class PostApi {
   private baseApi: BaseApi;
 
@@ -27,6 +31,18 @@ class PostApi {
 
   async unlikePost(postId: number, userId: number) {
     return this.baseApi.sendRequest("POST", `/unlike/${postId}/${userId}`);
+  }
+
+  async commentPost(
+    postId: number,
+    userId: number,
+    commentData: CommentPostDto
+  ) {
+    return this.baseApi.sendRequest(
+      "POST",
+      `/comment/${postId}/${userId}`,
+      commentData
+    );
   }
 }
 

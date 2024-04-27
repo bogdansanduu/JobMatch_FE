@@ -8,5 +8,6 @@ export enum AppRoutes {
   Jobs = "/jobs",
   Notifications = "/notifications",
 
+  CreateCompanyAccount = "/create-company-account",
   UserProfile = "/profile",
 }

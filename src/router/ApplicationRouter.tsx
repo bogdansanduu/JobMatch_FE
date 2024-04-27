@@ -14,6 +14,7 @@ import MyNetworkPage from "../pages/MyNetworkPage";
 import RegisterPage from "../pages/RegisterPage";
 import MessagingPage from "../pages/MessagingPage";
 import UserPage from "../pages/UserPage";
+import CreateCompanyAccount from "../pages/CreateCompanyAccount";
 
 const ApplicationRouter = createBrowserRouter([
   {
@@ -53,6 +54,10 @@ const ApplicationRouter = createBrowserRouter([
       {
         path: AppRoutes.Notifications,
         element: <NotImplementedPage />,
+      },
+      {
+        path: AppRoutes.CreateCompanyAccount,
+        element: <CreateCompanyAccount />,
       },
       {
         path: AppRoutes.AccessDenied,

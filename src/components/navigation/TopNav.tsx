@@ -11,18 +11,21 @@ import HomeIcon from "@mui/icons-material/Home";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import WorkIcon from "@mui/icons-material/Work";
 import ForumIcon from "@mui/icons-material/Forum";
+import Logout from "@mui/icons-material/Logout";
+import Settings from "@mui/icons-material/Settings";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import { AppBar } from "@mui/material";
-import Button from "@mui/material/Button";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import PersonAdd from "@mui/icons-material/PersonAdd";
+import { AppBar, Divider, Typography } from "@mui/material";
 
-import { useAppDispatch } from "../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 
 import logo from "../../assets/linkedLogo.png";
 import { GrayColors, White } from "../../utils/constants/colorPallete";
 import { AppRoutes } from "../../utils/constants/routes";
 
 import { BodyText4 } from "../typography/BodyTexts";
-import { logout } from "../../store/slices/AuthSlice";
+import { getLoggedUser, logout } from "../../store/slices/AuthSlice";
 import SearchPopover from "../popover/SearchPopover";
 
 const pages = [
@@ -52,10 +55,12 @@ const pages = [
     route: AppRoutes.Notifications,
   },
 ];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const TopNav = () => {
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorElUser);
+
+  const currentUser = useAppSelector(getLoggedUser);
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -70,6 +75,12 @@ const TopNav = () => {
 
   const handleClick = (route: string) => {
     navigate(route);
+  };
+
+  const handleCreateJobAccount = () => {
+    setAnchorElUser(null);
+
+    navigate(AppRoutes.CreateCompanyAccount);
   };
 
   const handleSignOut = () => {
@@ -133,40 +144,87 @@ const TopNav = () => {
             </IconButton>
           ))}
         </Box>
-        {/*TODO REMOVE AND ADD IT IN THE USER MENU*/}
-        <Button
-          size={"small"}
-          variant="contained"
-          color={"warning"}
-          onClick={handleSignOut}
-        >
-          Sign Out
-        </Button>
-        <Tooltip title="Open settings">
-          <IconButton onClick={handleOpenUserMenu} sx={{ padding: 0 }}>
-            <Avatar alt="User Avatar" src="/static/images/avatar/2.jpg" />
+        <Tooltip title="Account settings">
+          <IconButton
+            onClick={handleOpenUserMenu}
+            size="small"
+            sx={{ ml: 2, mr: 1 }}
+            aria-controls={open ? "account-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? "true" : undefined}
+          >
+            <Avatar
+              sx={{ width: 35, height: 35 }}
+              src={currentUser?.profilePicture}
+            />
           </IconButton>
         </Tooltip>
         <Menu
-          id="menu-appbar"
           anchorEl={anchorElUser}
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-          keepMounted
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-          open={Boolean(anchorElUser)}
+          id="account-menu"
+          open={open}
           onClose={handleCloseUserMenu}
+          onClick={handleCloseUserMenu}
+          PaperProps={{
+            elevation: 0,
+            sx: {
+              overflow: "visible",
+              filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+              mt: 1.5,
+              "& .MuiAvatar-root": {
+                width: 32,
+                height: 32,
+                ml: -0.5,
+                mr: 1,
+              },
+              "&::before": {
+                content: '""',
+                display: "block",
+                position: "absolute",
+                top: 0,
+                right: 14,
+                width: 10,
+                height: 10,
+                bgcolor: White.PureWhite,
+                transform: "translateY(-50%) rotate(45deg)",
+                zIndex: 0,
+              },
+            },
+          }}
+          transformOrigin={{ horizontal: "right", vertical: "top" }}
+          anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         >
-          {settings.map((setting) => (
-            <MenuItem key={setting} onClick={handleCloseUserMenu}>
-              {setting}
-            </MenuItem>
-          ))}
+          <MenuItem onClick={handleCloseUserMenu}>
+            <Avatar src={currentUser?.profilePicture} />
+            <Typography variant="body2" color={"text.secondary"}>
+              {`${currentUser?.firstName} ${currentUser?.lastName}`}
+            </Typography>
+          </MenuItem>
+          <Divider sx={{ my: 0.5 }} />
+          <MenuItem onClick={handleCreateJobAccount}>
+            <ListItemIcon>
+              <PersonAdd fontSize="small" />
+            </ListItemIcon>
+            <Typography variant="body2" color={"text.secondary"}>
+              Create Company Account
+            </Typography>
+          </MenuItem>
+          <MenuItem onClick={handleCloseUserMenu}>
+            <ListItemIcon>
+              <Settings fontSize="small" />
+            </ListItemIcon>
+            <Typography variant="body2" color={"text.secondary"}>
+              Settings
+            </Typography>
+          </MenuItem>
+          <MenuItem onClick={handleSignOut}>
+            <ListItemIcon>
+              <Logout fontSize="small" />
+            </ListItemIcon>
+            <Typography variant="body2" color={"text.secondary"}>
+              Sign Out
+            </Typography>
+          </MenuItem>
         </Menu>
       </Toolbar>
     </AppBar>

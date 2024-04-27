@@ -3,6 +3,7 @@ import AuthApi from "./AuthApi";
 import UserApi from "./UserApi";
 import SocketApi from "./SocketApi";
 import PostApi from "./PostApi";
+import CommentApi from "./CommentApi";
 
 class AppApi {
   private static instance: AppApi;
@@ -12,6 +13,7 @@ class AppApi {
   readonly userApi: UserApi;
   readonly socketApi: SocketApi;
   readonly postApi: PostApi;
+  readonly commentApi: CommentApi;
 
   private constructor() {
     this.baseApi = new BaseApi();
@@ -19,6 +21,7 @@ class AppApi {
     this.userApi = new UserApi();
     this.socketApi = new SocketApi();
     this.postApi = new PostApi();
+    this.commentApi = new CommentApi();
   }
 
   public static getInstance() {
@@ -45,6 +48,10 @@ class AppApi {
 
   static getPostApi() {
     return this.getInstance().postApi;
+  }
+
+  static getCommentApi() {
+    return this.getInstance().commentApi;
   }
 }
 
