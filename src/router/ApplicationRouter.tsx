@@ -15,10 +15,14 @@ import RegisterPage from "../pages/RegisterPage";
 import MessagingPage from "../pages/MessagingPage";
 import UserPage from "../pages/UserPage";
 import CreateCompanyAccount from "../pages/CreateCompanyAccount";
+import LoginCompanyPage from "../pages/LoginCompanyPage";
+import AuthWrapperCompany from "./AuthWrapperCompany";
+import HomePageCompany from "../pages/HomePageCompany";
+import EmployeesPage from "../pages/EmployeesPage";
 
 const ApplicationRouter = createBrowserRouter([
   {
-    path: "/",
+    path: AppRoutes.User,
     element: <AuthWrapper />,
     errorElement: <NotFoundPage />,
     children: [
@@ -66,12 +70,44 @@ const ApplicationRouter = createBrowserRouter([
     ],
   },
   {
+    path: AppRoutes.Company,
+    element: <AuthWrapperCompany />,
+    errorElement: <NotFoundPage />,
+    children: [
+      {
+        path: "",
+        element: <Navigate to={AppRoutes.HomeCompany} />,
+      },
+      {
+        path: AppRoutes.HomeCompany,
+        element: <HomePageCompany />,
+      },
+      {
+        path: AppRoutes.Employees,
+        element: <EmployeesPage />,
+      },
+      {
+        path: AppRoutes.CompanyProfile,
+        element: <NotImplementedPage />,
+      },
+      {
+        path: AppRoutes.AccessDeniedCompany,
+        element: <AccessDeniedPage />,
+      },
+    ],
+  },
+  {
     path: "/",
     element: <NotAuthWrapper />,
+    errorElement: <NotFoundPage />,
     children: [
       {
         path: AppRoutes.Login,
         element: <LoginPage />,
+      },
+      {
+        path: AppRoutes.LoginCompany,
+        element: <LoginCompanyPage />,
       },
       {
         path: AppRoutes.Register,

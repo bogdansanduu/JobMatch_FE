@@ -1,22 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
-import CircularProgress from "@mui/material/CircularProgress";
-import styled from "styled-components";
-
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import {
-  getLoggedCompany,
-  getLoggedUser,
-  getToken,
-  logout,
-} from "../store/slices/AuthSlice";
 import { getUserSearchOpen } from "../store/slices/UISlice";
-
+import { getLoggedCompany, getToken, logout } from "../store/slices/AuthSlice";
+import { Outlet, useNavigate } from "react-router-dom";
 import { AppRoutes } from "../utils/constants/routes";
-import { White } from "../utils/constants/colorPallete";
-
-import TopNav from "../components/navigation/TopNav";
 import { LoadingContainer, SpinnerContainer } from "./styledComponents";
+import CircularProgress from "@mui/material/CircularProgress";
+import TopNav from "../components/navigation/TopNav";
+import { White } from "../utils/constants/colorPallete";
+import styled from "styled-components";
 
 const Overlay = styled.div<{ show: boolean }>`
   position: absolute;
@@ -29,14 +21,14 @@ const Overlay = styled.div<{ show: boolean }>`
   display: ${(props) => (props.show ? "block" : "none")};
 `;
 
-const AuthWrapper = () => {
+const AuthWrapperCompany = () => {
   const userSearchOpen = useAppSelector(getUserSearchOpen);
+  const loggedCompany = useAppSelector(getLoggedCompany);
+  const accessToken = useAppSelector(getToken);
 
   const [loading, setLoading] = useState(true);
 
   const dispatch = useAppDispatch();
-  const loggedUser = useAppSelector(getLoggedUser);
-  const accessToken = useAppSelector(getToken);
 
   const navigate = useNavigate();
 
@@ -44,20 +36,20 @@ const AuthWrapper = () => {
     setLoading(true);
 
     (async () => {
-      if (!accessToken || !loggedUser) {
+      if (!accessToken || !loggedCompany) {
         await dispatch(logout());
-        navigate(AppRoutes.Login);
+        navigate(AppRoutes.LoginCompany);
       }
 
-      if (accessToken && loggedUser) {
+      if (accessToken && loggedCompany) {
         return;
       }
     })();
 
     setLoading(false);
-  }, [loggedUser, accessToken]);
+  }, [loggedCompany, accessToken]);
 
-  if (loading || !loggedUser || !accessToken)
+  if (loading || !loggedCompany || !accessToken)
     return (
       <LoadingContainer>
         <SpinnerContainer>
@@ -84,4 +76,4 @@ const AuthWrapper = () => {
   );
 };
 
-export default AuthWrapper;
+export default AuthWrapperCompany;

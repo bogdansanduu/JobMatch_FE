@@ -32,6 +32,18 @@ export class BaseApi {
   sendRequest = async (method: Method, endpoint: string, data?: any) => {
     const accessToken = store.getState().auth.accessToken;
 
+    let refreshUrl = "";
+
+    const loggedUser = store.getState().auth.loggedUser;
+    const loggedCompany = store.getState().auth.loggedCompany;
+
+    if (loggedUser) {
+      refreshUrl = "/auth/refresh-token";
+    }
+    if (loggedCompany) {
+      refreshUrl = "/auth/refresh-token-company";
+    }
+
     const config: RawAxiosRequestConfig = {
       method,
       url: endpoint,
@@ -47,6 +59,12 @@ export class BaseApi {
     } catch (error) {
       const axiosError = error as AxiosError;
 
+      if (!refreshUrl) {
+        throw axiosError;
+      }
+
+      console.log(refreshUrl);
+
       //handle error response
       if (axiosError.response?.status === 401) {
         //token expired, attempt to refresh
@@ -55,7 +73,7 @@ export class BaseApi {
             data: { accessToken: newAccessToken },
           } = await this.axiosInstance.request({
             baseURL: process.env.REACT_APP_API_URL,
-            url: "/auth/refresh-token",
+            url: refreshUrl,
             method: "POST",
           });
 

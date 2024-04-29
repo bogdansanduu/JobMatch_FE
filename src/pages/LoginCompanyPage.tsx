@@ -1,4 +1,4 @@
-import { ChangeEvent, MouseEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, MouseEvent, useState } from "react";
 import {
   Avatar,
   Box,
@@ -9,28 +9,24 @@ import {
   Typography,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
-import { useNavigate } from "react-router-dom";
-import isEmail from "validator/lib/isEmail";
-
-import { useAppDispatch } from "../store/hooks";
-import { login } from "../store/slices/AuthSlice";
-
 import { AppRoutes } from "../utils/constants/routes";
-
 import Copyright from "../components/auth/Copyright";
+import isEmail from "validator/lib/isEmail";
+import { loginCompany } from "../store/slices/AuthSlice";
+import { useAppDispatch } from "../store/hooks";
+import { useNavigate } from "react-router-dom";
 
 enum FIELD_NAMES {
   email = "email",
   password = "password",
 }
 
-const LoginPage = () => {
+const LoginCompanyPage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const [user, setUser] = useState<Record<FIELD_NAMES, string>>({
+  const [company, setCompany] = useState<Record<FIELD_NAMES, string>>({
     email: "",
     password: "",
   });
@@ -41,14 +37,14 @@ const LoginPage = () => {
 
   const [isEmailValid, setIsEmailValid] = useState(false);
 
-  const isSubmitDisabled = !user.password || !user.email || !isEmailValid;
+  const isSubmitDisabled = !company.email || !company.password || !isEmailValid;
 
   const handleChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { value, name } = event.target;
-    setUser((prevUser) => ({
-      ...prevUser,
+    setCompany((prevState) => ({
+      ...prevState,
       [name]: value,
     }));
 
@@ -74,10 +70,10 @@ const LoginPage = () => {
   ) => {
     event.preventDefault();
 
-    const { email, password } = user;
+    const { email, password } = company;
 
-    await dispatch(login({ email, password }));
-    navigate(AppRoutes.Home);
+    await dispatch(loginCompany({ email, password }));
+    navigate(AppRoutes.HomeCompany);
   };
 
   return (
@@ -95,15 +91,15 @@ const LoginPage = () => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in as a User
+          Sign in as a Company
         </Typography>
         <Box component="form" noValidate sx={{ mt: 1 }}>
           <TextField
-            error={dirty.email && !user.email && !isEmailValid}
+            error={dirty.email && !company.email && !isEmailValid}
             label={"Email Address"}
             name={FIELD_NAMES.email}
             variant={"outlined"}
-            value={user.email}
+            value={company.email}
             onChange={(e) => handleChange(e)}
             fullWidth
             required
@@ -112,11 +108,11 @@ const LoginPage = () => {
             onBlur={(e) => handleBlur(e, true)}
           />
           <TextField
-            error={dirty.password && !user.password}
+            error={dirty.password && !company.password}
             label={"Password"}
             name={FIELD_NAMES.password}
             variant={"outlined"}
-            value={user.password}
+            value={company.password}
             onChange={(e) => handleChange(e)}
             fullWidth
             required
@@ -143,11 +139,8 @@ const LoginPage = () => {
               gap: "4px",
             }}
           >
-            <Link href={AppRoutes.Register} variant="body2">
-              Don't have an account? Sign Up
-            </Link>
-            <Link href={AppRoutes.LoginCompany} variant="body2">
-              Sign in as a Company
+            <Link href={AppRoutes.Login} variant="body2">
+              Sign in as a user
             </Link>
             <Copyright />
           </Box>
@@ -156,4 +149,5 @@ const LoginPage = () => {
     </Container>
   );
 };
-export default LoginPage;
+
+export default LoginCompanyPage;

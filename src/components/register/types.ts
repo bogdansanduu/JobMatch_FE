@@ -14,9 +14,8 @@ export enum LOCATION_NAMES {
   city = "city",
 }
 
-//sandubogdan2001
 export const geonames = Geonames({
-  username: "thalesandrade",
+  username: "sandubogdan2001",
   lan: "en",
   encoding: "JSON",
 });

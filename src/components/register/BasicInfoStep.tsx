@@ -1,22 +1,16 @@
 import React, {
   ChangeEvent,
   Dispatch,
-  FormEvent,
   useCallback,
   useEffect,
   useState,
 } from "react";
-import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { AxiosError } from "axios";
 import isEmail from "validator/lib/isEmail";
-import { useNavigate } from "react-router-dom";
 
-import AppApi from "../../server/api/AppApi";
 import GeoLocation from "./GeoLocation";
-import { AppRoutes } from "../../utils/constants/routes";
 import { FIELD_NAMES, geonames, LOCATION_NAMES } from "./types";
 import { MainContainer } from "./styledComponents";
 
@@ -43,12 +37,8 @@ const BasicInfoStep = ({
   setDirty,
   handleNext,
 }: BasicInfoStepProps) => {
-  const authApi = AppApi.getAuthApi();
-
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [isNextDisabled, setIsNextDisabled] = useState(true);
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     const {
@@ -146,45 +136,6 @@ const BasicInfoStep = ({
     },
     [dirty]
   );
-
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    const { password, retypedPassword } = user;
-
-    if (password !== retypedPassword) {
-      setUser((prevUser) => ({
-        ...prevUser,
-        password: "",
-        retypedPassword: "",
-      }));
-      setDirty((prevDirty) => ({
-        ...prevDirty,
-        password: true,
-        retypedPassword: true,
-      }));
-      alert("Passwords do not match");
-      return;
-    }
-
-    try {
-      await authApi.register({
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        password: user.password,
-        country: user.country,
-        state: user.state,
-        city: user.city,
-      });
-
-      navigate(AppRoutes.Login);
-    } catch (error) {
-      const axiosError = error as AxiosError<{ error: string }>;
-      const messageMessage =
-        axiosError?.response?.data.error || "An error occurred";
-
-      alert(messageMessage);
-    }
-  };
 
   const onNext = () => {
     if (!isNextDisabled) {

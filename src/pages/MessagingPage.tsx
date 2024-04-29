@@ -3,7 +3,12 @@ import { Box } from "@mui/material";
 
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { UserType } from "../store/slices/UserSlice";
-import { getLoggedUser, refreshToken } from "../store/slices/AuthSlice";
+import {
+  getLoggedCompany,
+  getLoggedUser,
+  refreshToken,
+  refreshTokenCompany,
+} from "../store/slices/AuthSlice";
 
 import {
   SocketEventsClient,
@@ -21,8 +26,8 @@ const MessagingPage = () => {
   const dispatch = useAppDispatch();
 
   const currentUser = useAppSelector(getLoggedUser);
+  const currentCompany = useAppSelector(getLoggedCompany);
 
-  const [, forceUpdate] = useReducer((x) => x + 1, 0);
   const [selectedRoom, setSelectedRoom] = useState<ChatRoomType | undefined>(
     undefined
   );
@@ -49,7 +54,8 @@ const MessagingPage = () => {
 
     socket.on("connect_error", async (error) => {
       //TODO TEMPORARY FIX
-      await dispatch(refreshToken());
+      currentUser && (await dispatch(refreshToken()));
+      currentCompany && (await dispatch(refreshTokenCompany()));
       window.location.reload();
     });
 

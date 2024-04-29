@@ -6,17 +6,13 @@ import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
-import MenuItem from "@mui/material/MenuItem";
 import HomeIcon from "@mui/icons-material/Home";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import WorkIcon from "@mui/icons-material/Work";
 import ForumIcon from "@mui/icons-material/Forum";
-import Logout from "@mui/icons-material/Logout";
-import Settings from "@mui/icons-material/Settings";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import PersonAdd from "@mui/icons-material/PersonAdd";
-import { AppBar, Divider, Typography } from "@mui/material";
+import { AppBar } from "@mui/material";
+import BadgeIcon from "@mui/icons-material/Badge";
 
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 
@@ -25,10 +21,12 @@ import { GrayColors, White } from "../../utils/constants/colorPallete";
 import { AppRoutes } from "../../utils/constants/routes";
 
 import { BodyText4 } from "../typography/BodyTexts";
-import { getLoggedUser, logout } from "../../store/slices/AuthSlice";
+import { getLoggedCompany, getLoggedUser } from "../../store/slices/AuthSlice";
 import SearchPopover from "../popover/SearchPopover";
+import UserSettings from "./UserSettings";
+import CompanySettings from "./CompanySettings";
 
-const pages = [
+const pagesUser = [
   {
     title: "Home Page",
     icon: <HomeIcon sx={{ height: "22px", width: "22px" }} />,
@@ -56,14 +54,33 @@ const pages = [
   },
 ];
 
+const pagesCompany = [
+  {
+    title: "Home Page",
+    icon: <HomeIcon sx={{ height: "22px", width: "22px" }} />,
+    route: AppRoutes.HomeCompany,
+  },
+  {
+    title: "Employees",
+    icon: <BadgeIcon sx={{ height: "22px", width: "22px" }} />,
+    route: AppRoutes.Employees,
+  },
+  {
+    title: "Messages",
+    icon: <ForumIcon sx={{ height: "22px", width: "22px" }} />,
+    route: AppRoutes.Employees,
+  },
+];
+
 const TopNav = () => {
-  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorElUser);
-
-  const currentUser = useAppSelector(getLoggedUser);
-
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+
+  const currentUser = useAppSelector(getLoggedUser);
+  const currentCompany = useAppSelector(getLoggedCompany);
+
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorElUser);
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -76,28 +93,6 @@ const TopNav = () => {
   const handleClick = (route: string) => {
     navigate(route);
   };
-
-  const handleCreateJobAccount = () => {
-    setAnchorElUser(null);
-
-    navigate(AppRoutes.CreateCompanyAccount);
-  };
-
-  const handleSignOut = () => {
-    localStorage.clear();
-    dispatch(logout());
-    navigate(AppRoutes.Login);
-  };
-
-  // const debouncedHandleSearch = debounce(
-  //   async (event: React.ChangeEvent<HTMLInputElement>) => {
-  //     const searchTerm = event.target.value;
-  //     const users = await userApi.searchByNameAndEmail(searchTerm);
-  //
-  //     console.log(users);
-  //   },
-  //   500
-  // );
 
   return (
     <AppBar
@@ -124,25 +119,46 @@ const TopNav = () => {
         <SearchPopover />
         <Box sx={{ flexGrow: 1 }} />
         <Box sx={{ display: "flex" }}>
-          {pages.map(({ title, icon, route }) => (
-            <IconButton
-              key={title}
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                color: GrayColors.Gray6,
-                padding: "4px",
-                "&:hover": {
-                  color: GrayColors.Gray9,
-                },
-              }}
-              onClick={() => handleClick(route)}
-              disableRipple
-            >
-              {icon}
-              <BodyText4>{title}</BodyText4>
-            </IconButton>
-          ))}
+          {currentUser &&
+            pagesUser.map(({ title, icon, route }) => (
+              <IconButton
+                key={title}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  color: GrayColors.Gray6,
+                  padding: "4px",
+                  "&:hover": {
+                    color: GrayColors.Gray9,
+                  },
+                }}
+                onClick={() => handleClick(route)}
+                disableRipple
+              >
+                {icon}
+                <BodyText4>{title}</BodyText4>
+              </IconButton>
+            ))}
+          {currentCompany &&
+            pagesCompany.map(({ title, icon, route }) => (
+              <IconButton
+                key={title}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  color: GrayColors.Gray6,
+                  padding: "4px",
+                  "&:hover": {
+                    color: GrayColors.Gray9,
+                  },
+                }}
+                onClick={() => handleClick(route)}
+                disableRipple
+              >
+                {icon}
+                <BodyText4>{title}</BodyText4>
+              </IconButton>
+            ))}
         </Box>
         <Tooltip title="Account settings">
           <IconButton
@@ -194,37 +210,10 @@ const TopNav = () => {
           transformOrigin={{ horizontal: "right", vertical: "top" }}
           anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         >
-          <MenuItem onClick={handleCloseUserMenu}>
-            <Avatar src={currentUser?.profilePicture} />
-            <Typography variant="body2" color={"text.secondary"}>
-              {`${currentUser?.firstName} ${currentUser?.lastName}`}
-            </Typography>
-          </MenuItem>
-          <Divider sx={{ my: 0.5 }} />
-          <MenuItem onClick={handleCreateJobAccount}>
-            <ListItemIcon>
-              <PersonAdd fontSize="small" />
-            </ListItemIcon>
-            <Typography variant="body2" color={"text.secondary"}>
-              Create Company Account
-            </Typography>
-          </MenuItem>
-          <MenuItem onClick={handleCloseUserMenu}>
-            <ListItemIcon>
-              <Settings fontSize="small" />
-            </ListItemIcon>
-            <Typography variant="body2" color={"text.secondary"}>
-              Settings
-            </Typography>
-          </MenuItem>
-          <MenuItem onClick={handleSignOut}>
-            <ListItemIcon>
-              <Logout fontSize="small" />
-            </ListItemIcon>
-            <Typography variant="body2" color={"text.secondary"}>
-              Sign Out
-            </Typography>
-          </MenuItem>
+          {currentUser && <UserSettings setAnchorElUser={setAnchorElUser} />}
+          {currentCompany && (
+            <CompanySettings setAnchorElUser={setAnchorElUser} />
+          )}
         </Menu>
       </Toolbar>
     </AppBar>

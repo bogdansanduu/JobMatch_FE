@@ -89,9 +89,8 @@ const PostSection = () => {
             gap: "16px",
           }}
         >
-          {allPosts.map((post) => (
-            <Post key={post.id} post={post} />
-          ))}
+          {Array.isArray(allPosts) &&
+            allPosts.map((post) => <Post key={post.id} post={post} />)}
         </Box>
       </Box>
       <PostModal

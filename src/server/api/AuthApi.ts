@@ -17,6 +17,17 @@ interface RegisterParams {
   city: string;
 }
 
+interface RegisterCompanyParams {
+  email: string;
+  password: string;
+  name: string;
+  industry: string;
+  country: string;
+  state: string;
+  city: string;
+  ownerId: number;
+}
+
 class AuthApi {
   private baseApi: BaseApi;
 
@@ -28,8 +39,16 @@ class AuthApi {
     return this.baseApi.sendRequest("PUT", "/register", data);
   }
 
+  registerCompany(data: RegisterCompanyParams) {
+    return this.baseApi.sendRequest("PUT", "/register-company", data);
+  }
+
   login(data: LoginParams) {
     return this.baseApi.sendRequest("POST", "/login", data);
+  }
+
+  loginCompany(data: LoginParams) {
+    return this.baseApi.sendRequest("POST", "/login-company", data);
   }
 
   logout() {
@@ -38,6 +57,10 @@ class AuthApi {
 
   refreshAccessToken() {
     return this.baseApi.sendRequest("POST", "/refresh-token");
+  }
+
+  refreshAccessTokenCompany() {
+    return this.baseApi.sendRequest("POST", "/refresh-token-company");
   }
 }
 

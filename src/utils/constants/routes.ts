@@ -1,13 +1,26 @@
 export enum AppRoutes {
-  Home = "/home",
-  Login = "/login",
-  Register = "/register",
-  Messaging = "/messaging",
-  AccessDenied = "/access-denied",
-  MyNetwork = "/my-network",
-  Jobs = "/jobs",
-  Notifications = "/notifications",
+  //---MAIN ROUTES---
+  User = "/user",
+  Company = "/company",
 
-  CreateCompanyAccount = "/create-company-account",
-  UserProfile = "/profile",
+  //---ROLE-AGNOSTIC---
+  Login = "/login",
+  LoginCompany = "/login-company",
+  Register = "/register",
+
+  //---USER---
+  Home = "/user/home",
+  Messaging = "/user/messaging",
+  AccessDenied = "/user/access-denied",
+  MyNetwork = "/user/my-network",
+  Jobs = "/user/jobs",
+  Notifications = "/user/notifications",
+  CreateCompanyAccount = "/user/create-company-account",
+  UserProfile = "/user/profile",
+
+  //---COMPANY---
+  HomeCompany = "/company/home",
+  Employees = "/company/employees",
+  CompanyProfile = "/company/profile",
+  AccessDeniedCompany = "/company/access-denied",
 }
