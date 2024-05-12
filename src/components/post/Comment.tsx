@@ -4,41 +4,72 @@ import { GrayColors, White } from "../../utils/constants/colorPallete";
 import {
   CommentType,
   likeComment,
+  likeCommentCompany,
   unlikeComment,
+  unlikeCommentCompany,
 } from "../../store/slices/PostSlice";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { getLoggedUser } from "../../store/slices/AuthSlice";
+import { getLoggedCompany, getLoggedUser } from "../../store/slices/AuthSlice";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 
 interface CommentProps {
   comment: CommentType;
+  isCompany?: boolean;
+  isUser?: boolean;
 }
-const Comment = ({ comment }: CommentProps) => {
+const Comment = ({ comment, isUser, isCompany }: CommentProps) => {
   const currentUser = useAppSelector(getLoggedUser);
+  const currentCompany = useAppSelector(getLoggedCompany);
 
   const dispatch = useAppDispatch();
 
   const alreadyLiked = !!comment.likes.find(
-    (like) => like.author.id === currentUser?.id
+    (like) =>
+      like.author?.id === currentUser?.id ||
+      like.company?.id === currentCompany?.id
   );
 
   const likesCount = comment.likes.length;
 
   const handleLikeComment = (comment: CommentType) => {
-    if (!currentUser) {
+    if (!currentUser && !currentCompany) {
       return;
     }
 
-    dispatch(likeComment({ commentId: comment.id, userId: currentUser.id }));
+    if (isUser && currentUser) {
+      dispatch(likeComment({ commentId: comment.id, userId: currentUser.id }));
+    }
+
+    if (isCompany && currentCompany) {
+      dispatch(
+        likeCommentCompany({
+          commentId: comment.id,
+          companyId: currentCompany.id,
+        })
+      );
+    }
   };
 
   const handleUnlikeComment = (comment: CommentType) => {
-    if (!currentUser) {
+    if (!currentUser && !currentCompany) {
       return;
     }
 
-    dispatch(unlikeComment({ commentId: comment.id, userId: currentUser.id }));
+    if (isUser && currentUser) {
+      dispatch(
+        unlikeComment({ commentId: comment.id, userId: currentUser.id })
+      );
+    }
+
+    if (isCompany && currentCompany) {
+      dispatch(
+        unlikeCommentCompany({
+          commentId: comment.id,
+          companyId: currentCompany.id,
+        })
+      );
+    }
   };
 
   return (

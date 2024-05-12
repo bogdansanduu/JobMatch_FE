@@ -4,6 +4,7 @@ import UserApi from "./UserApi";
 import SocketApi from "./SocketApi";
 import PostApi from "./PostApi";
 import CommentApi from "./CommentApi";
+import JobApi from "./JobApi";
 
 class AppApi {
   private static instance: AppApi;
@@ -14,6 +15,7 @@ class AppApi {
   readonly socketApi: SocketApi;
   readonly postApi: PostApi;
   readonly commentApi: CommentApi;
+  readonly jobApi: JobApi;
 
   private constructor() {
     this.baseApi = new BaseApi();
@@ -22,6 +24,7 @@ class AppApi {
     this.socketApi = new SocketApi();
     this.postApi = new PostApi();
     this.commentApi = new CommentApi();
+    this.jobApi = new JobApi();
   }
 
   public static getInstance() {
@@ -52,6 +55,10 @@ class AppApi {
 
   static getCommentApi() {
     return this.getInstance().commentApi;
+  }
+
+  static getJobApi() {
+    return this.getInstance().jobApi;
   }
 }
 

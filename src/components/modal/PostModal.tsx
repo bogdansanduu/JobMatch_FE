@@ -5,16 +5,24 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import TextEditor from "../textEditor/TextEditor";
 import { RichTextEditorRef } from "mui-tiptap";
-import { createPost } from "../../store/slices/PostSlice";
+import { createPost, createPostCompany } from "../../store/slices/PostSlice";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { getLoggedUser } from "../../store/slices/AuthSlice";
+import { getLoggedCompany, getLoggedUser } from "../../store/slices/AuthSlice";
 
 interface PostModalProps {
   openPostModal: boolean;
   setOpenPostModal: (value: boolean) => void;
+  isCompany?: boolean;
+  isUser?: boolean;
 }
-const PostModal = ({ openPostModal, setOpenPostModal }: PostModalProps) => {
+const PostModal = ({
+  openPostModal,
+  setOpenPostModal,
+  isCompany,
+  isUser,
+}: PostModalProps) => {
   const currentUser = useAppSelector(getLoggedUser);
+  const currentCompany = useAppSelector(getLoggedCompany);
 
   const dispatch = useAppDispatch();
 
@@ -47,7 +55,7 @@ const PostModal = ({ openPostModal, setOpenPostModal }: PostModalProps) => {
   };
 
   const handleCreatePost = () => {
-    if (!currentUser || errorTitle) {
+    if ((!currentUser && !currentCompany) || errorTitle) {
       return;
     }
 
@@ -56,15 +64,30 @@ const PostModal = ({ openPostModal, setOpenPostModal }: PostModalProps) => {
     const editor = editorRef.current?.editor;
     if (editor) {
       const content = editor.getHTML();
-      dispatch(
-        createPost({
-          userId: currentUser.id,
-          postData: {
-            title,
-            content,
-          },
-        })
-      );
+
+      if (isUser && currentUser) {
+        dispatch(
+          createPost({
+            userId: currentUser.id,
+            postData: {
+              title,
+              content,
+            },
+          })
+        );
+      }
+
+      if (isCompany && currentCompany) {
+        dispatch(
+          createPostCompany({
+            companyId: currentCompany.id,
+            postData: {
+              title,
+              content,
+            },
+          })
+        );
+      }
 
       //clears editor and title
       editor.commands.clearContent();

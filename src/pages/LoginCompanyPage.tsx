@@ -140,7 +140,7 @@ const LoginCompanyPage = () => {
             }}
           >
             <Link href={AppRoutes.Login} variant="body2">
-              Sign in as a user
+              Sign in as a User
             </Link>
             <Copyright />
           </Box>

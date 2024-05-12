@@ -4,6 +4,7 @@ export type CompanyType = {
   id: number;
   email: string;
   name: string;
+  profilePicture: string;
   industry: string;
   country: string;
   state: string;

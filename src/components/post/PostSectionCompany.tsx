@@ -1,20 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Avatar, Box, Divider, Typography } from "@mui/material";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import { GrayColors, White } from "../../utils/constants/colorPallete";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
-
-import { GrayColors, White } from "../../utils/constants/colorPallete";
-
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import Post from "./Post";
+import PostModal from "../modal/PostModal";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { getLoggedUser } from "../../store/slices/AuthSlice";
+import { getLoggedCompany } from "../../store/slices/AuthSlice";
 import { getAllPosts, getPosts } from "../../store/slices/PostSlice";
 
-import PostModal from "../modal/PostModal";
-import Post from "./Post";
-
-const PostSection = () => {
-  const currentUser = useAppSelector(getLoggedUser);
+const PostSectionCompany = () => {
+  const currentCompany = useAppSelector(getLoggedCompany);
   const allPosts = useAppSelector(getPosts);
 
   const dispatch = useAppDispatch();
@@ -51,11 +48,11 @@ const PostSection = () => {
             gap: "8px",
           }}
         >
-          {currentUser && currentUser.profilePicture && (
+          {currentCompany && currentCompany.profilePicture && (
             <Box sx={{ display: "flex", gap: "8px", alignItems: "center" }}>
               <Avatar
-                alt={`${currentUser.firstName} ${currentUser.lastName}`}
-                src={currentUser.profilePicture}
+                alt={`${currentCompany.name}`}
+                src={currentCompany.profilePicture}
                 sx={{ width: 30, height: 30 }}
               />
               <Typography
@@ -63,8 +60,7 @@ const PostSection = () => {
                 variant="subtitle2"
                 color={"text.primary"}
               >
-                Hello, {currentUser.firstName} {currentUser.lastName}, start
-                exploring your feed!
+                Hello, {currentCompany.name}, start exploring your feed!
               </Typography>
             </Box>
           )}
@@ -90,16 +86,18 @@ const PostSection = () => {
           }}
         >
           {Array.isArray(allPosts) &&
-            allPosts.map((post) => <Post key={post.id} post={post} isUser />)}
+            allPosts.map((post) => (
+              <Post key={post.id} post={post} isCompany />
+            ))}
         </Box>
       </Box>
       <PostModal
         openPostModal={openPostModal}
         setOpenPostModal={setOpenPostModal}
-        isUser
+        isCompany
       />
     </>
   );
 };
 
-export default PostSection;
+export default PostSectionCompany;

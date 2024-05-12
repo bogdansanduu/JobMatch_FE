@@ -3,35 +3,46 @@ import { Box, Button, Collapse, Divider, Typography } from "@mui/material";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import AddCommentOutlinedIcon from "@mui/icons-material/AddCommentOutlined";
+import IconButton from "@mui/material/IconButton";
 import DOMPurify from "dompurify";
 
 import { Blue, GrayColors, White } from "../../utils/constants/colorPallete";
 
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { getLoggedCompany, getLoggedUser } from "../../store/slices/AuthSlice";
+
 import {
   commentPost,
+  commentPostCompany,
   likePost,
+  likePostCompany,
   PostType,
   unlikePost,
+  unlikePostCompany,
 } from "../../store/slices/PostSlice";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { getLoggedUser } from "../../store/slices/AuthSlice";
+
 import { StyledInputElement } from "../messaging/styledComponents";
-import IconButton from "@mui/material/IconButton";
 import Comment from "./Comment";
 
 interface PostProps {
   post: PostType;
+  isCompany?: boolean;
+  isUser?: boolean;
 }
-const Post = ({ post }: PostProps) => {
+
+const Post = ({ post, isCompany, isUser }: PostProps) => {
   const currentUser = useAppSelector(getLoggedUser);
+  const currentCompany = useAppSelector(getLoggedCompany);
 
   const dispatch = useAppDispatch();
 
-  const [expanded, setExapnded] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
   const alreadyLiked = !!post.likes.find(
-    (like) => like.author.id === currentUser?.id
+    (like) =>
+      like.author?.id === currentUser?.id ||
+      like.company?.id === currentCompany?.id
   );
 
   const likesCount = post.likes.length;
@@ -42,40 +53,70 @@ const Post = ({ post }: PostProps) => {
   };
 
   const handleLikePost = (post: PostType) => {
-    if (!currentUser) {
+    if (!currentUser && !currentCompany) {
       return;
     }
 
-    dispatch(likePost({ postId: post.id, userId: currentUser.id }));
+    if (isUser && currentUser) {
+      dispatch(likePost({ postId: post.id, userId: currentUser.id }));
+    }
+
+    if (isCompany && currentCompany) {
+      dispatch(
+        likePostCompany({ postId: post.id, companyId: currentCompany.id })
+      );
+    }
   };
 
   const handleUnlikePost = (post: PostType) => {
-    if (!currentUser) {
+    if (!currentUser && !currentCompany) {
       return;
     }
 
-    dispatch(unlikePost({ postId: post.id, userId: currentUser.id }));
+    if (isUser && currentUser) {
+      dispatch(unlikePost({ postId: post.id, userId: currentUser.id }));
+    }
+
+    if (isCompany && currentCompany) {
+      dispatch(
+        unlikePostCompany({ postId: post.id, companyId: currentCompany.id })
+      );
+    }
   };
 
   const handleCommentExpand = () => {
-    setExapnded((prevState) => !prevState);
+    setExpanded((prevState) => !prevState);
     setInputValue("");
   };
 
   const handleCreateComment = () => {
-    if (!currentUser || !inputValue) {
+    if ((!currentUser && !currentCompany) || !inputValue) {
       return;
     }
 
-    dispatch(
-      commentPost({
-        postId: post.id,
-        userId: currentUser.id,
-        commentData: {
-          content: inputValue,
-        },
-      })
-    );
+    if (isUser && currentUser) {
+      dispatch(
+        commentPost({
+          postId: post.id,
+          userId: currentUser.id,
+          commentData: {
+            content: inputValue,
+          },
+        })
+      );
+    }
+
+    if (isCompany && currentCompany) {
+      dispatch(
+        commentPostCompany({
+          postId: post.id,
+          companyId: currentCompany.id,
+          commentData: {
+            content: inputValue,
+          },
+        })
+      );
+    }
   };
 
   return (
@@ -144,7 +185,12 @@ const Post = ({ post }: PostProps) => {
         >
           <Divider flexItem />
           {post.comments.map((comment) => (
-            <Comment key={comment.id} comment={comment} />
+            <Comment
+              key={comment.id}
+              comment={comment}
+              isCompany={isCompany}
+              isUser={isUser}
+            />
           ))}
           <Divider flexItem />
           <StyledInputElement
