@@ -31,6 +31,12 @@ const UserSettings = ({ setAnchorElUser }: UserSettingsProps) => {
     navigate(AppRoutes.CreateCompanyAccount);
   };
 
+  const handleOpenProfile = () => {
+    setAnchorElUser(null);
+
+    navigate(AppRoutes.MyProfile);
+  };
+
   const handleSignOut = () => {
     localStorage.clear();
     dispatch(logout());
@@ -40,7 +46,7 @@ const UserSettings = ({ setAnchorElUser }: UserSettingsProps) => {
 
   return (
     <>
-      <MenuItem onClick={handleCloseUserMenu}>
+      <MenuItem onClick={handleOpenProfile}>
         <Avatar src={currentUser?.profilePicture} />
         <Typography variant="body2" color={"text.secondary"}>
           {`${currentUser?.firstName} ${currentUser?.lastName}`}

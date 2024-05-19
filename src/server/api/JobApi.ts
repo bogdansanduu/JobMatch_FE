@@ -7,8 +7,14 @@ class JobApi {
     this.baseApi = new BaseApi("job");
   }
 
-  async getAllJobs() {
-    return this.baseApi.sendRequest("GET", "/all");
+  async getAllJobsPaginated(page: number, limit: number, searchTerm?: string) {
+    let endpoint = `/all-paginated?page=${page}&limit=${limit}`;
+
+    if (searchTerm) {
+      endpoint += `&searchTerm=${searchTerm}`;
+    }
+
+    return this.baseApi.sendRequest("GET", endpoint);
   }
 }
 

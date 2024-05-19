@@ -7,7 +7,7 @@ import PostSection from "../components/post/PostSection";
 
 const HomePage = () => {
   return (
-    <Box sx={{ display: "flex", margin: "12px", gap: "12px" }}>
+    <Box sx={{ display: "flex", padding: "12px", gap: "12px" }}>
       <Box
         sx={{
           flex: 1,

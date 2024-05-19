@@ -16,8 +16,9 @@ import SubmitStep from "../components/register/SubmitStep";
 import EducationStep from "../components/register/EducationStep";
 import WorkHistoryStep from "../components/register/WorkHistoryStep";
 import { GrayColors, White } from "../utils/constants/colorPallete";
+import ResumeStep from "../components/register/ResumeStep";
 
-const steps = ["Basic Info", "Education", "Work History", "Submit"];
+const steps = ["Basic Info", "Resume", "Education", "Work History", "Submit"];
 
 const RegisterPage = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -28,6 +29,7 @@ const RegisterPage = () => {
     firstName: "",
     lastName: "",
     email: "",
+    resume: "",
     country: "",
     state: "",
     city: "",
@@ -46,6 +48,7 @@ const RegisterPage = () => {
     firstName: false,
     lastName: false,
     email: false,
+    resume: false,
     country: false,
     state: false,
     city: false,
@@ -112,9 +115,18 @@ const RegisterPage = () => {
               handleNext={handleNext}
             />
           )}
-          {activeStep === 1 && <EducationStep handleNext={handleNext} />}
-          {activeStep === 2 && <WorkHistoryStep handleNext={handleNext} />}
-          {activeStep === 3 && <SubmitStep user={user} />}
+          {activeStep === 1 && (
+            <ResumeStep
+              user={user}
+              dirty={dirty}
+              setUser={setUser}
+              setDirty={setDirty}
+              handleNext={handleNext}
+            />
+          )}
+          {activeStep === 2 && <EducationStep handleNext={handleNext} />}
+          {activeStep === 3 && <WorkHistoryStep handleNext={handleNext} />}
+          {activeStep === 4 && <SubmitStep user={user} />}
           <div style={{ flex: 1 }} />
         </Box>
 

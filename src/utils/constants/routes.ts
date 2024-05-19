@@ -17,6 +17,7 @@ export enum AppRoutes {
   Notifications = "/user/notifications",
   CreateCompanyAccount = "/user/create-company-account",
   UserProfile = "/user/profile",
+  MyProfile = "/user/my-profile",
 
   //---COMPANY---
   HomeCompany = "/company/home",

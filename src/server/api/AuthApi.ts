@@ -10,6 +10,7 @@ interface RegisterParams {
   password: string;
   firstName: string;
   lastName: string;
+  resume: string;
   //TODO add profile picture to register step
   profilePicture?: string;
   country: string;

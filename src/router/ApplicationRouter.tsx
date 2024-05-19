@@ -19,6 +19,8 @@ import LoginCompanyPage from "../pages/LoginCompanyPage";
 import AuthWrapperCompany from "./AuthWrapperCompany";
 import HomePageCompany from "../pages/HomePageCompany";
 import EmployeesPage from "../pages/EmployeesPage";
+import JobsPage from "../pages/JobsPage";
+import MyProfilePage from "../pages/MyProfilePage";
 
 const ApplicationRouter = createBrowserRouter([
   {
@@ -40,11 +42,15 @@ const ApplicationRouter = createBrowserRouter([
       },
       {
         path: AppRoutes.Jobs,
-        element: <NotImplementedPage />,
+        element: <JobsPage />,
       },
       {
         path: AppRoutes.Messaging,
         element: <MessagingPage />,
+      },
+      {
+        path: AppRoutes.MyProfile,
+        element: <MyProfilePage />,
       },
       {
         path: AppRoutes.UserProfile,

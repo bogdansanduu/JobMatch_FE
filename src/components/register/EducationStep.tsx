@@ -7,6 +7,7 @@ import { MainContainer } from "./styledComponents";
 interface EducationStepProps {
   handleNext: () => void;
 }
+
 const EducationStep = ({ handleNext }: EducationStepProps) => {
   const onNext = () => {
     handleNext();

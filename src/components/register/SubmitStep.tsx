@@ -18,12 +18,15 @@ const SubmitStep = ({ user }: SubmitStepProps) => {
 
   const navigate = useNavigate();
 
+  console.log(user);
+
   const handleSubmit = async () => {
     try {
       await authApi.register({
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
+        resume: user.resume,
         password: user.password,
         country: user.country,
         state: user.state,

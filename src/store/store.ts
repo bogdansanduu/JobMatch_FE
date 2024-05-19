@@ -6,6 +6,7 @@ import userReducer from "./slices/UserSlice";
 import authReducer from "./slices/AuthSlice";
 import uiReducer from "./slices/UISlice";
 import postReducer from "./slices/PostSlice";
+import jobReducer from "./slices/JobSlice";
 
 const persistConfig = {
   key: "root",
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   auth: authReducer,
   ui: uiReducer,
   post: postReducer,
+  job: jobReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

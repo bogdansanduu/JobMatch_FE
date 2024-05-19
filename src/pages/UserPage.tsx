@@ -8,34 +8,48 @@ import {
   CardContent,
   CardHeader,
   CardMedia,
+  Collapse,
   Typography,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
+import CircularProgress from "@mui/material/CircularProgress";
+import IconButton from "@mui/material/IconButton";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import userBanner from "../assets/user_banner.jpg";
-
-import { getCurrentUser, getUserById } from "../store/slices/UserSlice";
 import { White } from "../utils/constants/colorPallete";
+
+import {
+  addConnection,
+  getCurrentUser,
+  getUserById,
+  removeConnection,
+} from "../store/slices/UserSlice";
+import { getLoggedUser } from "../store/slices/AuthSlice";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { getLoggedUser, setUser } from "../store/slices/AuthSlice";
-import AppApi from "../server/api/AppApi";
+
 import { LoadingContainer, SpinnerContainer } from "../router/styledComponents";
-import CircularProgress from "@mui/material/CircularProgress";
 
 const UserPage = () => {
-  const userApi = AppApi.getUserApi();
-
   const currentUser = useAppSelector(getLoggedUser);
   const user = useAppSelector(getCurrentUser);
   const dispatch = useAppDispatch();
 
   const [loading, setLoading] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+
+  // Determine the number of characters to show in the preview
+  const previewLength = 100;
+  const resumePreview = user.resume && user.resume.substring(0, previewLength);
+  const showEllipsis = user.resume && user.resume.length > previewLength;
+  const hasResume = !!user.resume && user.resume.length > 0;
 
   const { userId } = useParams();
   const isFollowing = !!(
     currentUser &&
-    currentUser.following.find((followingUser) => {
-      return followingUser.id === user.id;
+    user.followers.find((followerUser) => {
+      return followerUser.id === currentUser.id;
     })
   );
 
@@ -60,10 +74,11 @@ const UserPage = () => {
       return;
     }
 
-    const updateCurrentUser = await userApi.addContact(currentUser.id, user.id);
-    dispatch(setUser(updateCurrentUser));
+    dispatch(addConnection({ userId: currentUser.id, contactId: user.id }));
+  };
 
-    // dispatch(addConnection({ userId: currentUser.id, contactId: user.id }));
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
   };
 
   const handleRemoveConnection = async () => {
@@ -71,11 +86,7 @@ const UserPage = () => {
       return;
     }
 
-    const updateCurrentUser = await userApi.removeContact(
-      currentUser.id,
-      user.id
-    );
-    dispatch(setUser(updateCurrentUser));
+    dispatch(removeConnection({ userId: currentUser.id, contactId: user.id }));
   };
 
   if (loading)
@@ -154,14 +165,40 @@ const UserPage = () => {
       <Box
         sx={{
           display: "flex",
-          height: "inherit",
           flexDirection: "column",
           backgroundColor: White.PureWhite,
           borderRadius: "8px",
           minHeight: "100px",
+          padding: "20px", // Adjust padding for aesthetic reasons
+          boxShadow: "0 2px 4px rgba(0,0,0,0.1)", // Optional shadow for depth
         }}
       >
-        About
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Typography variant="h6">Resume:</Typography>
+          {showEllipsis && (
+            <IconButton
+              onClick={handleExpandClick}
+              aria-expanded={expanded}
+              aria-label="show more"
+              sx={{ marginLeft: "auto" }}
+            >
+              {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+            </IconButton>
+          )}
+        </Box>
+
+        {hasResume ? (
+          <>
+            <Typography variant="body1" paragraph>
+              {!expanded && `${resumePreview}${showEllipsis ? "..." : ""}`}
+            </Typography>
+            <Collapse in={expanded} timeout="auto" unmountOnExit>
+              <Typography paragraph>{user.resume}</Typography>
+            </Collapse>
+          </>
+        ) : (
+          <Typography variant="body1">No resume available</Typography>
+        )}
       </Box>
     </Box>
   );

@@ -20,6 +20,7 @@ export type UserType = {
   country: string;
   city: string;
   state: string;
+  resume: string;
 };
 
 export const EMPTY_USER: UserType = {
@@ -33,6 +34,7 @@ export const EMPTY_USER: UserType = {
   country: "",
   city: "",
   state: "",
+  resume: "",
 };
 
 const initialState: UserState = {
@@ -64,6 +66,15 @@ export const addConnection = createAsyncThunk(
   }
 );
 
+export const removeConnection = createAsyncThunk(
+  "user/removeConnection",
+  async ({ userId, contactId }: { userId: number; contactId: number }) => {
+    const userApi = AppApi.getUserApi();
+
+    return await userApi.removeContact(userId, contactId);
+  }
+);
+
 export const UserSlice = createSlice({
   name: "user",
   initialState,
@@ -92,10 +103,17 @@ export const UserSlice = createSlice({
     });
     //ADD CONNECTION
     builder.addCase(addConnection.fulfilled, (state, action) => {
-      console.log("Connection added");
+      state.currentUser = action.payload;
     });
     builder.addCase(addConnection.rejected, (state) => {
       console.log("Error adding connection");
+    });
+    //REMOVE CONNECTION
+    builder.addCase(removeConnection.fulfilled, (state, action) => {
+      state.currentUser = action.payload;
+    });
+    builder.addCase(removeConnection.rejected, (state) => {
+      console.log("Error removing connection");
     });
   },
 });
