@@ -24,7 +24,6 @@ const HomePage = () => {
         My Account
       </Box>
       <PostSection />
-
       <Box
         sx={{
           flex: 2,

@@ -9,7 +9,11 @@ import { Step, StepLabel, Stepper } from "@mui/material";
 import Link from "@mui/material/Link";
 
 import Copyright from "../components/auth/Copyright";
-import { FIELD_NAMES, LOCATION_NAMES } from "../components/register/types";
+import {
+  FIELD_NAMES,
+  FIELD_NAMES_JOB,
+  LOCATION_NAMES,
+} from "../components/register/types";
 import BasicInfoStep from "../components/register/BasicInfoStep";
 import { AppRoutes } from "../utils/constants/routes";
 import SubmitStep from "../components/register/SubmitStep";
@@ -17,43 +21,46 @@ import EducationStep from "../components/register/EducationStep";
 import WorkHistoryStep from "../components/register/WorkHistoryStep";
 import { GrayColors, White } from "../utils/constants/colorPallete";
 import ResumeStep from "../components/register/ResumeStep";
+import useFormInput from "../utils/hooks/useFormInput";
 
 const steps = ["Basic Info", "Resume", "Education", "Work History", "Submit"];
 
 const RegisterPage = () => {
   const [activeStep, setActiveStep] = useState(0);
 
-  const [user, setUser] = useState<
-    Record<FIELD_NAMES | LOCATION_NAMES, string>
-  >({
-    firstName: "",
-    lastName: "",
-    email: "",
-    resume: "",
-    country: "",
-    state: "",
-    city: "",
-    password: "",
-    retypedPassword: "",
-  });
+  const { formData, handleChange, setFormData, dirty, handleBlur, setDirty } =
+    useFormInput<
+      Record<FIELD_NAMES | LOCATION_NAMES, string>,
+      Record<FIELD_NAMES | LOCATION_NAMES, boolean>
+    >(
+      {
+        firstName: "",
+        lastName: "",
+        email: "",
+        resume: "",
+        country: "",
+        state: "",
+        city: "",
+        password: "",
+        retypedPassword: "",
+      },
+      {
+        firstName: false,
+        lastName: false,
+        email: false,
+        resume: false,
+        country: false,
+        state: false,
+        city: false,
+        password: false,
+        retypedPassword: false,
+      }
+    );
+
   const [location, setLocation] = useState<Record<LOCATION_NAMES, number>>({
     country: 0,
     state: 0,
     city: 0,
-  });
-
-  const [dirty, setDirty] = useState<
-    Record<FIELD_NAMES | LOCATION_NAMES, boolean>
-  >({
-    firstName: false,
-    lastName: false,
-    email: false,
-    resume: false,
-    country: false,
-    state: false,
-    city: false,
-    password: false,
-    retypedPassword: false,
   });
 
   const handleNext = () => {
@@ -106,27 +113,29 @@ const RegisterPage = () => {
           </Stepper>
           {activeStep === 0 && (
             <BasicInfoStep
-              user={user}
+              user={formData}
+              setUser={setFormData}
+              handleChange={handleChange}
               location={location}
-              dirty={dirty}
-              setUser={setUser}
               setLocation={setLocation}
+              dirty={dirty}
               setDirty={setDirty}
+              handleBlur={handleBlur}
               handleNext={handleNext}
             />
           )}
           {activeStep === 1 && (
             <ResumeStep
-              user={user}
+              user={formData}
+              handleChange={handleChange}
               dirty={dirty}
-              setUser={setUser}
-              setDirty={setDirty}
+              handleBlur={handleBlur}
               handleNext={handleNext}
             />
           )}
           {activeStep === 2 && <EducationStep handleNext={handleNext} />}
           {activeStep === 3 && <WorkHistoryStep handleNext={handleNext} />}
-          {activeStep === 4 && <SubmitStep user={user} />}
+          {activeStep === 4 && <SubmitStep user={formData} />}
           <div style={{ flex: 1 }} />
         </Box>
 

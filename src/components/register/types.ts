@@ -9,6 +9,18 @@ export enum FIELD_NAMES {
   retypedPassword = "retypedPassword",
 }
 
+export enum FIELD_NAMES_JOB {
+  title = "title",
+  description = "description",
+  category = "category",
+  country = "country",
+  state = "state",
+  city = "city",
+  responsibilities = "responsibilities",
+  minimumQualifications = "minimumQualifications",
+  preferredQualifications = "preferredQualifications",
+}
+
 export enum LOCATION_NAMES {
   country = "country",
   state = "state",

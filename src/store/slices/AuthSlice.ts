@@ -61,6 +61,22 @@ export const refreshTokenCompany = createAsyncThunk(
   }
 );
 
+export const refreshCurrentUserData = createAsyncThunk<
+  any,
+  void,
+  { state: RootState }
+>("auth/refreshCurrentUserData", async (_, { dispatch, getState }) => {
+  const authApi = AppApi.getUserApi();
+
+  const loggedUserId = getState().auth.loggedUser?.id;
+
+  if (!loggedUserId) {
+    return;
+  }
+
+  return await authApi.getUserById(loggedUserId);
+});
+
 export const AuthSlice = createSlice({
   name: "auth",
   initialState,
@@ -99,6 +115,15 @@ export const AuthSlice = createSlice({
       state.accessToken = action.payload;
     });
     builder.addCase(refreshToken.rejected, (state) => {
+      state.accessToken = undefined;
+      state.loggedUser = undefined;
+      state.loggedCompany = undefined;
+    });
+    //REFRESH CURRENT USER DATA
+    builder.addCase(refreshCurrentUserData.fulfilled, (state, action) => {
+      state.loggedUser = action.payload;
+    });
+    builder.addCase(refreshCurrentUserData.rejected, (state) => {
       state.accessToken = undefined;
       state.loggedUser = undefined;
       state.loggedCompany = undefined;

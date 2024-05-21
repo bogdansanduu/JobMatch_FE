@@ -1,16 +1,15 @@
 import React, { useCallback, useEffect, useState, MouseEvent } from "react";
 import { debounce } from "lodash";
 import {
-  Avatar,
-  Card,
-  CardHeader,
+  Chip,
+  Divider,
   InputAdornment,
   Paper,
   Popper,
   TextField,
+  Typography,
 } from "@mui/material";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
-import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
@@ -20,33 +19,45 @@ import { UserType } from "../../store/slices/UserSlice";
 import { setUserSearchOpen } from "../../store/slices/UISlice";
 
 import AppApi from "../../server/api/AppApi";
-import { Blue, GrayColors, White } from "../../utils/constants/colorPallete";
+import { Blue, White } from "../../utils/constants/colorPallete";
 import { useNavigate } from "react-router-dom";
 import { AppRoutes } from "../../utils/constants/routes";
+import { CompanyType } from "../../store/slices/CompanySlice";
+import UsersSearchList from "./UsersSearchList";
+import CompaniesSearchList from "./CompaniesSearchList";
 
 const SearchPopover = () => {
   const userApi = AppApi.getUserApi();
+  const companyApi = AppApi.getCompanyApi();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [searchResults, setSearchResults] = useState<UserType[]>([]);
+  const [searchResultsUsers, setSearchResultsUsers] = useState<UserType[]>([]);
+  const [searchResultsCompanies, setSearchResultsCompanies] = useState<
+    CompanyType[]
+  >([]);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popper" : undefined;
+  const totalSearchResults =
+    searchResultsUsers.length + searchResultsCompanies.length;
 
   const handleSearch = useCallback(
     debounce(async (searchTerm) => {
       if (searchTerm === "") {
-        setSearchResults([]);
+        setSearchResultsUsers([]);
+        setSearchResultsCompanies([]);
         return;
       }
 
       const users = await userApi.searchByNameAndEmail(searchTerm);
+      const companies = await companyApi.searchByNameAndEmail(searchTerm);
 
-      setSearchResults(users);
+      setSearchResultsUsers(users);
+      setSearchResultsCompanies(companies);
     }, 300),
     []
   );
@@ -57,7 +68,8 @@ const SearchPopover = () => {
     }
 
     setSearchTerm("");
-    setSearchResults([]);
+    setSearchResultsUsers([]);
+    setSearchResultsCompanies([]);
 
     setAnchorEl(event.currentTarget);
     dispatch(setUserSearchOpen(true));
@@ -67,10 +79,6 @@ const SearchPopover = () => {
     setSearchTerm("");
     setAnchorEl(null);
     dispatch(setUserSearchOpen(false));
-  };
-
-  const handleAddUser = (user: UserType) => {
-    console.log(`Selected user: ${user.firstName} ${user.lastName}`);
   };
 
   const handleClose = (
@@ -83,8 +91,16 @@ const SearchPopover = () => {
     dispatch(setUserSearchOpen(false));
   };
 
-  const handleNavigate = (user: UserType) => {
+  const handleNavigateUser = (user: UserType) => {
     navigate(`${AppRoutes.UserProfile}/${user.id}`);
+
+    setSearchTerm("");
+    setAnchorEl(null);
+    dispatch(setUserSearchOpen(false));
+  };
+
+  const handleNavigateCompany = (company: CompanyType) => {
+    navigate(`${AppRoutes.CompanyProfile}/${company.id}`);
 
     setSearchTerm("");
     setAnchorEl(null);
@@ -145,39 +161,28 @@ const SearchPopover = () => {
               overflowY: "auto",
             }}
           >
-            {/* Display search results */}
-            {searchResults.length === 0 && <div>No results found</div>}
-            {searchResults.map((user) => (
-              <Card
-                key={user.id}
-                sx={{
-                  marginBottom: "4px",
-                  backgroundColor: White.OffWhite,
-                  border: `1px solid ${GrayColors.Gray2}`,
-                }}
-              >
-                <CardHeader
-                  avatar={
-                    <Avatar
-                      alt={`${user.firstName} ${user.lastName}`}
-                      src={user.profilePicture}
-                      sx={{ width: 30, height: 30 }}
-                    />
-                  }
-                  title={`${user.firstName} ${user.lastName}`}
-                  action={
-                    <IconButton
-                      aria-label="add-user"
-                      onClick={() => handleAddUser(user)}
-                    >
-                      <PersonAddAlt1Icon />
-                    </IconButton>
-                  }
-                  onClick={() => handleNavigate(user)}
-                  sx={{ padding: "4px" }}
+            {totalSearchResults === 0 ? (
+              <Typography variant={"h6"} sx={{ textAlign: "center" }}>
+                No results found
+              </Typography>
+            ) : (
+              <>
+                <Divider sx={{ margin: "4px 0" }}>
+                  <Chip label="Users" size="small" />
+                </Divider>
+                <UsersSearchList
+                  searchResultsUsers={searchResultsUsers}
+                  handleNavigate={handleNavigateUser}
                 />
-              </Card>
-            ))}
+                <Divider sx={{ margin: "6px 0" }}>
+                  <Chip label="Companies" size="small" />
+                </Divider>
+                <CompaniesSearchList
+                  searchResultsCompanies={searchResultsCompanies}
+                  handleNavigate={handleNavigateCompany}
+                />
+              </>
+            )}
           </Paper>
         </Popper>
       </div>

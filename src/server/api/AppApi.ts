@@ -6,6 +6,7 @@ import PostApi from "./PostApi";
 import CommentApi from "./CommentApi";
 import JobApi from "./JobApi";
 import RecommendationApi from "./RecommendationApi";
+import CompanyApi from "./CompanyApi";
 
 class AppApi {
   private static instance: AppApi;
@@ -13,6 +14,7 @@ class AppApi {
   readonly baseApi: BaseApi;
   readonly authApi: AuthApi;
   readonly userApi: UserApi;
+  readonly companyApi: CompanyApi;
   readonly socketApi: SocketApi;
   readonly postApi: PostApi;
   readonly commentApi: CommentApi;
@@ -23,6 +25,7 @@ class AppApi {
     this.baseApi = new BaseApi();
     this.authApi = new AuthApi();
     this.userApi = new UserApi();
+    this.companyApi = new CompanyApi();
     this.socketApi = new SocketApi();
     this.postApi = new PostApi();
     this.commentApi = new CommentApi();
@@ -46,6 +49,10 @@ class AppApi {
 
   static getUserApi() {
     return this.getInstance().userApi;
+  }
+
+  static getCompanyApi() {
+    return this.getInstance().companyApi;
   }
 
   static getSocketApi() {

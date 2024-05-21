@@ -8,33 +8,45 @@ import React, {
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import isEmail from "validator/lib/isEmail";
 
 import GeoLocation from "./GeoLocation";
 import { FIELD_NAMES, geonames, LOCATION_NAMES } from "./types";
 import { MainContainer } from "./styledComponents";
+import isEmail from "validator/lib/isEmail";
 
 interface BasicInfoStepProps {
   user: Record<FIELD_NAMES | LOCATION_NAMES, string>;
-  location: Record<LOCATION_NAMES, number>;
-  dirty: Record<FIELD_NAMES | LOCATION_NAMES, boolean>;
   setUser: Dispatch<
     React.SetStateAction<Record<FIELD_NAMES | LOCATION_NAMES, string>>
   >;
+  handleChange: (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
+
+  location: Record<LOCATION_NAMES, number>;
   setLocation: Dispatch<React.SetStateAction<Record<LOCATION_NAMES, number>>>;
+
+  dirty: Record<FIELD_NAMES | LOCATION_NAMES, boolean>;
   setDirty: Dispatch<
     React.SetStateAction<Record<FIELD_NAMES | LOCATION_NAMES, boolean>>
   >;
+  handleBlur: (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    state: boolean
+  ) => void;
+
   handleNext: () => void;
 }
 
 const BasicInfoStep = ({
   user,
-  location,
-  dirty,
   setUser,
+  handleChange,
+  location,
   setLocation,
+  dirty,
   setDirty,
+  handleBlur,
   handleNext,
 }: BasicInfoStepProps) => {
   const [isEmailValid, setIsEmailValid] = useState(false);
@@ -66,20 +78,17 @@ const BasicInfoStep = ({
     setIsNextDisabled(isDisabled);
   }, [user, isEmailValid]);
 
-  const handleChange = useCallback(
-    (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const { value, name } = event.target;
-      setUser((prevUser) => ({
-        ...prevUser,
-        [name]: value,
-      }));
+  const handleChangeEmail = (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { value, name } = event.target;
 
-      if (name === FIELD_NAMES.email) {
-        setIsEmailValid(isEmail(value));
-      }
-    },
-    [user]
-  );
+    handleChange(event);
+
+    if (name === FIELD_NAMES.email) {
+      setIsEmailValid(isEmail(value));
+    }
+  };
 
   const handleLocationChange = useCallback(
     async (key: LOCATION_NAMES, value: number, isCountry: boolean) => {
@@ -110,21 +119,6 @@ const BasicInfoStep = ({
       }));
     },
     [location, user]
-  );
-
-  const handleBlur = useCallback(
-    (
-      event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-      state: boolean
-    ) => {
-      const { name } = event.target;
-
-      setDirty((prevDirty) => ({
-        ...prevDirty,
-        [name]: state,
-      }));
-    },
-    [dirty]
   );
 
   const handleLocationBlur = useCallback(
@@ -202,7 +196,7 @@ const BasicInfoStep = ({
             name={FIELD_NAMES.email}
             variant={"outlined"}
             value={user.email}
-            onChange={(e) => handleChange(e)}
+            onChange={(e) => handleChangeEmail(e)}
             fullWidth
             required
             margin={"normal"}

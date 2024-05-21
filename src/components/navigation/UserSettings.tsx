@@ -21,6 +21,8 @@ const UserSettings = ({ setAnchorElUser }: UserSettingsProps) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
+  const alreadyHasCompanyAccount = !!currentUser?.company;
+
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
@@ -53,14 +55,16 @@ const UserSettings = ({ setAnchorElUser }: UserSettingsProps) => {
         </Typography>
       </MenuItem>
       <Divider sx={{ my: 0.5 }} />
-      <MenuItem onClick={handleCreateJobAccount}>
-        <ListItemIcon>
-          <PersonAdd fontSize="small" />
-        </ListItemIcon>
-        <Typography variant="body2" color={"text.secondary"}>
-          Create Company Account
-        </Typography>
-      </MenuItem>
+      {!alreadyHasCompanyAccount && (
+        <MenuItem onClick={handleCreateJobAccount}>
+          <ListItemIcon>
+            <PersonAdd fontSize="small" />
+          </ListItemIcon>
+          <Typography variant="body2" color={"text.secondary"}>
+            Create Company Account
+          </Typography>
+        </MenuItem>
+      )}
       <MenuItem onClick={handleCloseUserMenu}>
         <ListItemIcon>
           <Settings fontSize="small" />

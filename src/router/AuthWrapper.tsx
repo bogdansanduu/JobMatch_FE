@@ -4,12 +4,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import styled from "styled-components";
 
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import {
-  getLoggedCompany,
-  getLoggedUser,
-  getToken,
-  logout,
-} from "../store/slices/AuthSlice";
+import { getLoggedUser, getToken, logout } from "../store/slices/AuthSlice";
 import { getUserSearchOpen } from "../store/slices/UISlice";
 
 import { AppRoutes } from "../utils/constants/routes";

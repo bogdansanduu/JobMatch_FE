@@ -6,6 +6,7 @@ import { UserType } from "../store/slices/UserSlice";
 import {
   getLoggedCompany,
   getLoggedUser,
+  refreshCurrentUserData,
   refreshToken,
   refreshTokenCompany,
 } from "../store/slices/AuthSlice";
@@ -35,6 +36,7 @@ const MessagingPage = () => {
   const [joinedChat, setJoinedChat] = useState(false);
 
   useEffect(() => {
+    dispatch(refreshCurrentUserData());
     socket.connect();
 
     return () => {

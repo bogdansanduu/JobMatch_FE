@@ -15,6 +15,7 @@ interface PostModalProps {
   isCompany?: boolean;
   isUser?: boolean;
 }
+
 const PostModal = ({
   openPostModal,
   setOpenPostModal,

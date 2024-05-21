@@ -11,3 +11,9 @@ export type CompanyType = {
   city: string;
   owner: UserType;
 };
+
+export type CompanySimpleType = {
+  id: number;
+  email: string;
+  name: string;
+};

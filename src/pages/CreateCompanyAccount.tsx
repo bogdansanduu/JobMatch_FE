@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useCallback, useState } from "react";
+import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { Box, Divider, Typography } from "@mui/material";
 import Geonames from "geonames.js";
 
@@ -12,6 +12,8 @@ import AppApi from "../server/api/AppApi";
 import { AxiosError } from "axios/index";
 import { useAppSelector } from "../store/hooks";
 import { getLoggedUser } from "../store/slices/AuthSlice";
+import { useNavigate } from "react-router-dom";
+import { AppRoutes } from "../utils/constants/routes";
 
 export enum FIELD_NAMES {
   name = "name",
@@ -36,6 +38,7 @@ const CreateCompanyAccount = () => {
   const authApi = AppApi.getAuthApi();
 
   const currentUser = useAppSelector(getLoggedUser);
+  const navigate = useNavigate();
 
   const [account, setAccount] = useState<
     Record<FIELD_NAMES | LOCATION_NAMES, string>
@@ -78,6 +81,14 @@ const CreateCompanyAccount = () => {
     !!account.state &&
     !!account.city &&
     isEmailValid;
+
+  useEffect(() => {
+    const alreadyHasAccount = !!currentUser?.company;
+
+    if (alreadyHasAccount) {
+      navigate(AppRoutes.Home);
+    }
+  }, [currentUser]);
 
   const handleChange = useCallback(
     (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -156,7 +167,6 @@ const CreateCompanyAccount = () => {
     }
 
     try {
-      //TODO
       await authApi.registerCompany({
         email: account.email,
         password: account.password,

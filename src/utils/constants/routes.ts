@@ -18,10 +18,13 @@ export enum AppRoutes {
   CreateCompanyAccount = "/user/create-company-account",
   UserProfile = "/user/profile",
   MyProfile = "/user/my-profile",
+  UserJobDetails = "/user/job-details",
 
   //---COMPANY---
   HomeCompany = "/company/home",
+  JobPostings = "/company/job-postings",
   Employees = "/company/employees",
   CompanyProfile = "/company/profile",
   AccessDeniedCompany = "/company/access-denied",
+  CompanyJobDetails = "/company/job-details",
 }

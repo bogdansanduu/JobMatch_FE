@@ -1,4 +1,4 @@
-import React, { ChangeEvent, Dispatch, useCallback, useState } from "react";
+import React, { ChangeEvent } from "react";
 import Button from "@mui/material/Button";
 import { TextField } from "@mui/material";
 
@@ -6,57 +6,32 @@ import { MainContainer } from "./styledComponents";
 import { FIELD_NAMES, LOCATION_NAMES } from "./types";
 
 interface ResumeStepProps {
-  handleNext: () => void;
-  dirty: Record<FIELD_NAMES | LOCATION_NAMES, boolean>;
-  setDirty: Dispatch<
-    React.SetStateAction<Record<FIELD_NAMES | LOCATION_NAMES, boolean>>
-  >;
   user: Record<FIELD_NAMES | LOCATION_NAMES, string>;
+  handleChange: (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
 
-  setUser: Dispatch<
-    React.SetStateAction<Record<FIELD_NAMES | LOCATION_NAMES, string>>
-  >;
+  dirty: Record<FIELD_NAMES | LOCATION_NAMES, boolean>;
+  handleBlur: (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    state: boolean
+  ) => void;
+
+  handleNext: () => void;
 }
 
 const ResumeStep = ({
-  handleNext,
-  dirty,
-  setDirty,
   user,
-  setUser,
+  handleChange,
+  dirty,
+  handleBlur,
+  handleNext,
 }: ResumeStepProps) => {
   const isDisabled = !user.resume;
 
   const onNext = () => {
     handleNext();
   };
-
-  const handleChange = useCallback(
-    (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const { value, name } = event.target;
-
-      setUser((prevUser) => ({
-        ...prevUser,
-        [name]: value,
-      }));
-    },
-    [setUser]
-  );
-
-  const handleBlur = useCallback(
-    (
-      event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-      state: boolean
-    ) => {
-      const { name } = event.target;
-
-      setDirty((prevDirty) => ({
-        ...prevDirty,
-        [name]: state,
-      }));
-    },
-    [dirty]
-  );
 
   return (
     <MainContainer>

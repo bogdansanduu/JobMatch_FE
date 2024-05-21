@@ -4,6 +4,7 @@ import { CompanyType } from "./CompanySlice";
 import AppApi from "../../server/api/AppApi";
 import { RootState } from "../store";
 import { GetRecommendationsDto } from "../../server/api/RecommendationApi";
+import { CreateJobListingDto } from "../../server/api/JobApi";
 
 export interface JobType {
   id: number;
@@ -52,6 +53,24 @@ export const getAllJobsPaginated = createAsyncThunk(
   }
 );
 
+export const getAllJobsByCompany = createAsyncThunk(
+  "job/getAllJobsByCompany",
+  async (companyId: number) => {
+    const jobApi = AppApi.getJobApi();
+
+    return await jobApi.getAllJobsByCompany(companyId);
+  }
+);
+
+export const createJobListing = createAsyncThunk(
+  "job/createJobListing",
+  async (data: CreateJobListingDto) => {
+    const jobApi = AppApi.getJobApi();
+
+    return await jobApi.createJobListing(data);
+  }
+);
+
 export const getJobRecommendations = createAsyncThunk(
   "job/getJobRecommendations",
   async (data: GetRecommendationsDto) => {
@@ -93,6 +112,26 @@ export const JobSlice = createSlice({
     );
     builder.addCase(getAllJobsPaginated.rejected, (state) => {
       state.jobs = [];
+    });
+    //GET ALL JOBS BY COMPANY
+    builder.addCase(
+      getAllJobsByCompany.fulfilled,
+      (state, action: PayloadAction<JobType[]>) => {
+        state.jobs = action.payload;
+      }
+    );
+    builder.addCase(getAllJobsByCompany.rejected, (state) => {
+      state.jobs = [];
+    });
+    //CREATE JOB LISTING
+    builder.addCase(
+      createJobListing.fulfilled,
+      (state, action: PayloadAction<JobType>) => {
+        state.currentJob = action.payload;
+      }
+    );
+    builder.addCase(createJobListing.rejected, (state) => {
+      console.log("Error creating job");
     });
     //GET RECOMMENDED JOBS
     builder.addCase(

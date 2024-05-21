@@ -61,6 +61,11 @@ const pagesCompany = [
     route: AppRoutes.HomeCompany,
   },
   {
+    title: "Job Postings",
+    icon: <WorkIcon sx={{ height: "22px", width: "22px" }} />,
+    route: AppRoutes.JobPostings,
+  },
+  {
     title: "Employees",
     icon: <BadgeIcon sx={{ height: "22px", width: "22px" }} />,
     route: AppRoutes.Employees,
