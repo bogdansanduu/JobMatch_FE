@@ -22,6 +22,8 @@ import EmployeesPage from "../pages/EmployeesPage";
 import JobsPage from "../pages/JobsPage";
 import MyProfilePage from "../pages/MyProfilePage";
 import JobPostingsPage from "../pages/JobPostingsPage";
+import CompanyJobDetailsPage from "../pages/CompanyJobDetailsPage";
+import UserJobDetailsPage from "../pages/UserJobDetailsPage";
 
 const ApplicationRouter = createBrowserRouter([
   {
@@ -67,12 +69,12 @@ const ApplicationRouter = createBrowserRouter([
         children: [
           {
             path: ":jobId",
-            element: <NotImplementedPage />,
+            element: <UserJobDetailsPage />,
           },
         ],
       },
       {
-        path: AppRoutes.Notifications,
+        path: AppRoutes.MyApplications,
         element: <NotImplementedPage />,
       },
       {
@@ -107,7 +109,7 @@ const ApplicationRouter = createBrowserRouter([
         children: [
           {
             path: ":jobId",
-            element: <NotImplementedPage />,
+            element: <CompanyJobDetailsPage />,
           },
         ],
       },

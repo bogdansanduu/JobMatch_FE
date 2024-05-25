@@ -14,7 +14,7 @@ export enum AppRoutes {
   AccessDenied = "/user/access-denied",
   MyNetwork = "/user/my-network",
   Jobs = "/user/jobs",
-  Notifications = "/user/notifications",
+  MyApplications = "/user/my-applications",
   CreateCompanyAccount = "/user/create-company-account",
   UserProfile = "/user/profile",
   MyProfile = "/user/my-profile",

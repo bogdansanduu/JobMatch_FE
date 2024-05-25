@@ -19,6 +19,8 @@ export interface JobType {
   responsibilities: string;
   minimumQualifications: string;
   preferredQualifications: string;
+  createdAt: string;
+  updatedAt: string;
   company: CompanyType;
 }
 

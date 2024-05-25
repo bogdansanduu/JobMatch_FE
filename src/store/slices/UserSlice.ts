@@ -4,6 +4,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import AppApi from "../../server/api/AppApi";
 import { CompanySimpleType } from "./CompanySlice";
+import { JobApplicationType } from "./JobApplicationSlice";
 
 export interface UserState {
   currentUser: UserType;
@@ -18,6 +19,7 @@ export type UserType = {
   profilePicture: string;
   following: UserType[];
   followers: UserType[];
+  jobApplications: JobApplicationType[];
   company?: CompanySimpleType;
   country: string;
   city: string;
@@ -33,6 +35,7 @@ export const EMPTY_USER: UserType = {
   profilePicture: "",
   following: [],
   followers: [],
+  jobApplications: [],
   company: undefined,
   country: "",
   city: "",

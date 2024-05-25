@@ -18,12 +18,12 @@ import { JobType } from "../../store/slices/JobSlice";
 
 interface JobCardProps {
   job: JobType;
-  onClick: (jobId: number) => void;
+  onClick: (job: JobType) => void;
 }
 
 const JobCard = ({ job, onClick }: JobCardProps) => {
   const handleJobCardClick = () => {
-    onClick(job.id);
+    onClick(job);
   };
 
   return (

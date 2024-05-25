@@ -27,6 +27,7 @@ import {
   getJobs,
   getTotalJobsCount,
   JobType,
+  setCurrentJob,
 } from "../../store/slices/JobSlice";
 
 import useInfiniteScroll from "../../utils/hooks/useInfiniteScroll";
@@ -89,8 +90,10 @@ const AllJobsSection = () => {
     setSearchTerm("");
   };
 
-  const handleJobCardClick = (jobId: number) => {
-    navigate(`${AppRoutes.UserJobDetails}/${jobId}`);
+  const handleJobCardClick = (job: JobType) => {
+    dispatch(setCurrentJob(job));
+
+    navigate(`${AppRoutes.UserJobDetails}/${job.id}`);
   };
 
   return (

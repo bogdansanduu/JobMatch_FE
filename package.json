@@ -38,6 +38,7 @@
     "axios": "^1.6.7",
     "axios-cookiejar-support": "^5.0.0",
     "circular-dependency-plugin": "^5.2.2",
+    "date-fns": "^3.6.0",
     "dompurify": "^3.1.0",
     "emoji-picker-react": "^4.9.2",
     "geonames.js": "^3.0.6",

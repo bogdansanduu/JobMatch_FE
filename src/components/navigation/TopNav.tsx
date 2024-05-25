@@ -10,7 +10,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import WorkIcon from "@mui/icons-material/Work";
 import ForumIcon from "@mui/icons-material/Forum";
-import NotificationsIcon from "@mui/icons-material/Notifications";
+import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
 import { AppBar } from "@mui/material";
 import BadgeIcon from "@mui/icons-material/Badge";
 
@@ -43,14 +43,14 @@ const pagesUser = [
     route: AppRoutes.Jobs,
   },
   {
+    title: "My Applications",
+    icon: <WorkHistoryIcon sx={{ height: "22px", width: "22px" }} />,
+    route: AppRoutes.MyApplications,
+  },
+  {
     title: "Messages",
     icon: <ForumIcon sx={{ height: "22px", width: "22px" }} />,
     route: AppRoutes.Messaging,
-  },
-  {
-    title: "Notifications",
-    icon: <NotificationsIcon sx={{ height: "22px", width: "22px" }} />,
-    route: AppRoutes.Notifications,
   },
 ];
 

@@ -7,6 +7,7 @@ import CommentApi from "./CommentApi";
 import JobApi from "./JobApi";
 import RecommendationApi from "./RecommendationApi";
 import CompanyApi from "./CompanyApi";
+import JobApplicationApi from "./JobApplicationApi";
 
 class AppApi {
   private static instance: AppApi;
@@ -20,6 +21,7 @@ class AppApi {
   readonly commentApi: CommentApi;
   readonly jobApi: JobApi;
   readonly recommendationApi: RecommendationApi;
+  readonly jobApplicationApi: JobApplicationApi;
 
   private constructor() {
     this.baseApi = new BaseApi();
@@ -31,6 +33,7 @@ class AppApi {
     this.commentApi = new CommentApi();
     this.jobApi = new JobApi();
     this.recommendationApi = new RecommendationApi();
+    this.jobApplicationApi = new JobApplicationApi();
   }
 
   public static getInstance() {
@@ -73,6 +76,10 @@ class AppApi {
 
   static getRecommendationApi() {
     return this.getInstance().recommendationApi;
+  }
+
+  static getJobApplicationApi() {
+    return this.getInstance().jobApplicationApi;
   }
 }
 

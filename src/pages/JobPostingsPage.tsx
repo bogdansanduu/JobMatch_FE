@@ -4,7 +4,12 @@ import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
-import { getAllJobsByCompany, getJobs } from "../store/slices/JobSlice";
+import {
+  getAllJobsByCompany,
+  getJobs,
+  JobType,
+  setCurrentJob,
+} from "../store/slices/JobSlice";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { getLoggedCompany } from "../store/slices/AuthSlice";
 
@@ -35,8 +40,10 @@ const JobPostingsPage = () => {
     setOpenJobModal(true);
   };
 
-  const handleJobCardClick = (jobId: number) => {
-    navigate(`${AppRoutes.CompanyJobDetails}/${jobId}`);
+  const handleJobCardClick = (job: JobType) => {
+    dispatch(setCurrentJob(job));
+
+    navigate(`${AppRoutes.CompanyJobDetails}/${job.id}`);
   };
 
   return (
