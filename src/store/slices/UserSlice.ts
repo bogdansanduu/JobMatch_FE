@@ -5,6 +5,7 @@ import { RootState } from "../store";
 import AppApi from "../../server/api/AppApi";
 import { CompanySimpleType } from "./CompanySlice";
 import { JobApplicationType } from "./JobApplicationSlice";
+import { revertAll } from "../actions";
 
 export interface UserState {
   currentUser: UserType;
@@ -20,6 +21,7 @@ export type UserType = {
   following: UserType[];
   followers: UserType[];
   jobApplications: JobApplicationType[];
+  jobsSaved: JobApplicationType[];
   company?: CompanySimpleType;
   country: string;
   city: string;
@@ -36,6 +38,7 @@ export const EMPTY_USER: UserType = {
   following: [],
   followers: [],
   jobApplications: [],
+  jobsSaved: [],
   company: undefined,
   country: "",
   city: "",
@@ -93,6 +96,8 @@ export const UserSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    //RESET STORE
+    builder.addCase(revertAll, () => initialState);
     //GET ALL USERS
     builder.addCase(getAllUsers.fulfilled, (state, action) => {
       state.users = action.payload;

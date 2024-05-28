@@ -24,6 +24,8 @@ import MyProfilePage from "../pages/MyProfilePage";
 import JobPostingsPage from "../pages/JobPostingsPage";
 import CompanyJobDetailsPage from "../pages/CompanyJobDetailsPage";
 import UserJobDetailsPage from "../pages/UserJobDetailsPage";
+import MyApplicationsPage from "../pages/MyApplicationsPage";
+import ApplicationReviewPage from "../pages/ApplicationReviewPage";
 
 const ApplicationRouter = createBrowserRouter([
   {
@@ -75,7 +77,16 @@ const ApplicationRouter = createBrowserRouter([
       },
       {
         path: AppRoutes.MyApplications,
-        element: <NotImplementedPage />,
+        element: <MyApplicationsPage />,
+      },
+      {
+        path: AppRoutes.UserApplicationReview,
+        children: [
+          {
+            path: ":applicationId",
+            element: <ApplicationReviewPage />,
+          },
+        ],
       },
       {
         path: AppRoutes.CreateCompanyAccount,

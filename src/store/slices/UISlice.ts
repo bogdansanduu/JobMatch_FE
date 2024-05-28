@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { RootState } from "../store";
+import { revertAll } from "../actions";
 
 export interface UIState {
   userSearchOpen: boolean;
@@ -17,6 +18,10 @@ export const UISlice = createSlice({
     setUserSearchOpen: (state, action: PayloadAction<boolean>) => {
       state.userSearchOpen = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    //RESET STORE
+    builder.addCase(revertAll, () => initialState);
   },
 });
 

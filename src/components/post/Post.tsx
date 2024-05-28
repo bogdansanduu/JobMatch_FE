@@ -136,6 +136,7 @@ const Post = ({ post, isCompany, isUser }: PostProps) => {
       <Typography variant="h5" component="h2">
         {post.title}
       </Typography>
+      <Divider />
       <div dangerouslySetInnerHTML={createMarkup(post.content)} />
       <Divider />
       <Box

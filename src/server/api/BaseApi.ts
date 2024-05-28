@@ -8,7 +8,7 @@ import { wrapper } from "axios-cookiejar-support";
 import { CookieJar } from "tough-cookie";
 
 import { store } from "../../store/store";
-import { setToken } from "../../store/slices/AuthSlice";
+import { logout, setToken } from "../../store/slices/AuthSlice";
 
 export class BaseApi {
   private readonly axiosInstance: AxiosInstance;
@@ -88,6 +88,7 @@ export class BaseApi {
           const refreshedResponse = await this.axiosInstance(config);
           return refreshedResponse.data;
         } catch (refreshError) {
+          store.dispatch(logout());
           console.log("Error refreshing token:", refreshError);
         }
       } else {

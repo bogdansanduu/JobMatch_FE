@@ -5,6 +5,7 @@ import AppApi from "../../server/api/AppApi";
 import { RootState } from "../store";
 import { GetRecommendationsDto } from "../../server/api/RecommendationApi";
 import { CreateJobListingDto } from "../../server/api/JobApi";
+import { revertAll } from "../actions";
 
 export interface JobType {
   id: number;
@@ -91,6 +92,8 @@ export const JobSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    //RESET STORE
+    builder.addCase(revertAll, () => initialState);
     //GET ALL JOBS
     builder.addCase(
       getAllJobsPaginated.fulfilled,

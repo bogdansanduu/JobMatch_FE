@@ -43,7 +43,7 @@ const RecommendedJobsSection = () => {
   return (
     <Box
       sx={{
-        flex: 2,
+        flex: 3,
 
         display: "flex",
         flexDirection: "column",

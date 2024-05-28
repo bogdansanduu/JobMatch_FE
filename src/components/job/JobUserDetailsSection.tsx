@@ -5,14 +5,20 @@ import ClassIcon from "@mui/icons-material/Class";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import OutboundOutlinedIcon from "@mui/icons-material/OutboundOutlined";
 import BookmarkOutlinedIcon from "@mui/icons-material/BookmarkOutlined";
+import BookmarkRemoveOutlinedIcon from "@mui/icons-material/BookmarkRemoveOutlined";
 import { formatDistanceToNow, parseISO } from "date-fns";
+import Tooltip from "@mui/material/Tooltip";
 
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { getCurrentJob } from "../../store/slices/JobSlice";
-import { getLoggedUser } from "../../store/slices/AuthSlice";
+import {
+  getLoggedUser,
+  refreshCurrentUserData,
+} from "../../store/slices/AuthSlice";
+import { saveJob, unsaveJob } from "../../store/slices/JobSavedSlice";
+import { applyForJob } from "../../store/slices/JobApplicationSlice";
 
 import { GrayColors, White } from "../../utils/constants/colorPallete";
-import { applyForJob } from "../../store/slices/JobApplicationSlice";
 
 const JobUserDetailsSection = () => {
   const currentJob = useAppSelector(getCurrentJob);
@@ -20,8 +26,12 @@ const JobUserDetailsSection = () => {
 
   const dispatch = useAppDispatch();
 
-  const alreadyApplied = !!currentLoggedUser?.jobApplications.some(
+  const alreadyApplied = !!currentLoggedUser?.jobApplications?.some(
     (jobApplication) => jobApplication.job.id === currentJob?.id
+  );
+
+  const alreadySaved = !!currentLoggedUser?.jobsSaved?.some(
+    (savedJob) => savedJob.job.id === currentJob?.id
   );
 
   const formatRelativeTime = (dateString: string) => {
@@ -33,18 +43,46 @@ const JobUserDetailsSection = () => {
     return formatDistanceToNow(date, { addSuffix: true });
   };
 
-  const handleApplyForJob = () => {
+  const handleApplyForJob = async () => {
     if (!currentLoggedUser || !currentJob) {
       return;
     }
 
-    dispatch(
+    await dispatch(
       applyForJob({
         userId: currentLoggedUser.id,
         jobId: currentJob.id,
         resume: currentLoggedUser.resume,
       })
     );
+
+    await dispatch(refreshCurrentUserData());
+  };
+
+  const handleSaveJob = async () => {
+    if (!currentLoggedUser || !currentJob) {
+      return;
+    }
+
+    if (!alreadySaved) {
+      await dispatch(
+        saveJob({
+          userId: currentLoggedUser.id,
+          jobId: currentJob.id,
+        })
+      );
+    }
+
+    if (alreadySaved) {
+      await dispatch(
+        unsaveJob({
+          userId: currentLoggedUser.id,
+          jobId: currentJob.id,
+        })
+      );
+    }
+
+    await dispatch(refreshCurrentUserData());
   };
 
   return (
@@ -145,17 +183,32 @@ const JobUserDetailsSection = () => {
                 {currentJob.company.email}
               </Typography>
             </Box>
+
             <Box sx={{ display: "flex", marginLeft: "auto", gap: "8px" }}>
+              <Tooltip title={"Already applied"} placement={"top"}>
+                <span>
+                  <Button
+                    variant={"contained"}
+                    endIcon={<OutboundOutlinedIcon />}
+                    onClick={handleApplyForJob}
+                    disabled={alreadyApplied}
+                  >
+                    Apply
+                  </Button>
+                </span>
+              </Tooltip>
               <Button
-                variant={"contained"}
-                endIcon={<OutboundOutlinedIcon />}
-                onClick={handleApplyForJob}
-                disabled={alreadyApplied}
+                variant={"outlined"}
+                endIcon={
+                  alreadySaved ? (
+                    <BookmarkRemoveOutlinedIcon />
+                  ) : (
+                    <BookmarkOutlinedIcon />
+                  )
+                }
+                onClick={handleSaveJob}
               >
-                Apply
-              </Button>
-              <Button variant={"outlined"} endIcon={<BookmarkOutlinedIcon />}>
-                Save
+                {alreadySaved ? "Unsave" : "Save"}
               </Button>
             </Box>
           </Box>

@@ -4,6 +4,7 @@ import { UserType } from "./UserSlice";
 import { CompanyType } from "./CompanySlice";
 import { RootState } from "../store";
 import AppApi from "../../server/api/AppApi";
+import { revertAll } from "../actions";
 
 export interface AuthState {
   accessToken?: string;
@@ -89,6 +90,8 @@ export const AuthSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    //RESET STORE
+    builder.addCase(revertAll, () => initialState);
     //LOGIN
     builder.addCase(login.fulfilled, (state, action) => {
       state.accessToken = action.payload.accessToken;

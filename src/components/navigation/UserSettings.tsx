@@ -6,10 +6,13 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
-import { AppRoutes } from "../../utils/constants/routes";
+import { useNavigate } from "react-router";
+
 import { getLoggedUser, logout } from "../../store/slices/AuthSlice";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { useNavigate } from "react-router";
+import { revertAll } from "../../store/actions";
+
+import { AppRoutes } from "../../utils/constants/routes";
 
 interface UserSettingsProps {
   setAnchorElUser: (event: HTMLElement | null) => void;
@@ -39,9 +42,10 @@ const UserSettings = ({ setAnchorElUser }: UserSettingsProps) => {
     navigate(AppRoutes.MyProfile);
   };
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
     localStorage.clear();
-    dispatch(logout());
+    await dispatch(logout());
+    await dispatch(revertAll());
 
     navigate(AppRoutes.Login);
   };

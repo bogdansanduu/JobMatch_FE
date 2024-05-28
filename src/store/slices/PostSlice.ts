@@ -4,6 +4,7 @@ import AppApi from "../../server/api/AppApi";
 import { RootState } from "../store";
 import { CommentPostDto, CreatePostDto } from "../../server/api/PostApi";
 import { CompanyType } from "./CompanySlice";
+import { revertAll } from "../actions";
 
 export interface PostState {
   currentPost?: PostType;
@@ -203,6 +204,8 @@ export const PostSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    //RESET STORE
+    builder.addCase(revertAll, () => initialState);
     //GET ALL POSTS
     builder.addCase(getAllPosts.fulfilled, (state, action) => {
       state.posts = action.payload;

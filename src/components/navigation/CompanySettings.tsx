@@ -1,18 +1,16 @@
 import React from "react";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import {
-  getLoggedCompany,
-  getLoggedUser,
-  logout,
-} from "../../store/slices/AuthSlice";
-import { useNavigate } from "react-router";
-import { AppRoutes } from "../../utils/constants/routes";
 import MenuItem from "@mui/material/MenuItem";
-import Avatar from "@mui/material/Avatar";
 import { Divider, Typography } from "@mui/material";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
+import { useNavigate } from "react-router";
+
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { getLoggedCompany, logout } from "../../store/slices/AuthSlice";
+import { revertAll } from "../../store/actions";
+
+import { AppRoutes } from "../../utils/constants/routes";
 
 interface CompanySettingsProps {
   setAnchorElUser: (event: HTMLElement | null) => void;
@@ -31,6 +29,7 @@ const CompanySettings = ({ setAnchorElUser }: CompanySettingsProps) => {
   const handleSignOut = async () => {
     localStorage.clear();
     await dispatch(logout());
+    await dispatch(revertAll());
 
     navigate(AppRoutes.LoginCompany);
   };

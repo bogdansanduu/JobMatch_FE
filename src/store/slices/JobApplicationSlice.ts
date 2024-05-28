@@ -3,6 +3,7 @@ import { JobType } from "./JobSlice";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import AppApi from "../../server/api/AppApi";
+import { revertAll } from "../actions";
 
 const JobApplicationStatus = "123";
 
@@ -43,6 +44,15 @@ export const applyForJob = createAsyncThunk(
   }
 );
 
+export const getJobApplicationsByUser = createAsyncThunk(
+  "job-application/getJobApplicationsByUser",
+  async (userId: number) => {
+    const jobApplicationApi = AppApi.getJobApplicationApi();
+
+    return await jobApplicationApi.getJobApplicationsByUser(userId);
+  }
+);
+
 export const JobApplicationSlice = createSlice({
   name: "jobApplication",
   initialState,
@@ -55,11 +65,20 @@ export const JobApplicationSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    //RESET STORE
+    builder.addCase(revertAll, () => initialState);
     //APPLY FOR JOB
     builder.addCase(applyForJob.fulfilled, (state, action) => {
       state.jobApplications.push(action.payload);
     });
     builder.addCase(applyForJob.rejected, (state, action) => {
+      console.log(action.error.message);
+    });
+    //GET JOB APPLICATIONS BY USER
+    builder.addCase(getJobApplicationsByUser.fulfilled, (state, action) => {
+      state.jobApplications = action.payload;
+    });
+    builder.addCase(getJobApplicationsByUser.rejected, (state, action) => {
       console.log(action.error.message);
     });
   },

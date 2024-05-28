@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Avatar, Box, Divider, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import Tooltip from "@mui/material/Tooltip";
-import IconButton from "@mui/material/IconButton";
 
 import { GrayColors, White } from "../../utils/constants/colorPallete";
+import banner from "../../assets/banner.png";
 
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { getLoggedUser } from "../../store/slices/AuthSlice";
@@ -33,7 +32,7 @@ const PostSection = () => {
     <>
       <Box
         sx={{
-          flex: 4,
+          flex: 5,
           display: "flex",
           gap: "12px",
           flexDirection: "column",
@@ -52,34 +51,60 @@ const PostSection = () => {
           }}
         >
           {currentUser && currentUser.profilePicture && (
-            <Box sx={{ display: "flex", gap: "8px", alignItems: "center" }}>
-              <Avatar
-                alt={`${currentUser.firstName} ${currentUser.lastName}`}
-                src={currentUser.profilePicture}
-                sx={{ width: 30, height: 30 }}
+            <Typography
+              sx={{ marginRight: "8px", alignSelf: "flex-start" }}
+              variant="h6"
+              color={"text.primary"}
+            >
+              Hello, {currentUser.firstName} {currentUser.lastName}, start
+              exploring your feed!
+            </Typography>
+          )}
+          {currentUser && currentUser.profilePicture && (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                border: `1px solid ${GrayColors.Gray2}`,
+                borderRadius: "8px",
+              }}
+            >
+              <img
+                src={banner}
+                alt="Banner"
+                style={{ borderRadius: "8px 8px 0 0" }}
               />
-              <Typography
-                style={{ marginRight: "8px" }}
-                variant="subtitle2"
-                color={"text.primary"}
-              >
-                Hello, {currentUser.firstName} {currentUser.lastName}, start
-                exploring your feed!
-              </Typography>
+
+              <Box sx={{ padding: "16px" }}>
+                <Typography
+                  variant="body2"
+                  color={"text.secondary"}
+                  sx={{ marginBottom: "12px" }}
+                >
+                  Welcome to JobMatch, the ultimate platform to find your next
+                  career opportunity. Explore job listings, connect with
+                  employers, and grow your professional network.
+                </Typography>
+                <Typography
+                  variant="body2"
+                  color={"text.secondary"}
+                  sx={{ marginBottom: "12px" }}
+                >
+                  Ready to share your thoughts? Start a new post and engage with
+                  your community.
+                </Typography>
+                <Button
+                  onClick={handleOpenPostModal}
+                  variant={"contained"}
+                  endIcon={<AddCircleOutlineIcon />}
+                  sx={{ marginTop: "8px" }}
+                >
+                  Start a new Post
+                </Button>
+              </Box>
             </Box>
           )}
-          <Divider flexItem />
-
-          <Box sx={{ display: "flex", gap: "8px", alignItems: "center" }}>
-            <Typography variant="body2" color={"text.secondary"}>
-              Start a new Post
-            </Typography>
-            <Tooltip title="Add new post">
-              <IconButton onClick={handleOpenPostModal} color="primary">
-                <AddCircleOutlineIcon />
-              </IconButton>
-            </Tooltip>
-          </Box>
         </Box>
 
         <Box

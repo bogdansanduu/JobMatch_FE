@@ -19,6 +19,7 @@ export enum AppRoutes {
   UserProfile = "/user/profile",
   MyProfile = "/user/my-profile",
   UserJobDetails = "/user/job-details",
+  UserApplicationReview = "/user/application-review",
 
   //---COMPANY---
   HomeCompany = "/company/home",
