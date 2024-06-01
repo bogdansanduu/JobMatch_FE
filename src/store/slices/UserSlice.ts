@@ -6,10 +6,18 @@ import AppApi from "../../server/api/AppApi";
 import { CompanySimpleType } from "./CompanySlice";
 import { JobApplicationType } from "./JobApplicationSlice";
 import { revertAll } from "../actions";
+import { UploadResumeDto } from "../../server/api/UserApi";
 
 export interface UserState {
   currentUser: UserType;
   users: UserType[];
+}
+
+export interface ResumeFile {
+  id: string;
+  uploadedAt: Date;
+  fileName: string;
+  fileKey: string;
 }
 
 export type UserType = {
@@ -27,6 +35,7 @@ export type UserType = {
   city: string;
   state: string;
   resume: string;
+  resumeFile?: ResumeFile;
 };
 
 export const EMPTY_USER: UserType = {
@@ -44,6 +53,7 @@ export const EMPTY_USER: UserType = {
   city: "",
   state: "",
   resume: "",
+  resumeFile: undefined,
 };
 
 const initialState: UserState = {
@@ -81,6 +91,30 @@ export const removeConnection = createAsyncThunk(
     const userApi = AppApi.getUserApi();
 
     return await userApi.removeContact(userId, contactId);
+  }
+);
+
+export const uploadUserResume = createAsyncThunk(
+  "user/uploadUserResume",
+  async ({
+    userId,
+    resumeDto,
+  }: {
+    userId: number;
+    resumeDto: UploadResumeDto;
+  }) => {
+    const userApi = AppApi.getUserApi();
+
+    return await userApi.uploadUserResume(userId, resumeDto);
+  }
+);
+
+export const deleteUserResume = createAsyncThunk(
+  "user/deleteUserResume",
+  async (userId: number) => {
+    const userApi = AppApi.getUserApi();
+
+    return await userApi.deleteUserResume(userId);
   }
 );
 
@@ -125,6 +159,20 @@ export const UserSlice = createSlice({
     });
     builder.addCase(removeConnection.rejected, (state) => {
       console.log("Error removing connection");
+    });
+    //UPLOAD RESUME
+    builder.addCase(uploadUserResume.fulfilled, (state, action) => {
+      state.currentUser = action.payload;
+    });
+    builder.addCase(uploadUserResume.rejected, (state) => {
+      state.currentUser = EMPTY_USER;
+    });
+    //DELETE USER RESUME
+    builder.addCase(deleteUserResume.fulfilled, (state, action) => {
+      state.currentUser = action.payload;
+    });
+    builder.addCase(deleteUserResume.rejected, (state) => {
+      state.currentUser = EMPTY_USER;
     });
   },
 });

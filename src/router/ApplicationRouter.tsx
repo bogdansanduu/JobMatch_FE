@@ -9,23 +9,24 @@ import NotImplementedPage from "../pages/NotImplementedPage";
 import LoginPage from "../pages/LoginPage";
 import AuthWrapper from "./AuthWrapper";
 import NotAuthWrapper from "./NotAuthWrapper";
-import HomePage from "../pages/HomePage";
-import MyNetworkPage from "../pages/MyNetworkPage";
+import HomePage from "../pages/user-pages/HomePage";
+import MyNetworkPage from "../pages/user-pages/MyNetworkPage";
 import RegisterPage from "../pages/RegisterPage";
-import MessagingPage from "../pages/MessagingPage";
-import UserPage from "../pages/UserPage";
-import CreateCompanyAccount from "../pages/CreateCompanyAccount";
+import MessagingPage from "../pages/user-pages/MessagingPage";
+import UserPage from "../pages/user-pages/UserPage";
+import CreateCompanyAccount from "../pages/user-pages/CreateCompanyAccount";
 import LoginCompanyPage from "../pages/LoginCompanyPage";
 import AuthWrapperCompany from "./AuthWrapperCompany";
-import HomePageCompany from "../pages/HomePageCompany";
-import EmployeesPage from "../pages/EmployeesPage";
-import JobsPage from "../pages/JobsPage";
-import MyProfilePage from "../pages/MyProfilePage";
-import JobPostingsPage from "../pages/JobPostingsPage";
-import CompanyJobDetailsPage from "../pages/CompanyJobDetailsPage";
-import UserJobDetailsPage from "../pages/UserJobDetailsPage";
-import MyApplicationsPage from "../pages/MyApplicationsPage";
-import ApplicationReviewPage from "../pages/ApplicationReviewPage";
+import HomePageCompany from "../pages/company-pages/HomePageCompany";
+import EmployeesPage from "../pages/company-pages/EmployeesPage";
+import JobsPage from "../pages/user-pages/JobsPage";
+import MyProfilePage from "../pages/user-pages/MyProfilePage";
+import JobPostingsPage from "../pages/company-pages/JobPostingsPage";
+import CompanyJobDetailsPage from "../pages/company-pages/CompanyJobDetailsPage";
+import UserJobDetailsPage from "../pages/user-pages/UserJobDetailsPage";
+import MyApplicationsPage from "../pages/user-pages/MyApplicationsPage";
+import ApplicationReviewPage from "../pages/user-pages/ApplicationReviewPage";
+import UserCompanyPage from "../pages/user-pages/UserCompanyPage";
 
 const ApplicationRouter = createBrowserRouter([
   {
@@ -63,6 +64,15 @@ const ApplicationRouter = createBrowserRouter([
           {
             path: ":userId",
             element: <UserPage />,
+          },
+        ],
+      },
+      {
+        path: AppRoutes.UserCompanyProfile,
+        children: [
+          {
+            path: ":companyId",
+            element: <UserCompanyPage />,
           },
         ],
       },

@@ -9,6 +9,7 @@ import postReducer from "./slices/PostSlice";
 import jobReducer from "./slices/JobSlice";
 import jobApplicationReducer from "./slices/JobApplicationSlice";
 import jobSavedReducer from "./slices/JobSavedSlice";
+import companyReducer from "./slices/CompanySlice";
 
 const persistConfig = {
   key: "root",
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
   job: jobReducer,
   jobApplication: jobApplicationReducer,
   jobSaved: jobSavedReducer,
+  company: companyReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -1,9 +1,9 @@
 import React from "react";
 import { Box } from "@mui/material";
 
-import { GrayColors, White } from "../utils/constants/colorPallete";
+import { GrayColors, White } from "../../utils/constants/colorPallete";
 
-import PostSectionCompany from "../components/post/PostSectionCompany";
+import PostSectionCompany from "../../components/post/PostSectionCompany";
 
 const HomePageCompany = () => {
   return (

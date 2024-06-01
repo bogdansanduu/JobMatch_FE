@@ -4,11 +4,11 @@ import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import BusinessIcon from "@mui/icons-material/Business";
 import PersonIcon from "@mui/icons-material/Person";
 
-import { GrayColors, White } from "../utils/constants/colorPallete";
+import { GrayColors, White } from "../../utils/constants/colorPallete";
 
-import AppApi from "../server/api/AppApi";
-import { useAppSelector } from "../store/hooks";
-import { getLoggedUser } from "../store/slices/AuthSlice";
+import AppApi from "../../server/api/AppApi";
+import { useAppSelector } from "../../store/hooks";
+import { getLoggedUser } from "../../store/slices/AuthSlice";
 import MenuItem from "@mui/material/MenuItem";
 
 const userApi = AppApi.getUserApi();

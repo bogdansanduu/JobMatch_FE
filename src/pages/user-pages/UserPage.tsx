@@ -17,24 +17,28 @@ import IconButton from "@mui/material/IconButton";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-import userBanner from "../assets/user_banner.jpg";
-import { White } from "../utils/constants/colorPallete";
+import userBanner from "../../assets/user_banner.jpg";
+import { White } from "../../utils/constants/colorPallete";
 
 import {
   addConnection,
   getCurrentUser,
   getUserById,
   removeConnection,
-} from "../store/slices/UserSlice";
-import { getLoggedUser } from "../store/slices/AuthSlice";
-import { useAppDispatch, useAppSelector } from "../store/hooks";
+} from "../../store/slices/UserSlice";
+import { getLoggedUser } from "../../store/slices/AuthSlice";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 
-import { LoadingContainer, SpinnerContainer } from "../router/styledComponents";
+import {
+  LoadingContainer,
+  SpinnerContainer,
+} from "../../router/styledComponents";
 
 const UserPage = () => {
   const currentUser = useAppSelector(getLoggedUser);
   const user = useAppSelector(getCurrentUser);
   const dispatch = useAppDispatch();
+  const { userId } = useParams();
 
   const [loading, setLoading] = useState(false);
   const [expanded, setExpanded] = useState(false);
@@ -45,7 +49,6 @@ const UserPage = () => {
   const showEllipsis = user.resume && user.resume.length > previewLength;
   const hasResume = !!user.resume && user.resume.length > 0;
 
-  const { userId } = useParams();
   const isFollowing = !!(
     currentUser &&
     user.followers.find((followerUser) => {

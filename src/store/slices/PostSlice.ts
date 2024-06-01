@@ -50,6 +50,24 @@ export const getAllPosts = createAsyncThunk("post/getAllPosts", async () => {
   return await postApi.getAllPosts();
 });
 
+export const getAllPostsByCompany = createAsyncThunk(
+  "post/getAllPostsByCompany",
+  async (companyId: number) => {
+    const postApi = AppApi.getPostApi();
+
+    return await postApi.getAllPostsByCompany(companyId);
+  }
+);
+
+export const getMostRecentCompanyPosts = createAsyncThunk(
+  "post/getMostRecentCompanyPosts",
+  async ({ companyId, limit }: { companyId: number; limit: number }) => {
+    const postApi = AppApi.getPostApi();
+
+    return await postApi.getMostRecentCompanyPosts(companyId, limit);
+  }
+);
+
 export const createPost = createAsyncThunk(
   "post/createPost",
   async ({ userId, postData }: { userId: number; postData: CreatePostDto }) => {
@@ -211,6 +229,20 @@ export const PostSlice = createSlice({
       state.posts = action.payload;
     });
     builder.addCase(getAllPosts.rejected, (state) => {
+      state.posts = [];
+    });
+    //GET ALL POSTS BY COMPANY
+    builder.addCase(getAllPostsByCompany.fulfilled, (state, action) => {
+      state.posts = action.payload;
+    });
+    builder.addCase(getAllPostsByCompany.rejected, (state) => {
+      state.posts = [];
+    });
+    //GET MOST RECENT COMPANY POSTS
+    builder.addCase(getMostRecentCompanyPosts.fulfilled, (state, action) => {
+      state.posts = action.payload;
+    });
+    builder.addCase(getMostRecentCompanyPosts.rejected, (state) => {
       state.posts = [];
     });
     //CREATE POST

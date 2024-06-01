@@ -11,7 +11,7 @@ import Grid from "@mui/material/Grid";
 
 import { FIELD_NAMES_JOB, geonames } from "../register/types";
 import GeoLocation from "../register/GeoLocation";
-import { LOCATION_NAMES } from "../../pages/CreateCompanyAccount";
+import { LOCATION_NAMES } from "../../pages/user-pages/CreateCompanyAccount";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 

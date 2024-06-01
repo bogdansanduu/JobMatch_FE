@@ -1,6 +1,6 @@
 import React from "react";
 import { FIELD_NAMES_JOB } from "../register/types";
-import { LOCATION_NAMES } from "../../pages/CreateCompanyAccount";
+import { LOCATION_NAMES } from "../../pages/user-pages/CreateCompanyAccount";
 import { Box } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";

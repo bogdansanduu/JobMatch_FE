@@ -1,9 +1,9 @@
 import React from "react";
 import { Box } from "@mui/material";
 
-import RecommendedJobsSection from "../components/job/RecommendedJobsSection";
-import AllJobsSection from "../components/job/AllJobsSection";
-import MyAccountSection from "../components/account/MyAccountSection";
+import RecommendedJobsSection from "../../components/job/RecommendedJobsSection";
+import AllJobsSection from "../../components/job/AllJobsSection";
+import MyAccountSection from "../../components/account/MyAccountSection";
 
 const JobsPage = () => {
   return (

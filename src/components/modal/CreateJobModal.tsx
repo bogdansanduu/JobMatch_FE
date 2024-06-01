@@ -6,7 +6,7 @@ import CloseIcon from "@mui/icons-material/Close";
 
 import { FIELD_NAMES_JOB } from "../register/types";
 
-import { LOCATION_NAMES } from "../../pages/CreateCompanyAccount";
+import { LOCATION_NAMES } from "../../pages/user-pages/CreateCompanyAccount";
 import JobBasicInfoStep from "../job/JobBasicInfoStep";
 import useFormInput from "../../utils/hooks/useFormInput";
 import ResponsibilitiesStep from "../job/ResponsibilitiesStep";

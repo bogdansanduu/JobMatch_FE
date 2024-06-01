@@ -2,18 +2,18 @@ import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { Box, Divider, Typography } from "@mui/material";
 import Geonames from "geonames.js";
 
-import { GrayColors, White } from "../utils/constants/colorPallete";
+import { GrayColors, White } from "../../utils/constants/colorPallete";
 import Grid from "@mui/material/Grid";
-import GeoLocation from "../components/register/GeoLocation";
+import GeoLocation from "../../components/register/GeoLocation";
 import TextField from "@mui/material/TextField";
 import isEmail from "validator/lib/isEmail";
 import Button from "@mui/material/Button";
-import AppApi from "../server/api/AppApi";
+import AppApi from "../../server/api/AppApi";
 import { AxiosError } from "axios/index";
-import { useAppSelector } from "../store/hooks";
-import { getLoggedUser } from "../store/slices/AuthSlice";
+import { useAppSelector } from "../../store/hooks";
+import { getLoggedUser } from "../../store/slices/AuthSlice";
 import { useNavigate } from "react-router-dom";
-import { AppRoutes } from "../utils/constants/routes";
+import { AppRoutes } from "../../utils/constants/routes";
 
 export enum FIELD_NAMES {
   name = "name",

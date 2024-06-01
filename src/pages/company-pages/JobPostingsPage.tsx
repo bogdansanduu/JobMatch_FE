@@ -9,15 +9,15 @@ import {
   getJobs,
   JobType,
   setCurrentJob,
-} from "../store/slices/JobSlice";
-import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { getLoggedCompany } from "../store/slices/AuthSlice";
+} from "../../store/slices/JobSlice";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { getLoggedCompany } from "../../store/slices/AuthSlice";
 
-import { GrayColors, White } from "../utils/constants/colorPallete";
-import CreateJobModal from "../components/modal/CreateJobModal";
-import JobCard from "../components/job/JobCard";
+import { GrayColors, White } from "../../utils/constants/colorPallete";
+import CreateJobModal from "../../components/modal/CreateJobModal";
+import JobCard from "../../components/job/JobCard";
 import { useNavigate } from "react-router-dom";
-import { AppRoutes } from "../utils/constants/routes";
+import { AppRoutes } from "../../utils/constants/routes";
 
 const JobPostingsPage = () => {
   const allJobs = useAppSelector(getJobs);

@@ -3,7 +3,7 @@ import { Box, Divider, TextField, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 
 import { FIELD_NAMES_JOB } from "../register/types";
-import { LOCATION_NAMES } from "../../pages/CreateCompanyAccount";
+import { LOCATION_NAMES } from "../../pages/user-pages/CreateCompanyAccount";
 
 interface ResponsibilitiesStepProps {
   jobData: Record<FIELD_NAMES_JOB | LOCATION_NAMES, string>;

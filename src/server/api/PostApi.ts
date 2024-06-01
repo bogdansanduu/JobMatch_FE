@@ -21,6 +21,17 @@ class PostApi {
     return this.baseApi.sendRequest("GET", "/all");
   }
 
+  async getAllPostsByCompany(companyId: number) {
+    return this.baseApi.sendRequest("GET", `/company/${companyId}`);
+  }
+
+  async getMostRecentCompanyPosts(companyId: number, limit: number) {
+    return this.baseApi.sendRequest(
+      "GET",
+      `/company/most-recent/${companyId}?limit=${limit}`
+    );
+  }
+
   async createPost(userId: number, postData: CreatePostDto) {
     return this.baseApi.sendRequest("POST", `/user-post/${userId}`, postData);
   }

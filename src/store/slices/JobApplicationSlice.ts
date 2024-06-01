@@ -53,6 +53,15 @@ export const getJobApplicationsByUser = createAsyncThunk(
   }
 );
 
+export const getJobApplicationsByJob = createAsyncThunk(
+  "job-application/getJobApplicationsByJob",
+  async (jobId: number) => {
+    const jobApplicationApi = AppApi.getJobApplicationApi();
+
+    return await jobApplicationApi.getJobApplicationsByJob(jobId);
+  }
+);
+
 export const JobApplicationSlice = createSlice({
   name: "jobApplication",
   initialState,
@@ -79,7 +88,14 @@ export const JobApplicationSlice = createSlice({
       state.jobApplications = action.payload;
     });
     builder.addCase(getJobApplicationsByUser.rejected, (state, action) => {
-      console.log(action.error.message);
+      state.jobApplications = [];
+    });
+    //GET JOB APPLICATIONS BY JOB
+    builder.addCase(getJobApplicationsByJob.fulfilled, (state, action) => {
+      state.jobApplications = action.payload;
+    });
+    builder.addCase(getJobApplicationsByJob.rejected, (state, action) => {
+      state.jobApplications = [];
     });
   },
 });

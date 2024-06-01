@@ -1,5 +1,10 @@
 import BaseApi from "./BaseApi";
 
+export interface UploadResumeDto {
+  fileName: string;
+  fileKey: string;
+}
+
 class UserApi {
   private baseApi: BaseApi;
 
@@ -31,6 +36,18 @@ class UserApi {
       userId,
       contactId,
     });
+  }
+
+  uploadUserResume(userId: number, resumeDto: UploadResumeDto) {
+    return this.baseApi.sendRequest(
+      "POST",
+      `/upload-resume/${userId}`,
+      resumeDto
+    );
+  }
+
+  deleteUserResume(userId: number) {
+    return this.baseApi.sendRequest("DELETE", `/delete-resume/${userId}`);
   }
 }
 

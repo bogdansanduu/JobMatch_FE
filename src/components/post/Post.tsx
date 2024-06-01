@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Box, Button, Collapse, Divider, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Collapse,
+  Divider,
+  SxProps,
+  Typography,
+} from "@mui/material";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import AddCommentOutlinedIcon from "@mui/icons-material/AddCommentOutlined";
@@ -28,9 +35,10 @@ interface PostProps {
   post: PostType;
   isCompany?: boolean;
   isUser?: boolean;
+  containerSx?: SxProps;
 }
 
-const Post = ({ post, isCompany, isUser }: PostProps) => {
+const Post = ({ post, isCompany, isUser, containerSx }: PostProps) => {
   const currentUser = useAppSelector(getLoggedUser);
   const currentCompany = useAppSelector(getLoggedCompany);
 
@@ -131,6 +139,8 @@ const Post = ({ post, isCompany, isUser }: PostProps) => {
         borderRadius: "8px",
         backgroundColor: White.PureWhite,
         border: `1px solid ${GrayColors.Gray2}`,
+
+        ...containerSx,
       }}
     >
       <Typography variant="h5" component="h2">

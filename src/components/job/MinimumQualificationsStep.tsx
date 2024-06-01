@@ -2,7 +2,7 @@ import React, { ChangeEvent } from "react";
 import { Box, Divider, TextField, Typography } from "@mui/material";
 
 import { FIELD_NAMES_JOB } from "../register/types";
-import { LOCATION_NAMES } from "../../pages/CreateCompanyAccount";
+import { LOCATION_NAMES } from "../../pages/user-pages/CreateCompanyAccount";
 import Button from "@mui/material/Button";
 
 interface MinimumQualificationsStepProps {

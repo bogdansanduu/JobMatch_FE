@@ -100,7 +100,7 @@ const SearchPopover = () => {
   };
 
   const handleNavigateCompany = (company: CompanyType) => {
-    navigate(`${AppRoutes.CompanyProfile}/${company.id}`);
+    navigate(`${AppRoutes.UserCompanyProfile}/${company.id}`);
 
     setSearchTerm("");
     setAnchorEl(null);

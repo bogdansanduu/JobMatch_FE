@@ -1,26 +1,26 @@
 import React, { useEffect, useReducer, useState } from "react";
 import { Box } from "@mui/material";
 
-import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { UserType } from "../store/slices/UserSlice";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { UserType } from "../../store/slices/UserSlice";
 import {
   getLoggedCompany,
   getLoggedUser,
   refreshCurrentUserData,
   refreshToken,
   refreshTokenCompany,
-} from "../store/slices/AuthSlice";
+} from "../../store/slices/AuthSlice";
 
 import {
   SocketEventsClient,
   SocketEventsServer,
-} from "../utils/constants/socketEvents";
+} from "../../utils/constants/socketEvents";
 
-import { ChatRoomType } from "../utils/types/ChatRoom";
-import AppApi from "../server/api/AppApi";
-import NoConversationSelected from "../components/messaging/NoConversationSelected";
-import Conversation from "../components/messaging/Conversation";
-import ConversationsList from "../components/messaging/ConversationsList";
+import { ChatRoomType } from "../../utils/types/ChatRoom";
+import AppApi from "../../server/api/AppApi";
+import NoConversationSelected from "../../components/messaging/NoConversationSelected";
+import Conversation from "../../components/messaging/Conversation";
+import ConversationsList from "../../components/messaging/ConversationsList";
 
 const MessagingPage = () => {
   const socket = AppApi.getSocketApi();
