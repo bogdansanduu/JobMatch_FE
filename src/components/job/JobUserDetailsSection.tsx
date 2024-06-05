@@ -25,8 +25,6 @@ const JobUserDetailsSection = () => {
 
   const dispatch = useAppDispatch();
 
-  console.log(currentLoggedUser);
-
   const alreadyApplied = !!currentLoggedUser?.jobApplications?.some(
     (jobApplication) => jobApplication.job.id === currentJob?.id
   );
@@ -44,7 +42,6 @@ const JobUserDetailsSection = () => {
       applyForJob({
         userId: currentLoggedUser.id,
         jobId: currentJob.id,
-        resume: currentLoggedUser.resume,
       })
     );
 

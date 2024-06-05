@@ -5,13 +5,18 @@ import { RootState } from "../store";
 import AppApi from "../../server/api/AppApi";
 import { revertAll } from "../actions";
 
-const JobApplicationStatus = "123";
+export enum APPLICATION_STATUS {
+  PENDING = "PENDING",
+  APPROVED = "APPROVED",
+  REJECTED = "REJECTED",
+}
 
 export interface JobApplicationType {
   id: number;
   job: JobType;
   applicant: UserType;
-  status: string;
+  status: APPLICATION_STATUS;
+  observations?: string;
   resume: string;
   applicationDate: string;
   updateDate: string;
@@ -29,18 +34,31 @@ const initialState: JobApplicationState = {
 
 export const applyForJob = createAsyncThunk(
   "job-application/applyForJob",
+  async ({ userId, jobId }: { userId: number; jobId: number }) => {
+    const jobApplicationApi = AppApi.getJobApplicationApi();
+
+    return await jobApplicationApi.applyForJob(userId, jobId);
+  }
+);
+
+export const reviewJobApplication = createAsyncThunk(
+  "job-application/reviewJobApplication",
   async ({
-    userId,
-    jobId,
-    resume,
+    jobApplicationId,
+    status,
+    observations,
   }: {
-    userId: number;
-    jobId: number;
-    resume: string;
+    jobApplicationId: number;
+    status: APPLICATION_STATUS;
+    observations: string;
   }) => {
     const jobApplicationApi = AppApi.getJobApplicationApi();
 
-    return await jobApplicationApi.applyForJob(userId, jobId, resume);
+    return await jobApplicationApi.reviewJobApplication(
+      jobApplicationId,
+      status,
+      observations
+    );
   }
 );
 
@@ -81,7 +99,7 @@ export const JobApplicationSlice = createSlice({
       state.jobApplications.push(action.payload);
     });
     builder.addCase(applyForJob.rejected, (state, action) => {
-      console.log(action.error.message);
+      state.currentJobApplication = undefined;
     });
     //GET JOB APPLICATIONS BY USER
     builder.addCase(getJobApplicationsByUser.fulfilled, (state, action) => {
@@ -96,6 +114,18 @@ export const JobApplicationSlice = createSlice({
     });
     builder.addCase(getJobApplicationsByJob.rejected, (state, action) => {
       state.jobApplications = [];
+    });
+    //REVIEW JOB APPLICATION
+    builder.addCase(reviewJobApplication.fulfilled, (state, action) => {
+      state.currentJobApplication = action.payload;
+      state.jobApplications = state.jobApplications.map((jobApplication) =>
+        jobApplication.id === action.payload.id
+          ? action.payload
+          : jobApplication
+      );
+    });
+    builder.addCase(reviewJobApplication.rejected, (state, action) => {
+      state.currentJobApplication = undefined;
     });
   },
 });

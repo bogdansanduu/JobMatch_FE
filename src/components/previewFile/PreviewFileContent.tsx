@@ -23,7 +23,7 @@ interface PreviewFileModalProps {
 }
 
 const PreviewFileContent = ({ file, closePreview }: PreviewFileModalProps) => {
-  const { fileName, id, fileKey } = file;
+  const { fileName, fileKey } = file;
   const s3DocumentApi = AppApi.getS3DocumentApi();
 
   const [numPages, setNumPages] = useState(null);
@@ -34,6 +34,10 @@ const PreviewFileContent = ({ file, closePreview }: PreviewFileModalProps) => {
   const { isPDF } = getFileTypeFromFileExtensionName(fileName);
 
   useEffect(() => {
+    if (!fileName || !fileKey) {
+      return;
+    }
+
     (async () => {
       await onPreviewFile();
     })();

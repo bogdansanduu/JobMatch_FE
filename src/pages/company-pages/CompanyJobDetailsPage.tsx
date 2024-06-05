@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Box, Button, Collapse, Divider, Typography } from "@mui/material";
+import { Box, Button, Divider, Typography } from "@mui/material";
 
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { getCurrentJob } from "../../store/slices/JobSlice";
@@ -12,11 +12,7 @@ import { GrayColors, White } from "../../utils/constants/colorPallete";
 
 import JobDetails from "../../components/job/JobDetails";
 import JobDetailsHeader from "../../components/job/JobDetailsHeader";
-import IconButton from "@mui/material/IconButton";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import JobApplicationUser from "../../components/job/JobApplicationUser";
-import jobApplicationUser from "../../components/job/JobApplicationUser";
+import JobApplicationUser from "../../components/application/JobApplicationUser";
 
 const CompanyJobDetailsPage = () => {
   const currentJob = useAppSelector(getCurrentJob);

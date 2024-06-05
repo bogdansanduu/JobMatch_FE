@@ -7,6 +7,7 @@ import {
   getJobApplications,
   getJobApplicationsByUser,
   JobApplicationType,
+  setCurrentJobApplication,
 } from "../../store/slices/JobApplicationSlice";
 import {
   getJobsSaved,
@@ -37,10 +38,11 @@ const MyApplicationsSection = () => {
 
   const [value, setValue] = React.useState(0);
 
-  const handleJobApplicationCardClick = (
+  const handleJobApplicationCardClick = async (
     jobApplication: JobApplicationType
   ) => {
-    dispatch(setCurrentJob(jobApplication.job));
+    await dispatch(setCurrentJob(jobApplication.job));
+    await dispatch(setCurrentJobApplication(jobApplication));
 
     navigate(`${AppRoutes.UserApplicationReview}/${jobApplication.id}`);
   };
