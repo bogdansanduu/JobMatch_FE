@@ -54,6 +54,8 @@ export class BaseApi {
       },
     };
 
+    console.log(this.axiosInstance);
+
     try {
       const response = await this.axiosInstance(config);
       return response.data;
