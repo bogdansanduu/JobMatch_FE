@@ -24,7 +24,7 @@ export class BaseApi {
       axios.create({
         baseURL: this.baseUrl,
         jar,
-        withCredentials: true,
+        withCredentials: false,
       })
     );
   }
