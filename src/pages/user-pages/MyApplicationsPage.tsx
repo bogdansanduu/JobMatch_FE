@@ -1,16 +1,19 @@
 import React from "react";
-import { Box } from "@mui/material";
+import { Box, useMediaQuery } from "@mui/material";
 
 import MyAccountSection from "../../components/account/MyAccountSection";
 import RecommendedJobsSection from "../../components/job/RecommendedJobsSection";
 import MyApplicationsSection from "../../components/application/MyApplicationsSection";
 
 const MyApplicationsPage = () => {
+  const isLaptop = useMediaQuery("(min-width: 1024px)");
+  const isTablet = useMediaQuery("(max-width: 768px)");
+
   return (
     <Box sx={{ display: "flex", padding: "12px", gap: "12px" }}>
-      <MyAccountSection />
+      {isLaptop && <MyAccountSection />}
       <MyApplicationsSection />
-      <RecommendedJobsSection />
+      {!isTablet && <RecommendedJobsSection />}
     </Box>
   );
 };

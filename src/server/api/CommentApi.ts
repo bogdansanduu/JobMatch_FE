@@ -7,22 +7,26 @@ class CommentApi {
     this.baseApi = new BaseApi("comment");
   }
 
-  async likeComment(commentId: number, userId: number) {
+  getAllComments() {
+    return this.baseApi.sendRequest("GET", "/all");
+  }
+
+  likeComment(commentId: number, userId: number) {
     return this.baseApi.sendRequest("POST", `/like/${commentId}/${userId}`);
   }
 
-  async likeCommentCompany(commentId: number, companyId: number) {
+  likeCommentCompany(commentId: number, companyId: number) {
     return this.baseApi.sendRequest(
       "POST",
       `/like-company/${commentId}/${companyId}`
     );
   }
 
-  async unlikeComment(commentId: number, userId: number) {
+  unlikeComment(commentId: number, userId: number) {
     return this.baseApi.sendRequest("POST", `/unlike/${commentId}/${userId}`);
   }
 
-  async unlikeCommentCompany(commentId: number, companyId: number) {
+  unlikeCommentCompany(commentId: number, companyId: number) {
     return this.baseApi.sendRequest(
       "POST",
       `/unlike-company/${commentId}/${companyId}`

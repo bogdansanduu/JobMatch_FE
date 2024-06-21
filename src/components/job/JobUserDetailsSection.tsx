@@ -103,7 +103,10 @@ const JobUserDetailsSection = () => {
             </Box>
 
             <Box sx={{ display: "flex", marginLeft: "auto", gap: "8px" }}>
-              <Tooltip title={"Already applied"} placement={"top"}>
+              <Tooltip
+                title={alreadyApplied ? "Already applied" : ""}
+                placement={"top"}
+              >
                 <span>
                   <Button
                     variant={"contained"}

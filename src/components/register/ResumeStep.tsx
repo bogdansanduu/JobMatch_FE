@@ -27,7 +27,7 @@ const ResumeStep = ({
   handleBlur,
   handleNext,
 }: ResumeStepProps) => {
-  const isDisabled = !user.resume;
+  const isDisabled = !!user.resume && !!user.currentPosition;
 
   const onNext = () => {
     handleNext();
@@ -35,6 +35,20 @@ const ResumeStep = ({
 
   return (
     <MainContainer>
+      <TextField
+        error={dirty.currentPosition && !user.currentPosition}
+        label={"Current Position"}
+        name={FIELD_NAMES.currentPosition}
+        variant={"outlined"}
+        value={user.currentPosition}
+        onChange={(e) => handleChange(e)}
+        fullWidth
+        required
+        margin={"normal"}
+        type={"text"}
+        onBlur={(e) => handleBlur(e, true)}
+        placeholder="Enter your current position."
+      />
       <TextField
         error={dirty.resume && !user.resume}
         label={"Paste your resume here"}
@@ -53,7 +67,7 @@ const ResumeStep = ({
         placeholder="Include all relevant work and education details."
       />
       <Button
-        disabled={isDisabled}
+        disabled={!isDisabled}
         onClick={onNext}
         fullWidth
         variant="contained"

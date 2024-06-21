@@ -4,7 +4,6 @@ import Avatar from "@mui/material/Avatar";
 import { Divider, Typography } from "@mui/material";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import PersonAdd from "@mui/icons-material/PersonAdd";
-import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router";
 
@@ -13,6 +12,7 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { revertAll } from "../../store/actions";
 
 import { AppRoutes } from "../../utils/constants/routes";
+import { Roles } from "../../utils/constants/roles";
 
 interface UserSettingsProps {
   setAnchorElUser: (event: HTMLElement | null) => void;
@@ -52,31 +52,30 @@ const UserSettings = ({ setAnchorElUser }: UserSettingsProps) => {
 
   return (
     <>
-      <MenuItem onClick={handleOpenProfile}>
-        <Avatar src={currentUser?.profilePicture} />
-        <Typography variant="body2" color={"text.secondary"}>
-          {`${currentUser?.firstName} ${currentUser?.lastName}`}
-        </Typography>
-      </MenuItem>
-      <Divider sx={{ my: 0.5 }} />
-      {!alreadyHasCompanyAccount && (
-        <MenuItem onClick={handleCreateJobAccount}>
-          <ListItemIcon>
-            <PersonAdd fontSize="small" />
-          </ListItemIcon>
-          <Typography variant="body2" color={"text.secondary"}>
-            Create Company Account
-          </Typography>
-        </MenuItem>
-      )}
-      <MenuItem onClick={handleCloseUserMenu}>
-        <ListItemIcon>
-          <Settings fontSize="small" />
-        </ListItemIcon>
-        <Typography variant="body2" color={"text.secondary"}>
-          Settings
-        </Typography>
-      </MenuItem>
+      {currentUser &&
+        [Roles.USER, Roles.COMPANY_OWNER].includes(currentUser.role) && (
+          <>
+            <MenuItem onClick={handleOpenProfile}>
+              <Avatar src={currentUser?.profilePicture} />
+              <Typography variant="body2" color={"text.secondary"}>
+                {`${currentUser?.firstName} ${currentUser?.lastName}`}
+              </Typography>
+            </MenuItem>
+            <Divider sx={{ my: 0.5 }} />
+          </>
+        )}
+      {currentUser &&
+        [Roles.USER, Roles.COMPANY_OWNER].includes(currentUser.role) &&
+        !alreadyHasCompanyAccount && (
+          <MenuItem onClick={handleCreateJobAccount}>
+            <ListItemIcon>
+              <PersonAdd fontSize="small" />
+            </ListItemIcon>
+            <Typography variant="body2" color={"text.secondary"}>
+              Create Company Account
+            </Typography>
+          </MenuItem>
+        )}
       <MenuItem onClick={handleSignOut}>
         <ListItemIcon>
           <Logout fontSize="small" />

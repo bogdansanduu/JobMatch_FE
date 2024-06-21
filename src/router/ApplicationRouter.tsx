@@ -2,6 +2,7 @@ import React from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 
 import { AppRoutes } from "../utils/constants/routes";
+import { Roles } from "../utils/constants/roles";
 
 import NotFoundPage from "../pages/NotFoundPage";
 import AccessDeniedPage from "../pages/AccessDeniedPage";
@@ -27,6 +28,14 @@ import UserJobDetailsPage from "../pages/user-pages/UserJobDetailsPage";
 import MyApplicationsPage from "../pages/user-pages/MyApplicationsPage";
 import ApplicationReviewPage from "../pages/user-pages/ApplicationReviewPage";
 import UserCompanyPage from "../pages/user-pages/UserCompanyPage";
+import RoleRestrictedRoute from "../components/routeRestrictors/RoleRestrictedRoute";
+import CompanyPage from "../pages/company-pages/CompanyPage";
+import CompanyUserPage from "../pages/company-pages/CompanyUserPage";
+import AllUsersPage from "../pages/admin-pages/AllUsersPage";
+import AllCompaniesPage from "../pages/admin-pages/AllCompaniesPage";
+import AdminHomePage from "../pages/admin-pages/AdminHomePage";
+import AdminUserProfile from "../pages/admin-pages/AdminUserProfile";
+import AdminCompanyProfile from "../pages/admin-pages/AdminCompanyProfile";
 
 const ApplicationRouter = createBrowserRouter([
   {
@@ -40,30 +49,54 @@ const ApplicationRouter = createBrowserRouter([
       },
       {
         path: AppRoutes.Home,
-        element: <HomePage />,
+        element: (
+          <RoleRestrictedRoute roles={[Roles.USER, Roles.COMPANY_OWNER]}>
+            <HomePage />
+          </RoleRestrictedRoute>
+        ),
       },
       {
         path: AppRoutes.MyNetwork,
-        element: <MyNetworkPage />,
+        element: (
+          <RoleRestrictedRoute roles={[Roles.USER, Roles.COMPANY_OWNER]}>
+            <MyNetworkPage />
+          </RoleRestrictedRoute>
+        ),
       },
       {
         path: AppRoutes.Jobs,
-        element: <JobsPage />,
+        element: (
+          <RoleRestrictedRoute roles={[Roles.USER, Roles.COMPANY_OWNER]}>
+            <JobsPage />
+          </RoleRestrictedRoute>
+        ),
       },
       {
         path: AppRoutes.Messaging,
-        element: <MessagingPage />,
+        element: (
+          <RoleRestrictedRoute roles={[Roles.USER, Roles.COMPANY_OWNER]}>
+            <MessagingPage />
+          </RoleRestrictedRoute>
+        ),
       },
       {
         path: AppRoutes.MyProfile,
-        element: <MyProfilePage />,
+        element: (
+          <RoleRestrictedRoute roles={[Roles.USER, Roles.COMPANY_OWNER]}>
+            <MyProfilePage />
+          </RoleRestrictedRoute>
+        ),
       },
       {
         path: AppRoutes.UserProfile,
         children: [
           {
             path: ":userId",
-            element: <UserPage />,
+            element: (
+              <RoleRestrictedRoute roles={[Roles.USER, Roles.COMPANY_OWNER]}>
+                <UserPage />
+              </RoleRestrictedRoute>
+            ),
           },
         ],
       },
@@ -72,7 +105,11 @@ const ApplicationRouter = createBrowserRouter([
         children: [
           {
             path: ":companyId",
-            element: <UserCompanyPage />,
+            element: (
+              <RoleRestrictedRoute roles={[Roles.USER, Roles.COMPANY_OWNER]}>
+                <UserCompanyPage />
+              </RoleRestrictedRoute>
+            ),
           },
         ],
       },
@@ -81,30 +118,107 @@ const ApplicationRouter = createBrowserRouter([
         children: [
           {
             path: ":jobId",
-            element: <UserJobDetailsPage />,
+            element: (
+              <RoleRestrictedRoute roles={[Roles.USER, Roles.COMPANY_OWNER]}>
+                <UserJobDetailsPage />
+              </RoleRestrictedRoute>
+            ),
           },
         ],
       },
       {
         path: AppRoutes.MyApplications,
-        element: <MyApplicationsPage />,
+        element: (
+          <RoleRestrictedRoute roles={[Roles.USER, Roles.COMPANY_OWNER]}>
+            <MyApplicationsPage />
+          </RoleRestrictedRoute>
+        ),
       },
       {
         path: AppRoutes.UserApplicationReview,
         children: [
           {
             path: ":applicationId",
-            element: <ApplicationReviewPage />,
+            element: (
+              <RoleRestrictedRoute roles={[Roles.USER, Roles.COMPANY_OWNER]}>
+                <ApplicationReviewPage />
+              </RoleRestrictedRoute>
+            ),
           },
         ],
       },
       {
         path: AppRoutes.CreateCompanyAccount,
-        element: <CreateCompanyAccount />,
+        element: (
+          <RoleRestrictedRoute roles={[Roles.USER, Roles.COMPANY_OWNER]}>
+            <CreateCompanyAccount />
+          </RoleRestrictedRoute>
+        ),
       },
       {
         path: AppRoutes.AccessDenied,
         element: <AccessDeniedPage />,
+      },
+    ],
+  },
+  {
+    path: AppRoutes.Admin,
+    element: <AuthWrapper />,
+    errorElement: <NotFoundPage />,
+    children: [
+      {
+        path: "",
+        element: <Navigate to={AppRoutes.HomeAdmin} />,
+      },
+      {
+        path: AppRoutes.HomeAdmin,
+        element: (
+          <RoleRestrictedRoute roles={[Roles.ADMIN]}>
+            <AdminHomePage />
+          </RoleRestrictedRoute>
+        ),
+      },
+      {
+        path: AppRoutes.AllUsers,
+        element: (
+          <RoleRestrictedRoute roles={[Roles.ADMIN]}>
+            <AllUsersPage />
+          </RoleRestrictedRoute>
+        ),
+      },
+      {
+        path: AppRoutes.AdminUserProfile,
+        children: [
+          {
+            path: ":userId",
+            element: (
+              <RoleRestrictedRoute roles={[Roles.ADMIN]}>
+                <AdminUserProfile />
+              </RoleRestrictedRoute>
+            ),
+          },
+        ],
+      },
+      {
+        path: AppRoutes.AllCompanies,
+        element: (
+          <RoleRestrictedRoute roles={[Roles.ADMIN]}>
+            <AllCompaniesPage />
+          </RoleRestrictedRoute>
+        ),
+      },
+      {
+        path: AppRoutes.AdminCompanyProfile,
+        children: [
+          {
+            path: ":companyId",
+            element: (
+              <RoleRestrictedRoute roles={[Roles.ADMIN]}>
+                <AdminCompanyProfile />
+              </RoleRestrictedRoute>
+            ),
+          },
+        ],
       },
     ],
   },
@@ -122,6 +236,24 @@ const ApplicationRouter = createBrowserRouter([
         element: <HomePageCompany />,
       },
       {
+        path: AppRoutes.CompanyUserProfile,
+        children: [
+          {
+            path: ":userId",
+            element: <CompanyUserPage />,
+          },
+        ],
+      },
+      {
+        path: AppRoutes.CompanyProfile,
+        children: [
+          {
+            path: ":companyId",
+            element: <CompanyPage />,
+          },
+        ],
+      },
+      {
         path: AppRoutes.JobPostings,
         element: <JobPostingsPage />,
       },
@@ -133,14 +265,6 @@ const ApplicationRouter = createBrowserRouter([
             element: <CompanyJobDetailsPage />,
           },
         ],
-      },
-      {
-        path: AppRoutes.Employees,
-        element: <EmployeesPage />,
-      },
-      {
-        path: AppRoutes.CompanyProfile,
-        element: <NotImplementedPage />,
       },
       {
         path: AppRoutes.AccessDeniedCompany,

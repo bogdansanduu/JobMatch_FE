@@ -3,10 +3,8 @@ import styled from "styled-components";
 import { BodyText2 } from "../typography/BodyTexts";
 import { Blue, GrayColors, White } from "../../utils/constants/colorPallete";
 
-export const DragAndDropContainer = styled.div<{ isWidth800?: boolean }>`
-  min-width: ${(props) => (props.isWidth800 ? "auto" : "485px")};
+export const DragAndDropContainer = styled.div`
   width: 100%;
-  max-width: 100%;
   text-align: center;
   position: relative;
 `;
@@ -25,7 +23,7 @@ export const Label = styled.label<{ dragActive: boolean }>`
   background-color: ${(props) =>
     props.dragActive ? "rgba(210, 226, 253, 0.40)" : White.PureWhite};
 
-  padding: 40px;
+  padding: 20px;
   cursor: pointer;
 `;
 

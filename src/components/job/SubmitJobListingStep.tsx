@@ -24,9 +24,6 @@ const SubmitJobListingStep = ({
 
   const currentCompany = useAppSelector(getLoggedCompany);
 
-  console.log(jobData);
-  console.log(latLng);
-
   const handleSubmit = async () => {
     try {
       await jobApi.createJobListing({

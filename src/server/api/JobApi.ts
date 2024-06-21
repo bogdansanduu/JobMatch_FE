@@ -22,7 +22,7 @@ class JobApi {
     this.baseApi = new BaseApi("job");
   }
 
-  async getAllJobsPaginated(page: number, limit: number, searchTerm?: string) {
+  getAllJobsPaginated(page: number, limit: number, searchTerm?: string) {
     let endpoint = `/all-paginated?page=${page}&limit=${limit}`;
 
     if (searchTerm) {
@@ -32,12 +32,24 @@ class JobApi {
     return this.baseApi.sendRequest("GET", endpoint);
   }
 
-  async getAllJobsByCompany(companyId: number) {
+  getAllJobs() {
+    return this.baseApi.sendRequest("GET", "/all");
+  }
+
+  getJobById(jobId: number) {
+    return this.baseApi.sendRequest("GET", `/${jobId}`);
+  }
+
+  getAllJobsByCompany(companyId: number) {
     return this.baseApi.sendRequest("GET", `/all-company/${companyId}`);
   }
 
-  async createJobListing(data: CreateJobListingDto) {
+  createJobListing(data: CreateJobListingDto) {
     return this.baseApi.sendRequest("POST", "/", data);
+  }
+
+  deleteJobListing(jobId: number) {
+    return this.baseApi.sendRequest("DELETE", `/${jobId}`);
   }
 }
 

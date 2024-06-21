@@ -182,6 +182,7 @@ const JobBasicInfoStep = ({
             <Select
               labelId="category-label"
               id="category"
+              name={FIELD_NAMES_JOB.category}
               value={jobData.category}
               label="Category"
               onChange={handleSelectCategory}

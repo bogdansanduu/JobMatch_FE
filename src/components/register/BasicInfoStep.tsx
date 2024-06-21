@@ -13,6 +13,8 @@ import GeoLocation from "./GeoLocation";
 import { FIELD_NAMES, geonames, LOCATION_NAMES } from "./types";
 import { MainContainer } from "./styledComponents";
 import isEmail from "validator/lib/isEmail";
+import UploadProfilePicture from "../uploadFile/UploadProfilePicture";
+import { setFips } from "crypto";
 
 interface BasicInfoStepProps {
   user: Record<FIELD_NAMES | LOCATION_NAMES, string>;
@@ -35,6 +37,9 @@ interface BasicInfoStepProps {
     state: boolean
   ) => void;
 
+  file: File | undefined;
+  setFile: (file: File | undefined) => void;
+
   handleNext: () => void;
 }
 
@@ -47,36 +52,33 @@ const BasicInfoStep = ({
   dirty,
   setDirty,
   handleBlur,
+  file,
+  setFile,
   handleNext,
 }: BasicInfoStepProps) => {
   const [isEmailValid, setIsEmailValid] = useState(false);
-  const [isNextDisabled, setIsNextDisabled] = useState(true);
+  const {
+    firstName,
+    lastName,
+    email,
+    password,
+    retypedPassword,
+    country,
+    state,
+    city,
+  } = user;
 
-  useEffect(() => {
-    const {
-      firstName,
-      lastName,
-      email,
-      password,
-      retypedPassword,
-      country,
-      state,
-      city,
-    } = user;
-
-    const isDisabled =
-      !!firstName &&
-      !!lastName &&
-      !!password &&
-      !!retypedPassword &&
-      !!email &&
-      !!country &&
-      !!state &&
-      !!city &&
-      isEmailValid;
-
-    setIsNextDisabled(isDisabled);
-  }, [user, isEmailValid]);
+  const isDisabled =
+    !!firstName &&
+    !!lastName &&
+    !!password &&
+    !!retypedPassword &&
+    !!email &&
+    !!country &&
+    !!state &&
+    !!city &&
+    !!file &&
+    isEmailValid;
 
   const handleChangeEmail = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -132,7 +134,7 @@ const BasicInfoStep = ({
   );
 
   const onNext = () => {
-    if (!isNextDisabled) {
+    if (!isDisabled) {
       return;
     }
 
@@ -264,9 +266,12 @@ const BasicInfoStep = ({
             onBlur={(e) => handleBlur(e, true)}
           />
         </Grid>
+        <Grid item xs={12}>
+          <UploadProfilePicture file={file} setFile={setFile} />
+        </Grid>
       </Grid>
       <Button
-        disabled={!isNextDisabled}
+        disabled={!isDisabled}
         onClick={onNext}
         fullWidth
         variant="contained"

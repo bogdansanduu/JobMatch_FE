@@ -10,6 +10,7 @@ interface RegisterParams {
   password: string;
   firstName: string;
   lastName: string;
+  currentPosition: string;
   resume: string;
   //TODO add profile picture to register step
   profilePicture?: string;
@@ -27,6 +28,7 @@ interface RegisterCompanyParams {
   state: string;
   city: string;
   ownerId: number;
+  description: string;
 }
 
 class AuthApi {

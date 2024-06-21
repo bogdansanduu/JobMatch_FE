@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  Avatar,
   Box,
   Button,
   Collapse,
@@ -12,6 +13,8 @@ import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import AddCommentOutlinedIcon from "@mui/icons-material/AddCommentOutlined";
 import IconButton from "@mui/material/IconButton";
 import DOMPurify from "dompurify";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { formatDistanceToNow, parseISO } from "date-fns";
 
 import { Blue, GrayColors, White } from "../../utils/constants/colorPallete";
 
@@ -24,12 +27,14 @@ import {
   likePost,
   likePostCompany,
   PostType,
+  removePost,
   unlikePost,
   unlikePostCompany,
 } from "../../store/slices/PostSlice";
 
 import { StyledInputElement } from "../messaging/styledComponents";
 import Comment from "./Comment";
+import { Roles } from "../../utils/constants/roles";
 
 interface PostProps {
   post: PostType;
@@ -49,12 +54,21 @@ const Post = ({ post, isCompany, isUser, containerSx }: PostProps) => {
 
   const alreadyLiked = !!post.likes.find(
     (like) =>
-      like.author?.id === currentUser?.id ||
-      like.company?.id === currentCompany?.id
+      (currentUser && like.author?.id === currentUser.id) ||
+      (currentCompany && like.company?.id === currentCompany.id)
   );
 
   const likesCount = post.likes.length;
   const commentsCount = post.comments.length;
+
+  const formatRelativeTime = (dateString: string) => {
+    if (!dateString) {
+      return "N/A";
+    }
+
+    const date = parseISO(dateString);
+    return formatDistanceToNow(date, { addSuffix: true });
+  };
 
   const createMarkup = (htmlContent: string) => {
     return { __html: DOMPurify.sanitize(htmlContent) };
@@ -95,6 +109,14 @@ const Post = ({ post, isCompany, isUser, containerSx }: PostProps) => {
   const handleCommentExpand = () => {
     setExpanded((prevState) => !prevState);
     setInputValue("");
+  };
+
+  const handleRemovePost = async () => {
+    if (!currentUser || currentUser.role !== Roles.ADMIN) {
+      return;
+    }
+
+    await dispatch(removePost(post.id));
   };
 
   const handleCreateComment = () => {
@@ -143,49 +165,122 @@ const Post = ({ post, isCompany, isUser, containerSx }: PostProps) => {
         ...containerSx,
       }}
     >
+      <Box
+        sx={{
+          display: "flex",
+          gap: "8px",
+          alignItems: "center",
+        }}
+      >
+        {post.company && (
+          <>
+            <Avatar src={post.company.profilePicture} />
+            <Typography variant="h6">{`${post.company.name}`}</Typography>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                marginLeft: "auto",
+                gap: "4px",
+              }}
+            >
+              <Typography
+                variant="body2"
+                color={"text.secondary"}
+                sx={{ marginLeft: "auto" }}
+              >
+                Posted: {formatRelativeTime(post.createdAt)}
+              </Typography>
+              {currentUser?.role === Roles.ADMIN && (
+                <Button
+                  startIcon={<DeleteIcon />}
+                  onClick={handleRemovePost}
+                  color={"error"}
+                  variant={"contained"}
+                >
+                  Remove
+                </Button>
+              )}
+            </Box>
+          </>
+        )}
+        {post.author && (
+          <>
+            <Avatar src={post.author.profilePicture} />
+            <Typography variant="h6">
+              {`${post.author.firstName} ${post.author.lastName}`}
+            </Typography>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                marginLeft: "auto",
+                gap: "4px",
+              }}
+            >
+              <Typography variant="body2" color={"text.secondary"}>
+                Posted: {formatRelativeTime(post.createdAt)}
+              </Typography>
+              {currentUser?.role === Roles.ADMIN && (
+                <Button
+                  startIcon={<DeleteIcon />}
+                  onClick={handleRemovePost}
+                  color={"error"}
+                  variant={"contained"}
+                >
+                  Remove
+                </Button>
+              )}
+            </Box>
+          </>
+        )}
+      </Box>
+
       <Typography variant="h5" component="h2">
         {post.title}
       </Typography>
       <Divider />
       <div dangerouslySetInnerHTML={createMarkup(post.content)} />
       <Divider />
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "flex-end",
-          alignItems: "center",
-        }}
-      >
-        <Box sx={{ display: "flex", gap: "4px", marginRight: "auto" }}>
-          <Typography variant="body2" color={"text.secondary"}>
-            Likes: {likesCount}
-          </Typography>
-          <Typography variant="body2" color={"text.secondary"}>
-            Comments: {commentsCount}
-          </Typography>
-        </Box>
-        {alreadyLiked ? (
-          <Button
-            startIcon={<ThumbUpIcon />}
-            onClick={() => handleUnlikePost(post)}
-          >
-            Dislike
-          </Button>
-        ) : (
-          <Button
-            startIcon={<ThumbUpOutlinedIcon />}
-            onClick={() => handleLikePost(post)}
-          >
-            Like
-          </Button>
-        )}
-        <Button
-          startIcon={<AddCommentOutlinedIcon />}
-          onClick={handleCommentExpand}
+      {currentUser?.role !== Roles.ADMIN && (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+          }}
         >
-          Comment
-        </Button>
-      </Box>
+          <Box sx={{ display: "flex", gap: "4px", marginRight: "auto" }}>
+            <Typography variant="body2" color={"text.secondary"}>
+              Likes: {likesCount}
+            </Typography>
+            <Typography variant="body2" color={"text.secondary"}>
+              Comments: {commentsCount}
+            </Typography>
+          </Box>
+          {alreadyLiked ? (
+            <Button
+              startIcon={<ThumbUpIcon />}
+              onClick={() => handleUnlikePost(post)}
+            >
+              Dislike
+            </Button>
+          ) : (
+            <Button
+              startIcon={<ThumbUpOutlinedIcon />}
+              onClick={() => handleLikePost(post)}
+            >
+              Like
+            </Button>
+          )}
+          <Button
+            startIcon={<AddCommentOutlinedIcon />}
+            onClick={handleCommentExpand}
+          >
+            Comment
+          </Button>
+        </Box>
+      )}
       <Collapse in={expanded} timeout="auto">
         <Box
           sx={{

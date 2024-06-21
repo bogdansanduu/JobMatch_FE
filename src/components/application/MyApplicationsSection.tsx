@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Box, Tab, Tabs } from "@mui/material";
+import { Box, Tab, Tabs, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
@@ -28,6 +28,7 @@ function a11yProps(index: number) {
     "aria-controls": `simple-tabpanel-${index}`,
   };
 }
+
 const MyApplicationsSection = () => {
   const currentLoggedUser = useAppSelector(getLoggedUser);
   const jobApplications = useAppSelector(getJobApplications);
@@ -83,34 +84,50 @@ const MyApplicationsSection = () => {
       }}
     >
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          aria-label="basic tabs example"
-        >
+        <Tabs value={value} onChange={handleChange}>
           <Tab label="Applied Jobs" {...a11yProps(0)} />
           <Tab label="Saved Jobs" {...a11yProps(1)} />
         </Tabs>
       </Box>
       <Box hidden={value !== 0}>
-        {jobApplications.map((jobApplication) => (
-          <JobCard
-            key={jobApplication.id}
-            job={jobApplication.job}
-            onClick={() => handleJobApplicationCardClick(jobApplication)}
-          />
-        ))}
+        {Array.isArray(jobApplications) && jobApplications.length > 0 ? (
+          jobApplications.map((jobApplication) => (
+            <JobCard
+              key={jobApplication.id}
+              job={jobApplication.job}
+              onClick={() => handleJobApplicationCardClick(jobApplication)}
+            />
+          ))
+        ) : (
+          <Typography
+            variant="body1"
+            color={"text.secondary"}
+            sx={{ padding: "8px" }}
+          >
+            No applied jobs
+          </Typography>
+        )}
       </Box>
 
       <Box hidden={value !== 1}>
         <Box>
-          {savedJobs.map((savedJob) => (
-            <JobCard
-              key={savedJob.id}
-              job={savedJob.job}
-              onClick={() => handleJobSavedCardClick(savedJob)}
-            />
-          ))}
+          {Array.isArray(savedJobs) && savedJobs.length > 0 ? (
+            savedJobs.map((savedJob) => (
+              <JobCard
+                key={savedJob.id}
+                job={savedJob.job}
+                onClick={() => handleJobSavedCardClick(savedJob)}
+              />
+            ))
+          ) : (
+            <Typography
+              variant="body1"
+              color={"text.secondary"}
+              sx={{ padding: "8px" }}
+            >
+              No jobs saved
+            </Typography>
+          )}
         </Box>
       </Box>
     </Box>

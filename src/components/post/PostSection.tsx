@@ -50,7 +50,7 @@ const PostSection = () => {
             gap: "8px",
           }}
         >
-          {currentUser && currentUser.profilePicture && (
+          {currentUser && (
             <Typography
               sx={{ marginRight: "8px", alignSelf: "flex-start" }}
               variant="h6"
@@ -60,7 +60,7 @@ const PostSection = () => {
               exploring your feed!
             </Typography>
           )}
-          {currentUser && currentUser.profilePicture && (
+          {currentUser && (
             <Box
               sx={{
                 display: "flex",

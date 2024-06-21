@@ -1,12 +1,6 @@
 import React, { MouseEvent, useCallback, useEffect, useState } from "react";
 import {
-  Avatar,
   Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
   Divider,
   InputAdornment,
   TextField,
@@ -15,9 +9,6 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import BusinessIcon from "@mui/icons-material/Business";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import DescriptionIcon from "@mui/icons-material/Description";
 import { Blue, GrayColors, White } from "../../utils/constants/colorPallete";
 import { debounce } from "lodash";
 
@@ -34,10 +25,13 @@ import useInfiniteScroll from "../../utils/hooks/useInfiniteScroll";
 import JobCard from "./JobCard";
 import { AppRoutes } from "../../utils/constants/routes";
 import { useNavigate } from "react-router-dom";
+import { Roles } from "../../utils/constants/roles";
+import { getLoggedUser } from "../../store/slices/AuthSlice";
 
 const limit = 10;
 
 const AllJobsSection = () => {
+  const currentUser = useAppSelector(getLoggedUser);
   const allJobs = useAppSelector(getJobs);
   const totalJobsCount = useAppSelector(getTotalJobsCount);
 
@@ -113,43 +107,47 @@ const AllJobsSection = () => {
       }}
       ref={jobContainerRef}
     >
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "flex-end",
-          alignItems: "center",
-        }}
-      >
-        <TextField
-          variant="standard"
-          margin="normal"
-          placeholder="Search"
+      {currentUser?.role === Roles.ADMIN ? (
+        <Typography variant="h6">All Company Jobs:</Typography>
+      ) : (
+        <Box
           sx={{
-            backgroundColor: Blue.VoyagerBlue,
-            borderRadius: "6px",
-            marginTop: 0,
-            marginBottom: 0,
-            width: "fit-content",
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
           }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start" sx={{ paddingLeft: "4px" }}>
-                <SearchIcon />
-              </InputAdornment>
-            ),
-            disableUnderline: true,
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={(e) => handleClose(e)} disableRipple>
-                  <CloseIcon />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </Box>
+        >
+          <TextField
+            variant="standard"
+            margin="normal"
+            placeholder="Search"
+            sx={{
+              backgroundColor: Blue.VoyagerBlue,
+              borderRadius: "6px",
+              marginTop: 0,
+              marginBottom: 0,
+              width: "fit-content",
+            }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start" sx={{ paddingLeft: "4px" }}>
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+              disableUnderline: true,
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={(e) => handleClose(e)} disableRipple>
+                    <CloseIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </Box>
+      )}
 
       <Divider />
 

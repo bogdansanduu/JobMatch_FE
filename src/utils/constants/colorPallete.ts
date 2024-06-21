@@ -24,7 +24,7 @@ export enum Yellow {
 
 export enum GrayColors {
   PrimaryGray = "#D3D3D3",
-  Grey0 = "#FBFCFF",
+  Gray0 = "#FBFCFF",
   Gray1 = "#EFF1F7",
   Gray2 = "#E0E2E9",
   Gray3 = "#C5C7CD",

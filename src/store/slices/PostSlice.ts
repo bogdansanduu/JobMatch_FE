@@ -32,7 +32,8 @@ export type PostType = {
   title: string;
   content: string;
   picture?: string;
-  author: UserType;
+  author?: UserType;
+  company?: CompanyType;
   likes: LikeType[];
   comments: CommentType[];
   createdAt: string;
@@ -59,12 +60,30 @@ export const getAllPostsByCompany = createAsyncThunk(
   }
 );
 
+export const getAllPostsByUser = createAsyncThunk(
+  "post/getAllPostsByUser",
+  async (userId: number) => {
+    const postApi = AppApi.getPostApi();
+
+    return await postApi.getAllPostsByUser(userId);
+  }
+);
+
 export const getMostRecentCompanyPosts = createAsyncThunk(
   "post/getMostRecentCompanyPosts",
   async ({ companyId, limit }: { companyId: number; limit: number }) => {
     const postApi = AppApi.getPostApi();
 
     return await postApi.getMostRecentCompanyPosts(companyId, limit);
+  }
+);
+
+export const getMostRecentUserPosts = createAsyncThunk(
+  "post/getMostRecentUserPosts",
+  async ({ userId, limit }: { userId: number; limit: number }) => {
+    const postApi = AppApi.getPostApi();
+
+    return await postApi.getMostRecentUserPosts(userId, limit);
   }
 );
 
@@ -210,6 +229,17 @@ export const unlikeCommentCompany = createAsyncThunk(
   }
 );
 
+export const removePost = createAsyncThunk(
+  "post/removePost",
+  async (postId: number) => {
+    const postApi = AppApi.getPostApi();
+
+    await postApi.removePost(postId);
+
+    return postId;
+  }
+);
+
 export const PostSlice = createSlice({
   name: "post",
   initialState,
@@ -236,6 +266,20 @@ export const PostSlice = createSlice({
       state.posts = action.payload;
     });
     builder.addCase(getAllPostsByCompany.rejected, (state) => {
+      state.posts = [];
+    });
+    //GET ALL POSTS BY USER
+    builder.addCase(getAllPostsByUser.fulfilled, (state, action) => {
+      state.posts = action.payload;
+    });
+    builder.addCase(getAllPostsByUser.rejected, (state) => {
+      state.posts = [];
+    });
+    //GET MOST RECENT USER POSTS
+    builder.addCase(getMostRecentUserPosts.fulfilled, (state, action) => {
+      state.posts = action.payload;
+    });
+    builder.addCase(getMostRecentUserPosts.rejected, (state) => {
       state.posts = [];
     });
     //GET MOST RECENT COMPANY POSTS
@@ -388,6 +432,10 @@ export const PostSlice = createSlice({
         });
         return post;
       });
+    });
+    //REMOVE POST
+    builder.addCase(removePost.fulfilled, (state, action) => {
+      state.posts = state.posts.filter((post) => post.id !== action.payload);
     });
   },
 });

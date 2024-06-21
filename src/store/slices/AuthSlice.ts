@@ -85,7 +85,7 @@ export const AuthSlice = createSlice({
     setToken: (state, action: PayloadAction<string>) => {
       state.accessToken = action.payload;
     },
-    setUser: (state, action: PayloadAction<UserType>) => {
+    setLoggedUser: (state, action: PayloadAction<UserType>) => {
       state.loggedUser = action.payload;
     },
   },
@@ -97,7 +97,15 @@ export const AuthSlice = createSlice({
       state.accessToken = action.payload.accessToken;
       state.loggedUser = action.payload.user;
     });
-    builder.addCase(login.rejected, (state) => {
+    builder.addCase(login.rejected, (state, action) => {
+      if (action.error.message === "Request failed with status code 403") {
+        alert("User is banned");
+      }
+
+      if (action.error.message === "Request failed with status code 404") {
+        alert("Invalid credentials");
+      }
+
       state.accessToken = undefined;
       state.loggedUser = undefined;
       state.loggedCompany = undefined;
@@ -138,7 +146,15 @@ export const AuthSlice = createSlice({
       state.accessToken = action.payload.accessToken;
       state.loggedCompany = action.payload.company;
     });
-    builder.addCase(loginCompany.rejected, (state) => {
+    builder.addCase(loginCompany.rejected, (state, action) => {
+      if (action.error.message === "Request failed with status code 403") {
+        alert("Company is banned");
+      }
+
+      if (action.error.message === "Request failed with status code 404") {
+        alert("Invalid credentials");
+      }
+
       state.accessToken = undefined;
       state.loggedUser = undefined;
       state.loggedCompany = undefined;
@@ -150,7 +166,7 @@ export const AuthSlice = createSlice({
   },
 });
 
-export const { setToken, setUser } = AuthSlice.actions;
+export const { setToken, setLoggedUser } = AuthSlice.actions;
 export const getToken = (state: RootState) => state.auth.accessToken;
 export const getLoggedUser = (state: RootState) => state.auth.loggedUser;
 export const getLoggedCompany = (state: RootState) => state.auth.loggedCompany;

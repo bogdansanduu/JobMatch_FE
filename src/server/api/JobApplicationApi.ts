@@ -12,6 +12,10 @@ class JobApplicationApi {
     return this.baseApi.sendRequest("GET", "/all");
   }
 
+  async getJobApplicationById(jobApplicationId: number) {
+    return this.baseApi.sendRequest("GET", `/${jobApplicationId}`);
+  }
+
   async getJobApplicationsByUser(userId: number) {
     return this.baseApi.sendRequest("GET", `/user/${userId}`);
   }

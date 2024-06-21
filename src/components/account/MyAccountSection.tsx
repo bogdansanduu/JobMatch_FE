@@ -67,7 +67,7 @@ const MyAccountSection = () => {
         />
         <Typography variant="h6">{`${currentUser?.firstName} ${currentUser?.lastName}`}</Typography>
         <Typography variant="subtitle2" color="text.secondary">
-          {"Your Position"}
+          {currentUser?.currentPosition || "No position"}
         </Typography>
         <CardContent
           sx={{

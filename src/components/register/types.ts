@@ -4,6 +4,7 @@ export enum FIELD_NAMES {
   firstName = "firstName",
   lastName = "lastName",
   email = "email",
+  currentPosition = "currentPosition",
   resume = "resume",
   password = "password",
   retypedPassword = "retypedPassword",

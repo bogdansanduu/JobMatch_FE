@@ -26,8 +26,8 @@ const Comment = ({ comment, isUser, isCompany }: CommentProps) => {
 
   const alreadyLiked = !!comment.likes.find(
     (like) =>
-      like.author?.id === currentUser?.id ||
-      like.company?.id === currentCompany?.id
+      (currentUser && like.author?.id === currentUser.id) ||
+      (currentCompany && like.company?.id === currentCompany.id)
   );
 
   const likesCount = comment.likes.length;

@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, Box, Typography } from "@mui/material";
+import { Avatar, Box, Divider, Typography } from "@mui/material";
 import BusinessIcon from "@mui/icons-material/Business";
 import { GrayColors } from "../../utils/constants/colorPallete";
 import ClassIcon from "@mui/icons-material/Class";
@@ -28,7 +28,7 @@ const JobDetailsHeader = () => {
         src={currentJob.company.profilePicture}
         sx={{ alignSelf: "start", marginTop: "6px" }}
       />
-      <Box>
+      <Box sx={{ display: "flex", flexDirection: "column", gap: "6px" }}>
         <Typography variant="h6">{currentJob.title}</Typography>
         <Box
           sx={{
@@ -62,15 +62,6 @@ const JobDetailsHeader = () => {
             }${currentJob.state ? ", " : ""}${currentJob.country}`}
           </Typography>
         </Box>
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          marginLeft: "auto",
-          alignSelf: "end",
-        }}
-      >
         <Box
           sx={{
             display: "flex",

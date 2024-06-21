@@ -1,24 +1,23 @@
 import React from "react";
+import { Roles } from "../../utils/constants/roles";
+import { useAppSelector } from "../../store/hooks";
+import { getLoggedUser } from "../../store/slices/AuthSlice";
+import { Navigate } from "react-router-dom";
+import { AppRoutes } from "../../utils/constants/routes";
 
-const AccessDeniedPage = () => {
-    return (
-        <div
-            id="access-denided-page"
-            style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100%",
-            }}
-        >
-            <h1>Oops!</h1>
-            <p>Sorry, you can't be here.</p>
-            <p style={{ color: "red", fontWeight: 500, fontSize: "20px" }}>
-                <i>Access DENIED</i>
-            </p>
-        </div>
-    );
+interface RoleRestrictedRouteProps {
+  children: JSX.Element;
+  roles: Roles[];
+}
+
+const RoleRestrictedRoute = ({ children, roles }: RoleRestrictedRouteProps) => {
+  const loggedUser = useAppSelector(getLoggedUser);
+
+  if (!loggedUser || !roles.includes(loggedUser.role)) {
+    return <Navigate to={AppRoutes.AccessDenied} replace={true} />;
+  }
+
+  return children;
 };
 
-export default AccessDeniedPage;
+export default RoleRestrictedRoute;

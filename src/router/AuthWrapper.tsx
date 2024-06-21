@@ -26,12 +26,12 @@ const Overlay = styled.div<{ show: boolean }>`
 
 const AuthWrapper = () => {
   const userSearchOpen = useAppSelector(getUserSearchOpen);
-
-  const [loading, setLoading] = useState(true);
-
-  const dispatch = useAppDispatch();
   const loggedUser = useAppSelector(getLoggedUser);
   const accessToken = useAppSelector(getToken);
+
+  const dispatch = useAppDispatch();
+
+  const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
 

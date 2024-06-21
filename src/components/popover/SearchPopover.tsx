@@ -14,7 +14,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 
-import { useAppDispatch } from "../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { UserType } from "../../store/slices/UserSlice";
 import { setUserSearchOpen } from "../../store/slices/UISlice";
 
@@ -25,10 +25,14 @@ import { AppRoutes } from "../../utils/constants/routes";
 import { CompanyType } from "../../store/slices/CompanySlice";
 import UsersSearchList from "./UsersSearchList";
 import CompaniesSearchList from "./CompaniesSearchList";
+import { getLoggedCompany, getLoggedUser } from "../../store/slices/AuthSlice";
 
 const SearchPopover = () => {
   const userApi = AppApi.getUserApi();
   const companyApi = AppApi.getCompanyApi();
+
+  const currentUser = useAppSelector(getLoggedUser);
+  const currentCompany = useAppSelector(getLoggedCompany);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -92,7 +96,13 @@ const SearchPopover = () => {
   };
 
   const handleNavigateUser = (user: UserType) => {
-    navigate(`${AppRoutes.UserProfile}/${user.id}`);
+    if (currentUser) {
+      navigate(`${AppRoutes.UserProfile}/${user.id}`);
+    }
+
+    if (currentCompany) {
+      navigate(`${AppRoutes.CompanyUserProfile}/${user.id}`);
+    }
 
     setSearchTerm("");
     setAnchorEl(null);
@@ -100,7 +110,13 @@ const SearchPopover = () => {
   };
 
   const handleNavigateCompany = (company: CompanyType) => {
-    navigate(`${AppRoutes.UserCompanyProfile}/${company.id}`);
+    if (currentUser) {
+      navigate(`${AppRoutes.UserCompanyProfile}/${company.id}`);
+    }
+
+    if (currentCompany) {
+      navigate(`${AppRoutes.CompanyProfile}/${company.id}`);
+    }
 
     setSearchTerm("");
     setAnchorEl(null);

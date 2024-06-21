@@ -80,6 +80,27 @@ export const getJobApplicationsByJob = createAsyncThunk(
   }
 );
 
+export const getJobApplicationById = createAsyncThunk(
+  "job-application/getJobApplicationById",
+  async ({
+    jobApplicationId,
+    setInStore = false,
+  }: {
+    jobApplicationId: number;
+    setInStore?: boolean;
+  }) => {
+    const jobApplicationApi = AppApi.getJobApplicationApi();
+
+    const jobApplication = await jobApplicationApi.getJobApplicationById(
+      jobApplicationId
+    );
+    return {
+      jobApplication,
+      setInStore,
+    };
+  }
+);
+
 export const JobApplicationSlice = createSlice({
   name: "jobApplication",
   initialState,
@@ -114,6 +135,17 @@ export const JobApplicationSlice = createSlice({
     });
     builder.addCase(getJobApplicationsByJob.rejected, (state, action) => {
       state.jobApplications = [];
+    });
+    //GET JOB APPLICATION BY ID
+    builder.addCase(getJobApplicationById.fulfilled, (state, action) => {
+      const { jobApplication, setInStore } = action.payload;
+
+      if (setInStore) {
+        state.currentJobApplication = jobApplication;
+      }
+    });
+    builder.addCase(getJobApplicationById.rejected, (state, action) => {
+      console.log("Error getting job application by id");
     });
     //REVIEW JOB APPLICATION
     builder.addCase(reviewJobApplication.fulfilled, (state, action) => {

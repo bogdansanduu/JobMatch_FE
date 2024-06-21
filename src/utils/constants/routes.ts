@@ -1,6 +1,7 @@
 export enum AppRoutes {
   //---MAIN ROUTES---
   User = "/user",
+  Admin = "/admin",
   Company = "/company",
 
   //---ROLE-AGNOSTIC---
@@ -22,11 +23,18 @@ export enum AppRoutes {
   UserJobDetails = "/user/job-details",
   UserApplicationReview = "/user/application-review",
 
+  //---ADMIN---
+  HomeAdmin = "/admin/home",
+  AllUsers = "/admin/users",
+  AllCompanies = "/admin/companies",
+  AdminUserProfile = "/admin/user-profile",
+  AdminCompanyProfile = "/admin/company-profile",
+
   //---COMPANY---
   HomeCompany = "/company/home",
   JobPostings = "/company/job-postings",
-  Employees = "/company/employees",
   CompanyProfile = "/company/profile",
+  CompanyUserProfile = "/company/user-profile",
   AccessDeniedCompany = "/company/access-denied",
   CompanyJobDetails = "/company/job-details",
 }

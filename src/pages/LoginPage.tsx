@@ -1,4 +1,4 @@
-import { ChangeEvent, MouseEvent, useEffect, useState } from "react";
+import { ChangeEvent, MouseEvent, useState } from "react";
 import {
   Avatar,
   Box,
@@ -9,17 +9,18 @@ import {
   Typography,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 import { useNavigate } from "react-router-dom";
 import isEmail from "validator/lib/isEmail";
 
 import { useAppDispatch } from "../store/hooks";
-import { login } from "../store/slices/AuthSlice";
+import { login, setLoggedUser, setToken } from "../store/slices/AuthSlice";
 
 import { AppRoutes } from "../utils/constants/routes";
+import { Roles } from "../utils/constants/roles";
 
 import Copyright from "../components/auth/Copyright";
+import AppApi from "../server/api/AppApi";
 
 enum FIELD_NAMES {
   email = "email",
@@ -27,6 +28,8 @@ enum FIELD_NAMES {
 }
 
 const LoginPage = () => {
+  const authApi = AppApi.getAuthApi();
+
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -76,8 +79,21 @@ const LoginPage = () => {
 
     const { email, password } = user;
 
-    await dispatch(login({ email, password }));
-    navigate(AppRoutes.Home);
+    try {
+      const { payload } = await dispatch(login({ email, password }));
+      const userLogged = payload.user;
+
+      switch (userLogged.role) {
+        case Roles.USER:
+          navigate(AppRoutes.Home);
+          return;
+        case Roles.ADMIN:
+          navigate(AppRoutes.HomeAdmin);
+          return;
+      }
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (

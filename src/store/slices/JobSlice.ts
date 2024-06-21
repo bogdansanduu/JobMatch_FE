@@ -56,6 +56,26 @@ export const getAllJobsPaginated = createAsyncThunk(
   }
 );
 
+export const getJobById = createAsyncThunk(
+  "job/getJobById",
+  async ({
+    jobId,
+    setInStore = false,
+  }: {
+    jobId: number;
+    setInStore?: boolean;
+  }) => {
+    const jobApi = AppApi.getJobApi();
+
+    const job = await jobApi.getJobById(jobId);
+
+    return {
+      job,
+      setInStore,
+    };
+  }
+);
+
 export const getAllJobsByCompany = createAsyncThunk(
   "job/getAllJobsByCompany",
   async (companyId: number) => {
@@ -80,6 +100,17 @@ export const getJobRecommendations = createAsyncThunk(
     const jobApi = AppApi.getRecommendationApi();
 
     return await jobApi.getRecommendations(data);
+  }
+);
+
+export const removeJob = createAsyncThunk(
+  "job/removeJob",
+  async (jobId: number) => {
+    const jobApi = AppApi.getJobApi();
+
+    await jobApi.deleteJobListing(jobId);
+
+    return jobId;
   }
 );
 
@@ -128,11 +159,23 @@ export const JobSlice = createSlice({
     builder.addCase(getAllJobsByCompany.rejected, (state) => {
       state.jobs = [];
     });
+    //GET JOB BY ID
+    builder.addCase(getJobById.fulfilled, (state, action) => {
+      const { job, setInStore } = action.payload;
+
+      if (setInStore) {
+        state.currentJob = job;
+      }
+    });
+    builder.addCase(getJobById.rejected, (state) => {
+      console.log("Error getting job by id");
+    });
     //CREATE JOB LISTING
     builder.addCase(
       createJobListing.fulfilled,
       (state, action: PayloadAction<JobType>) => {
         state.currentJob = action.payload;
+        state.jobs = [action.payload, ...state.jobs];
       }
     );
     builder.addCase(createJobListing.rejected, (state) => {
@@ -147,6 +190,10 @@ export const JobSlice = createSlice({
     );
     builder.addCase(getJobRecommendations.rejected, (state) => {
       console.log("Error getting recommended jobs");
+    });
+    //REMOVE JOB
+    builder.addCase(removeJob.fulfilled, (state, action) => {
+      state.jobs = state.jobs.filter((job) => job.id !== action.payload);
     });
   },
 });

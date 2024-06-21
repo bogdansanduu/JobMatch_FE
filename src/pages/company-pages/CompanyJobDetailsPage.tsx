@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Box, Button, Divider, Typography } from "@mui/material";
+import { Box, Divider, Typography, useMediaQuery } from "@mui/material";
 
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { getCurrentJob } from "../../store/slices/JobSlice";
@@ -20,7 +20,7 @@ const CompanyJobDetailsPage = () => {
 
   const dispatch = useAppDispatch();
 
-  console.log(jobApplications);
+  const isLaptop = useMediaQuery("(min-width: 1024px)");
 
   useEffect(() => {
     if (!currentJob) {
@@ -30,51 +30,33 @@ const CompanyJobDetailsPage = () => {
     dispatch(getJobApplicationsByJob(currentJob.id));
   }, [currentJob]);
 
-  const handleEditJob = () => {
-    // Implement the logic to navigate to the edit job page or open an edit modal
-  };
-
   return (
     <Box sx={{ display: "flex", margin: "12px", gap: "12px" }}>
-      <Box
-        sx={{
-          flex: 1,
-          display: "flex",
-          gap: "12px",
-          flexDirection: "column",
-          height: "100%",
-          padding: "16px",
-          borderRadius: "8px",
-          backgroundColor: White.PureWhite,
-          border: `1px solid ${GrayColors.Gray2}`,
-        }}
-      >
-        {currentJob ? (
-          <>
-            <JobDetailsHeader />
-            <Divider />
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-end",
-              }}
-            >
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleEditJob}
-              >
-                Edit
-              </Button>
-            </Box>
-            <Divider />
-            <JobDetails />
-          </>
-        ) : (
-          <Typography variant="h6">No job selected</Typography>
-        )}
-      </Box>
+      {isLaptop && (
+        <Box
+          sx={{
+            flex: 1.5,
+            display: "flex",
+            gap: "12px",
+            flexDirection: "column",
+            height: "100%",
+            padding: "16px",
+            borderRadius: "8px",
+            backgroundColor: White.PureWhite,
+            border: `1px solid ${GrayColors.Gray2}`,
+          }}
+        >
+          {currentJob ? (
+            <>
+              <JobDetailsHeader />
+              <Divider />
+              <JobDetails />
+            </>
+          ) : (
+            <Typography variant="h6">No job selected</Typography>
+          )}
+        </Box>
+      )}
       <Box
         sx={{
           flex: 3,
@@ -88,9 +70,15 @@ const CompanyJobDetailsPage = () => {
           border: `1px solid ${GrayColors.Gray2}`,
         }}
       >
-        {jobApplications.map((jobApplication, index) => (
-          <JobApplicationUser jobApplication={jobApplication} key={index} />
-        ))}
+        {jobApplications.length > 0 ? (
+          jobApplications.map((jobApplication, index) => (
+            <JobApplicationUser jobApplication={jobApplication} key={index} />
+          ))
+        ) : (
+          <Typography variant="body1" color={"text.secondary"}>
+            No applications yet
+          </Typography>
+        )}
       </Box>
     </Box>
   );

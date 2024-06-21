@@ -1,25 +1,38 @@
 import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
-import { Box, Divider, Typography } from "@mui/material";
+import {
+  Box,
+  Divider,
+  FormControl,
+  InputLabel,
+  Select,
+  SelectChangeEvent,
+  Typography,
+} from "@mui/material";
 import Geonames from "geonames.js";
+import { AxiosError } from "axios";
+import { useNavigate } from "react-router-dom";
+import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
+import isEmail from "validator/lib/isEmail";
+import TextField from "@mui/material/TextField";
+import MenuItem from "@mui/material/MenuItem";
 
 import { GrayColors, White } from "../../utils/constants/colorPallete";
-import Grid from "@mui/material/Grid";
-import GeoLocation from "../../components/register/GeoLocation";
-import TextField from "@mui/material/TextField";
-import isEmail from "validator/lib/isEmail";
-import Button from "@mui/material/Button";
+import { AppRoutes } from "../../utils/constants/routes";
+
 import AppApi from "../../server/api/AppApi";
-import { AxiosError } from "axios/index";
 import { useAppSelector } from "../../store/hooks";
 import { getLoggedUser } from "../../store/slices/AuthSlice";
-import { useNavigate } from "react-router-dom";
-import { AppRoutes } from "../../utils/constants/routes";
+
+import GeoLocation from "../../components/register/GeoLocation";
 
 export enum FIELD_NAMES {
   name = "name",
   email = "email",
   password = "password",
   retypedPassword = "retypedPassword",
+  industry = "industry",
+  description = "description",
 }
 
 export enum LOCATION_NAMES {
@@ -33,6 +46,8 @@ export const geonames = Geonames({
   lan: "en",
   encoding: "JSON",
 });
+
+const categories = ["IT", "Marketing", "Finance", "Healthcare", "Engineering"];
 
 const CreateCompanyAccount = () => {
   const authApi = AppApi.getAuthApi();
@@ -50,6 +65,8 @@ const CreateCompanyAccount = () => {
     city: "",
     password: "",
     retypedPassword: "",
+    industry: "",
+    description: "",
   });
 
   const [location, setLocation] = useState<Record<LOCATION_NAMES, number>>({
@@ -68,6 +85,8 @@ const CreateCompanyAccount = () => {
     country: false,
     state: false,
     city: false,
+    industry: false,
+    description: false,
   });
 
   const [isEmailValid, setIsEmailValid] = useState(false);
@@ -80,6 +99,8 @@ const CreateCompanyAccount = () => {
     !!account.country &&
     !!account.state &&
     !!account.city &&
+    !!account.industry &&
+    !!account.description &&
     isEmailValid;
 
   useEffect(() => {
@@ -161,6 +182,13 @@ const CreateCompanyAccount = () => {
     [dirty]
   );
 
+  const handleSelectIndustry = (event: SelectChangeEvent<string>) => {
+    setAccount((prevAccountData) => ({
+      ...prevAccountData,
+      category: event.target.value,
+    }));
+  };
+
   const handleCreateAccount = async () => {
     if (!currentUser) {
       return;
@@ -171,12 +199,15 @@ const CreateCompanyAccount = () => {
         email: account.email,
         password: account.password,
         name: account.name,
-        industry: "industry",
+        industry: account.industry,
         country: account.country,
         state: account.state,
         city: account.city,
         ownerId: currentUser.id,
+        description: account.description,
       });
+
+      navigate(AppRoutes.Home);
     } catch (error) {
       const axiosError = error as AxiosError<{ error: string }>;
       const messageMessage =
@@ -293,6 +324,45 @@ const CreateCompanyAccount = () => {
             margin="normal"
             type={"password"}
             onBlur={(e) => handleBlur(e, true)}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <FormControl fullWidth error={dirty.industry && !account.industry}>
+            <InputLabel id="industry-label">Industry</InputLabel>
+            <Select
+              labelId="industry-label"
+              id="category"
+              name={FIELD_NAMES.industry}
+              value={account.industry}
+              label="Industry"
+              onChange={handleSelectIndustry}
+              onBlur={(e) => handleBlur(e, true)}
+            >
+              {categories.map((industry) => (
+                <MenuItem key={industry} value={industry}>
+                  {industry}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            error={dirty.description && !account.description}
+            label={"Description"}
+            name={FIELD_NAMES.description}
+            variant={"outlined"}
+            value={account.description}
+            onChange={(e) => handleChange(e)}
+            fullWidth
+            required
+            margin={"normal"}
+            type={"text"}
+            onBlur={(e) => handleBlur(e, true)}
+            multiline
+            minRows={4}
+            sx={{ mb: 2 }}
+            placeholder="Include all relevant details about your company."
           />
         </Grid>
       </Grid>

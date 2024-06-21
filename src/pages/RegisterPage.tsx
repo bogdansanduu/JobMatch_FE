@@ -9,21 +9,15 @@ import { Step, StepLabel, Stepper } from "@mui/material";
 import Link from "@mui/material/Link";
 
 import Copyright from "../components/auth/Copyright";
-import {
-  FIELD_NAMES,
-  FIELD_NAMES_JOB,
-  LOCATION_NAMES,
-} from "../components/register/types";
+import { FIELD_NAMES, LOCATION_NAMES } from "../components/register/types";
 import BasicInfoStep from "../components/register/BasicInfoStep";
 import { AppRoutes } from "../utils/constants/routes";
 import SubmitStep from "../components/register/SubmitStep";
-import EducationStep from "../components/register/EducationStep";
-import WorkHistoryStep from "../components/register/WorkHistoryStep";
 import { GrayColors, White } from "../utils/constants/colorPallete";
 import ResumeStep from "../components/register/ResumeStep";
 import useFormInput from "../utils/hooks/useFormInput";
 
-const steps = ["Basic Info", "Resume", "Education", "Work History", "Submit"];
+const steps = ["Basic Info", "Resume", "Submit"];
 
 const RegisterPage = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -37,6 +31,7 @@ const RegisterPage = () => {
         firstName: "",
         lastName: "",
         email: "",
+        currentPosition: "",
         resume: "",
         country: "",
         state: "",
@@ -48,6 +43,7 @@ const RegisterPage = () => {
         firstName: false,
         lastName: false,
         email: false,
+        currentPosition: false,
         resume: false,
         country: false,
         state: false,
@@ -62,6 +58,7 @@ const RegisterPage = () => {
     state: 0,
     city: 0,
   });
+  const [file, setFile] = useState<File | undefined>(undefined);
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -74,6 +71,7 @@ const RegisterPage = () => {
         sx={{
           width: "100%",
           marginTop: 8,
+          marginBottom: 8,
           padding: "24px",
           display: "flex",
           flexDirection: "column",
@@ -122,6 +120,8 @@ const RegisterPage = () => {
               setDirty={setDirty}
               handleBlur={handleBlur}
               handleNext={handleNext}
+              file={file}
+              setFile={setFile}
             />
           )}
           {activeStep === 1 && (
@@ -133,9 +133,7 @@ const RegisterPage = () => {
               handleNext={handleNext}
             />
           )}
-          {activeStep === 2 && <EducationStep handleNext={handleNext} />}
-          {activeStep === 3 && <WorkHistoryStep handleNext={handleNext} />}
-          {activeStep === 4 && <SubmitStep user={formData} />}
+          {activeStep === 2 && <SubmitStep user={formData} file={file} />}
           <div style={{ flex: 1 }} />
         </Box>
 

@@ -12,9 +12,14 @@ import {
 import BusinessIcon from "@mui/icons-material/Business";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import DescriptionIcon from "@mui/icons-material/Description";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 import { GrayColors } from "../../utils/constants/colorPallete";
-import { JobType } from "../../store/slices/JobSlice";
+import { Roles } from "../../utils/constants/roles";
+
+import { JobType, removeJob } from "../../store/slices/JobSlice";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { getLoggedUser } from "../../store/slices/AuthSlice";
 
 interface JobCardProps {
   job: JobType;
@@ -22,8 +27,20 @@ interface JobCardProps {
 }
 
 const JobCard = ({ job, onClick }: JobCardProps) => {
+  const currentUser = useAppSelector(getLoggedUser);
+
+  const dispatch = useAppDispatch();
+
   const handleJobCardClick = () => {
     onClick(job);
+  };
+
+  const handleRemoveJob = async () => {
+    if (!currentUser || currentUser.role !== Roles.ADMIN) {
+      return;
+    }
+
+    await dispatch(removeJob(job.id));
   };
 
   return (
@@ -81,9 +98,20 @@ const JobCard = ({ job, onClick }: JobCardProps) => {
         </Box>
       </CardContent>
       <CardActions>
-        <Button size="small" onClick={handleJobCardClick}>
-          Details
-        </Button>
+        {currentUser?.role === Roles.ADMIN ? (
+          <Button
+            startIcon={<DeleteIcon />}
+            color={"error"}
+            variant={"contained"}
+            onClick={handleRemoveJob}
+          >
+            Remove
+          </Button>
+        ) : (
+          <Button size="small" onClick={handleJobCardClick}>
+            Details
+          </Button>
+        )}
       </CardActions>
     </Card>
   );

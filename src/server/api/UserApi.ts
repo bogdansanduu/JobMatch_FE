@@ -12,12 +12,18 @@ class UserApi {
     this.baseApi = new BaseApi("user");
   }
 
-  async getUserById(id: number) {
+  getUserById(id: number) {
     return this.baseApi.sendRequest("GET", `/${id}`);
   }
 
-  getAllUsers() {
-    return this.baseApi.sendRequest("GET", "/all");
+  getAllUsers(banned = false) {
+    let endpoint = "/all";
+
+    if (banned) {
+      endpoint += "?banned=true";
+    }
+
+    return this.baseApi.sendRequest("GET", endpoint);
   }
 
   searchByNameAndEmail(searchTerm: string) {
@@ -48,6 +54,12 @@ class UserApi {
 
   deleteUserResume(userId: number) {
     return this.baseApi.sendRequest("DELETE", `/delete-resume/${userId}`);
+  }
+
+  banUser(userId: number, banned: boolean) {
+    return this.baseApi.sendRequest("PUT", `/ban/${userId}`, {
+      banned,
+    });
   }
 }
 

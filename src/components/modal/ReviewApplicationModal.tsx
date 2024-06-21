@@ -22,6 +22,7 @@ import {
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 
 import { AppModal } from "./AppModal";
+import AppApi from "../../server/api/AppApi";
 
 interface ReviewApplicationModalProps {
   open: boolean;
@@ -32,6 +33,7 @@ const ReviewApplicationModal = ({
   open,
   setOpen,
 }: ReviewApplicationModalProps) => {
+  const emailApi = AppApi.getEmailApi();
   const currentJobApplication = useAppSelector(getCurrentJobApplication);
 
   const dispatch = useAppDispatch();
@@ -93,6 +95,7 @@ const ReviewApplicationModal = ({
       })
     );
     handleCloseReviewApplicationModal();
+    await emailApi.sendApplicationEvaluatedEmail(currentJobApplication.id);
   };
 
   return (

@@ -17,26 +17,37 @@ class PostApi {
     this.baseApi = new BaseApi("post");
   }
 
-  async getAllPosts() {
+  getAllPosts() {
     return this.baseApi.sendRequest("GET", "/all");
   }
 
-  async getAllPostsByCompany(companyId: number) {
+  getAllPostsByCompany(companyId: number) {
     return this.baseApi.sendRequest("GET", `/company/${companyId}`);
   }
 
-  async getMostRecentCompanyPosts(companyId: number, limit: number) {
+  getAllPostsByUser(userId: number) {
+    return this.baseApi.sendRequest("GET", `/user/${userId}`);
+  }
+
+  getMostRecentCompanyPosts(companyId: number, limit: number) {
     return this.baseApi.sendRequest(
       "GET",
       `/company/most-recent/${companyId}?limit=${limit}`
     );
   }
 
-  async createPost(userId: number, postData: CreatePostDto) {
+  getMostRecentUserPosts(userId: number, limit: number) {
+    return this.baseApi.sendRequest(
+      "GET",
+      `/user/most-recent/${userId}?limit=${limit}`
+    );
+  }
+
+  createPost(userId: number, postData: CreatePostDto) {
     return this.baseApi.sendRequest("POST", `/user-post/${userId}`, postData);
   }
 
-  async createPostCompany(companyId: number, postData: CreatePostDto) {
+  createPostCompany(companyId: number, postData: CreatePostDto) {
     return this.baseApi.sendRequest(
       "POST",
       `/company-post/${companyId}`,
@@ -44,33 +55,29 @@ class PostApi {
     );
   }
 
-  async likePost(postId: number, userId: number) {
+  likePost(postId: number, userId: number) {
     return this.baseApi.sendRequest("POST", `/like/${postId}/${userId}`);
   }
 
-  async likePostCompany(postId: number, companyId: number) {
+  likePostCompany(postId: number, companyId: number) {
     return this.baseApi.sendRequest(
       "POST",
       `/like-company/${postId}/${companyId}`
     );
   }
 
-  async unlikePost(postId: number, userId: number) {
+  unlikePost(postId: number, userId: number) {
     return this.baseApi.sendRequest("POST", `/unlike/${postId}/${userId}`);
   }
 
-  async unlikePostCompany(postId: number, companyId: number) {
+  unlikePostCompany(postId: number, companyId: number) {
     return this.baseApi.sendRequest(
       "POST",
       `/unlike-company/${postId}/${companyId}`
     );
   }
 
-  async commentPost(
-    postId: number,
-    userId: number,
-    commentData: CommentPostDto
-  ) {
+  commentPost(postId: number, userId: number, commentData: CommentPostDto) {
     return this.baseApi.sendRequest(
       "POST",
       `/comment/${postId}/${userId}`,
@@ -78,7 +85,7 @@ class PostApi {
     );
   }
 
-  async commentPostCompany(
+  commentPostCompany(
     postId: number,
     companyId: number,
     commentData: CommentPostDto
@@ -88,6 +95,10 @@ class PostApi {
       `/comment-company/${postId}/${companyId}`,
       commentData
     );
+  }
+
+  removePost(postId: number) {
+    return this.baseApi.sendRequest("DELETE", `/${postId}`);
   }
 }
 

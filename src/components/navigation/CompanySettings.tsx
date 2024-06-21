@@ -43,14 +43,14 @@ const CompanySettings = ({ setAnchorElUser }: CompanySettingsProps) => {
         </Typography>
       </MenuItem>
       <Divider sx={{ my: 0.5 }} />
-      <MenuItem onClick={handleCloseUserMenu}>
-        <ListItemIcon>
-          <Settings fontSize="small" />
-        </ListItemIcon>
-        <Typography variant="body2" color={"text.secondary"}>
-          Settings
-        </Typography>
-      </MenuItem>
+      {/*<MenuItem onClick={handleCloseUserMenu}>*/}
+      {/*  <ListItemIcon>*/}
+      {/*    <Settings fontSize="small" />*/}
+      {/*  </ListItemIcon>*/}
+      {/*  <Typography variant="body2" color={"text.secondary"}>*/}
+      {/*    Settings*/}
+      {/*  </Typography>*/}
+      {/*</MenuItem>*/}
       <MenuItem onClick={handleSignOut}>
         <ListItemIcon>
           <Logout fontSize="small" />

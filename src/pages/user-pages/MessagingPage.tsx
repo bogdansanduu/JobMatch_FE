@@ -1,5 +1,5 @@
-import React, { useEffect, useReducer, useState } from "react";
-import { Box } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Box, useMediaQuery } from "@mui/material";
 
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { UserType } from "../../store/slices/UserSlice";
@@ -35,6 +35,8 @@ const MessagingPage = () => {
   const [availableRooms, setAvailableRooms] = useState<ChatRoomType[]>([]);
   const [joinedChat, setJoinedChat] = useState(false);
 
+  const isTablet = useMediaQuery("(max-width: 768px)");
+
   useEffect(() => {
     dispatch(refreshCurrentUserData());
     socket.connect();
@@ -64,7 +66,7 @@ const MessagingPage = () => {
     socket.on(
       SocketEventsServer.ALL_ROOMS_FOR_USER,
       (rooms: ChatRoomType[]) => {
-        setAvailableRooms(rooms);
+        setAvailableRooms(rooms || []);
       }
     );
 
@@ -97,6 +99,12 @@ const MessagingPage = () => {
   };
 
   const handleRoomSelection = (room: ChatRoomType) => {
+    if (selectedRoom) {
+      socket.emit(SocketEventsClient.LEAVE_ROOM, {
+        roomId: selectedRoom.id,
+      });
+    }
+
     socket.emit(SocketEventsClient.JOIN_ROOM, {
       roomId: room.id,
       userId: currentUser?.id,
@@ -110,7 +118,13 @@ const MessagingPage = () => {
   };
 
   return (
-    <Box sx={{ display: "flex", height: "inherit" }}>
+    <Box
+      sx={{
+        display: "flex",
+        height: "inherit",
+        flexDirection: isTablet ? "column" : "row",
+      }}
+    >
       <ConversationsList
         selectedRoom={selectedRoom}
         availableRooms={availableRooms}

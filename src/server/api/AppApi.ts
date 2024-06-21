@@ -10,6 +10,7 @@ import CompanyApi from "./CompanyApi";
 import JobApplicationApi from "./JobApplicationApi";
 import JobSavedApi from "./JobSavedApi";
 import S3DocumentApi from "./S3DocumentApi";
+import EmailApi from "./EmailApi";
 
 class AppApi {
   private static instance: AppApi;
@@ -26,6 +27,7 @@ class AppApi {
   readonly jobApplicationApi: JobApplicationApi;
   readonly jobSavedApi: JobSavedApi;
   readonly s3DocumentApi: S3DocumentApi;
+  readonly emailApi: EmailApi;
 
   private constructor() {
     this.baseApi = new BaseApi();
@@ -40,6 +42,7 @@ class AppApi {
     this.jobApplicationApi = new JobApplicationApi();
     this.jobSavedApi = new JobSavedApi();
     this.s3DocumentApi = new S3DocumentApi();
+    this.emailApi = new EmailApi();
   }
 
   public static getInstance() {
@@ -94,6 +97,10 @@ class AppApi {
 
   static getS3DocumentApi() {
     return this.getInstance().s3DocumentApi;
+  }
+
+  static getEmailApi() {
+    return this.getInstance().emailApi;
   }
 }
 

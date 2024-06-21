@@ -6,89 +6,56 @@ import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
-import HomeIcon from "@mui/icons-material/Home";
-import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
-import WorkIcon from "@mui/icons-material/Work";
-import ForumIcon from "@mui/icons-material/Forum";
-import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
-import { AppBar } from "@mui/material";
-import BadgeIcon from "@mui/icons-material/Badge";
+import { AppBar, Typography, useMediaQuery } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
 
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 
-import logo from "../../assets/linkedLogo.png";
+import logo from "../../assets/jobMatchLogo.png";
 import { GrayColors, White } from "../../utils/constants/colorPallete";
 import { AppRoutes } from "../../utils/constants/routes";
+import { adminPages, pagesCompany, pagesUser } from "./constants";
 
 import { BodyText4 } from "../typography/BodyTexts";
 import { getLoggedCompany, getLoggedUser } from "../../store/slices/AuthSlice";
 import SearchPopover from "../popover/SearchPopover";
 import UserSettings from "./UserSettings";
 import CompanySettings from "./CompanySettings";
-
-const pagesUser = [
-  {
-    title: "Home Page",
-    icon: <HomeIcon sx={{ height: "22px", width: "22px" }} />,
-    route: AppRoutes.Home,
-  },
-  {
-    title: "My Network",
-    icon: <PeopleAltIcon sx={{ height: "22px", width: "22px" }} />,
-    route: AppRoutes.MyNetwork,
-  },
-  {
-    title: "Jobs",
-    icon: <WorkIcon sx={{ height: "22px", width: "22px" }} />,
-    route: AppRoutes.Jobs,
-  },
-  {
-    title: "My Applications",
-    icon: <WorkHistoryIcon sx={{ height: "22px", width: "22px" }} />,
-    route: AppRoutes.MyApplications,
-  },
-  {
-    title: "Messages",
-    icon: <ForumIcon sx={{ height: "22px", width: "22px" }} />,
-    route: AppRoutes.Messaging,
-  },
-];
-
-const pagesCompany = [
-  {
-    title: "Home Page",
-    icon: <HomeIcon sx={{ height: "22px", width: "22px" }} />,
-    route: AppRoutes.HomeCompany,
-  },
-  {
-    title: "Job Postings",
-    icon: <WorkIcon sx={{ height: "22px", width: "22px" }} />,
-    route: AppRoutes.JobPostings,
-  },
-  {
-    title: "Employees",
-    icon: <BadgeIcon sx={{ height: "22px", width: "22px" }} />,
-    route: AppRoutes.Employees,
-  },
-  {
-    title: "Messages",
-    icon: <ForumIcon sx={{ height: "22px", width: "22px" }} />,
-    route: AppRoutes.Employees,
-  },
-];
+import { Roles } from "../../utils/constants/roles";
+import DrawerNav from "./DrawerNav";
 
 const TopNav = () => {
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-
   const currentUser = useAppSelector(getLoggedUser);
   const currentCompany = useAppSelector(getLoggedCompany);
 
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  const [openDrawer, setOpenDrawer] = useState(false);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorElUser);
 
+  const isLaptop = useMediaQuery("(min-width: 1024px)");
+  const isTablet = useMediaQuery("(max-width: 768px)");
+
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
+  };
+
+  const handleLogoClick = () => {
+    if (currentUser) {
+      if (currentUser.role === Roles.ADMIN) {
+        navigate(AppRoutes.HomeAdmin);
+        return;
+      }
+
+      navigate(AppRoutes.Home);
+      return;
+    }
+    if (currentCompany) {
+      navigate(AppRoutes.HomeCompany);
+      return;
+    }
   };
 
   const handleCloseUserMenu = () => {
@@ -110,61 +77,123 @@ const TopNav = () => {
         sx={{ alignItems: "center", height: "inherit" }}
         variant="dense"
       >
-        <Box sx={{ padding: "4px" }}>
+        <Box
+          sx={{
+            padding: "8px",
+            display: "flex",
+            gap: "12px",
+            alignItems: "center",
+            borderRadius: "8px",
+            maxWidth: "fit-content",
+          }}
+        >
+          {isTablet && (
+            <IconButton
+              sx={{
+                color: GrayColors.Gray6,
+                padding: "4px",
+                "&:hover": {
+                  color: GrayColors.Gray9,
+                },
+              }}
+              onClick={() => setOpenDrawer(true)}
+            >
+              <MenuIcon />
+            </IconButton>
+          )}
           <img
             src={logo}
-            alt={"LinkedIn"}
+            alt="JobMatch"
             style={{
-              height: 32,
-              width: 32,
-              borderRadius: "4px",
+              height: "80px",
+              width: "80px",
+              borderRadius: "8px",
+              objectFit: "cover",
+              cursor: "pointer",
             }}
+            onClick={handleLogoClick}
           />
+          {isLaptop && (
+            <Typography
+              variant="h5"
+              color="textPrimary"
+              sx={{ fontWeight: "bold" }}
+            >
+              JobMatch
+            </Typography>
+          )}
         </Box>
-        <SearchPopover />
+        {currentUser &&
+          (currentUser.role === Roles.USER ||
+            currentUser.role === Roles.COMPANY_OWNER) && <SearchPopover />}
         <Box sx={{ flexGrow: 1 }} />
-        <Box sx={{ display: "flex" }}>
-          {currentUser &&
-            pagesUser.map(({ title, icon, route }) => (
-              <IconButton
-                key={title}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  color: GrayColors.Gray6,
-                  padding: "4px",
-                  "&:hover": {
-                    color: GrayColors.Gray9,
-                  },
-                }}
-                onClick={() => handleClick(route)}
-                disableRipple
-              >
-                {icon}
-                <BodyText4>{title}</BodyText4>
-              </IconButton>
-            ))}
-          {currentCompany &&
-            pagesCompany.map(({ title, icon, route }) => (
-              <IconButton
-                key={title}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  color: GrayColors.Gray6,
-                  padding: "4px",
-                  "&:hover": {
-                    color: GrayColors.Gray9,
-                  },
-                }}
-                onClick={() => handleClick(route)}
-                disableRipple
-              >
-                {icon}
-                <BodyText4>{title}</BodyText4>
-              </IconButton>
-            ))}
-        </Box>
+        {!isTablet && (
+          <Box sx={{ display: "flex" }}>
+            {currentUser &&
+              (currentUser.role === Roles.USER ||
+                currentUser.role === Roles.COMPANY_OWNER) &&
+              pagesUser.map(({ title, icon, route }) => (
+                <IconButton
+                  key={title}
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    color: GrayColors.Gray6,
+                    padding: "4px",
+                    "&:hover": {
+                      color: GrayColors.Gray9,
+                    },
+                  }}
+                  onClick={() => handleClick(route)}
+                  disableRipple
+                >
+                  {icon}
+                  <BodyText4>{title}</BodyText4>
+                </IconButton>
+              ))}
+            {currentUser &&
+              currentUser.role === Roles.ADMIN &&
+              adminPages.map(({ title, icon, route }) => (
+                <IconButton
+                  key={title}
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    color: GrayColors.Gray6,
+                    padding: "4px",
+                    "&:hover": {
+                      color: GrayColors.Gray9,
+                    },
+                  }}
+                  onClick={() => handleClick(route)}
+                  disableRipple
+                >
+                  {icon}
+                  <BodyText4>{title}</BodyText4>
+                </IconButton>
+              ))}
+            {currentCompany &&
+              pagesCompany.map(({ title, icon, route }) => (
+                <IconButton
+                  key={title}
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    color: GrayColors.Gray6,
+                    padding: "4px",
+                    "&:hover": {
+                      color: GrayColors.Gray9,
+                    },
+                  }}
+                  onClick={() => handleClick(route)}
+                  disableRipple
+                >
+                  {icon}
+                  <BodyText4>{title}</BodyText4>
+                </IconButton>
+              ))}
+          </Box>
+        )}
         <Tooltip title="Account settings">
           <IconButton
             onClick={handleOpenUserMenu}
@@ -176,7 +205,9 @@ const TopNav = () => {
           >
             <Avatar
               sx={{ width: 35, height: 35 }}
-              src={currentUser?.profilePicture}
+              src={
+                currentUser?.profilePicture || currentCompany?.profilePicture
+              }
             />
           </IconButton>
         </Tooltip>
@@ -221,6 +252,7 @@ const TopNav = () => {
           )}
         </Menu>
       </Toolbar>
+      <DrawerNav open={openDrawer} setOpen={setOpenDrawer} />
     </AppBar>
   );
 };

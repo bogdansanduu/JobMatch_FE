@@ -1,5 +1,5 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import { RootState } from "../store";
 import AppApi from "../../server/api/AppApi";
@@ -7,6 +7,7 @@ import { CompanySimpleType } from "./CompanySlice";
 import { JobApplicationType } from "./JobApplicationSlice";
 import { revertAll } from "../actions";
 import { UploadResumeDto } from "../../server/api/UserApi";
+import { Roles } from "../../utils/constants/roles";
 
 export interface UserState {
   currentUser: UserType;
@@ -22,10 +23,13 @@ export interface ResumeFile {
 
 export type UserType = {
   id: number;
+  role: Roles;
+  isBanned: boolean;
   email: string;
   firstName: string;
   lastName: string;
   profilePicture: string;
+  currentPosition?: string;
   following: UserType[];
   followers: UserType[];
   jobApplications: JobApplicationType[];
@@ -40,10 +44,13 @@ export type UserType = {
 
 export const EMPTY_USER: UserType = {
   id: 0,
+  role: Roles.USER,
+  isBanned: false,
   email: "",
   firstName: "",
   lastName: "",
   profilePicture: "",
+  currentPosition: "",
   following: [],
   followers: [],
   jobApplications: [],
@@ -61,11 +68,14 @@ const initialState: UserState = {
   users: [],
 };
 
-export const getAllUsers = createAsyncThunk("user/getAllUsers", async (_) => {
-  const userApi = AppApi.getUserApi();
+export const getAllUsers = createAsyncThunk(
+  "user/getAllUsers",
+  async ({ banned = false }: { banned: boolean }) => {
+    const userApi = AppApi.getUserApi();
 
-  return await userApi.getAllUsers();
-});
+    return await userApi.getAllUsers(banned);
+  }
+);
 
 export const getUserById = createAsyncThunk(
   "user/getUserById",
@@ -115,6 +125,15 @@ export const deleteUserResume = createAsyncThunk(
     const userApi = AppApi.getUserApi();
 
     return await userApi.deleteUserResume(userId);
+  }
+);
+
+export const banUser = createAsyncThunk(
+  "user/banUser",
+  async ({ userId, banned }: { userId: number; banned: boolean }) => {
+    const userApi = AppApi.getUserApi();
+
+    return await userApi.banUser(userId, banned);
   }
 );
 
@@ -173,6 +192,14 @@ export const UserSlice = createSlice({
     });
     builder.addCase(deleteUserResume.rejected, (state) => {
       state.currentUser = EMPTY_USER;
+    });
+    //BAN USER
+    builder.addCase(banUser.fulfilled, (state, action) => {
+      state.currentUser = action.payload;
+      state.users = state.users.filter((user) => user.id !== action.payload.id);
+    });
+    builder.addCase(banUser.rejected, (state) => {
+      console.log("Error banning user");
     });
   },
 });
