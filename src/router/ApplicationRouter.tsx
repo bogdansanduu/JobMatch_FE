@@ -278,6 +278,10 @@ const ApplicationRouter = createBrowserRouter([
     errorElement: <NotFoundPage />,
     children: [
       {
+        path: "",
+        element: <Navigate to={AppRoutes.Login} />,
+      },
+      {
         path: AppRoutes.Login,
         element: <LoginPage />,
       },
