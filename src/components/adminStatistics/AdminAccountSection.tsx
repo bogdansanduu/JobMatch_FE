@@ -1,7 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Avatar,
   Box,
+  Button,
   Card,
   CardContent,
   CardMedia,
@@ -11,9 +12,16 @@ import { GrayColors, White } from "../../utils/constants/colorPallete";
 import userBanner from "../../assets/user_banner.jpg";
 import { useAppSelector } from "../../store/hooks";
 import { getLoggedUser } from "../../store/slices/AuthSlice";
+import AppApi from "../../server/api/AppApi";
 
 const AdminAccountSection = () => {
+  const recommendationApi = AppApi.getRecommendationApi();
+
   const currentUser = useAppSelector(getLoggedUser);
+
+  const populateDB = async () => {
+    await recommendationApi.populateRecommendations();
+  };
 
   return (
     <Box
@@ -90,6 +98,10 @@ const AdminAccountSection = () => {
           you have the tools to moderate the application, manage user accounts,
           and ensure the platform's smooth operation.
         </Typography>
+
+        <Button variant={"contained"} onClick={populateDB}>
+          Populate DB for RecSys
+        </Button>
       </Box>
     </Box>
   );
