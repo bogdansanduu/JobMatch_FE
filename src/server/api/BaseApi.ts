@@ -17,14 +17,14 @@ export class BaseApi {
   constructor(url: string = "") {
     const jar = new CookieJar();
     this.baseUrl = `${
-      process.env.REACT_APP_API_URL || "http://localhost:3000"
+      process.env.REACT_APP_API_URL || "http://localhost:8080"
     }/${url}`;
 
     this.axiosInstance = wrapper(
       axios.create({
         baseURL: this.baseUrl,
         jar,
-        withCredentials: false,
+        // withCredentials: true,
       })
     );
   }
