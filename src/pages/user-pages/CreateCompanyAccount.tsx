@@ -185,7 +185,7 @@ const CreateCompanyAccount = () => {
   const handleSelectIndustry = (event: SelectChangeEvent<string>) => {
     setAccount((prevAccountData) => ({
       ...prevAccountData,
-      category: event.target.value,
+      industry: event.target.value,
     }));
   };
 
