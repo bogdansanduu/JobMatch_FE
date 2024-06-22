@@ -41,19 +41,19 @@ const RecommendedJobsSection = ({
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   if (!currentUser || !currentUser.resume) {
-  //     return;
-  //   }
-  //
-  //   const recommendedData: GetRecommendationsDto = {
-  //     description: currentUser.resume,
-  //     latitude: 1.35711,
-  //     longitude: 103.8198,
-  //   };
-  //
-  //   dispatch(getJobRecommendations(recommendedData));
-  // }, [currentUser]);
+  useEffect(() => {
+    if (!currentUser || !currentUser.resume) {
+      return;
+    }
+
+    const recommendedData: GetRecommendationsDto = {
+      description: currentUser.resume,
+      latitude: 1.35711,
+      longitude: 103.8198,
+    };
+
+    dispatch(getJobRecommendations(recommendedData));
+  }, [currentUser]);
 
   const handleJobCardClick = async (job: JobType) => {
     await dispatch(setCurrentJob(job));
