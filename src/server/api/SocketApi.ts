@@ -7,7 +7,7 @@ class SocketApi {
   private socketUrl: string;
 
   constructor() {
-    this.socketUrl = process.env.REACT_APP_SOCKET || "http://localhost:3001";
+    this.socketUrl = process.env.REACT_APP_API_URL || "http://localhost:8080";
 
     this.socket = io(this.socketUrl, {
       autoConnect: false,
