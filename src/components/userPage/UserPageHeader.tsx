@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Avatar,
   Button,
@@ -24,11 +24,15 @@ import {
   refreshCurrentUserData,
 } from "../../store/slices/AuthSlice";
 import { Roles } from "../../utils/constants/roles";
+import { useNavigate } from "react-router-dom";
+import { AppRoutes } from "../../utils/constants/routes";
 
 const UserPageHeader = () => {
   const currentUser = useAppSelector(getLoggedUser);
   const user = useAppSelector(getCurrentUser);
+
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const isFollowing = !!(
     currentUser &&
@@ -58,6 +62,13 @@ const UserPageHeader = () => {
     );
     await dispatch(refreshCurrentUserData());
   };
+
+  useEffect(() => {
+    if (currentUser?.id === user.id) {
+      navigate(AppRoutes.MyProfile, { replace: true });
+      return;
+    }
+  }, [currentUser]);
 
   return (
     <Card

@@ -40,8 +40,6 @@ const MyProfilePage = () => {
     currentUser?.resume && currentUser?.resume.length > previewLength;
   const hasResume = !!currentUser?.resume && currentUser?.resume.length > 0;
 
-  console.log(currentUser);
-
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
