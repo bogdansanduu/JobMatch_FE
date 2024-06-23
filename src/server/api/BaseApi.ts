@@ -47,6 +47,7 @@ export class BaseApi {
 
     const config: RawAxiosRequestConfig = {
       method,
+      baseURL: this.baseUrl,
       url: endpoint,
       data,
       headers: {
