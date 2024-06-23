@@ -13,6 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { setDefaults, OutputFormat, fromAddress } from "react-geocode";
 
 import { GrayColors, White } from "../../utils/constants/colorPallete";
 import { AppRoutes } from "../../utils/constants/routes";
@@ -32,6 +33,13 @@ interface RecommendedJobsSectionProps {
   containerSx?: SxProps;
 }
 
+setDefaults({
+  key: process.env.REACT_APP_GOOGLE_MAPS_API_KEY || "test",
+  language: "en", // Default language for responses.
+  region: "es", // Default region for responses.
+  outputFormat: OutputFormat.JSON, // Default output format.
+});
+
 const RecommendedJobsSection = ({
   containerSx,
 }: RecommendedJobsSectionProps) => {
@@ -46,13 +54,23 @@ const RecommendedJobsSection = ({
       return;
     }
 
-    const recommendedData: GetRecommendationsDto = {
-      description: currentUser.resume,
-      latitude: 1.35711,
-      longitude: 103.8198,
-    };
+    (async () => {
+      fromAddress(
+        `${currentUser.city} ${currentUser.country} ${currentUser.state}`
+      )
+        .then(({ results }) => {
+          const { lat, lng } = results[0].geometry.location;
 
-    dispatch(getJobRecommendations(recommendedData));
+          const recommendedData: GetRecommendationsDto = {
+            description: currentUser.resume,
+            latitude: lat,
+            longitude: lng,
+          };
+
+          dispatch(getJobRecommendations(recommendedData));
+        })
+        .catch(console.error);
+    })();
   }, [currentUser]);
 
   const handleJobCardClick = async (job: JobType) => {
