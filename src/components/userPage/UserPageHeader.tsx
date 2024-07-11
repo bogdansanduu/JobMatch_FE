@@ -121,9 +121,9 @@ const UserPageHeader = () => {
             </Button>
           )}
 
-          <Button variant={"contained"} size="small">
-            Message
-          </Button>
+          {/*<Button variant={"contained"} size="small">*/}
+          {/*  Message*/}
+          {/*</Button>*/}
         </CardActions>
       )}
     </Card>

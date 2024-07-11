@@ -19,12 +19,15 @@ export type LikeType = {
 
 export type CommentType = {
   id: number;
-  author: UserType;
+  author?: UserType;
+  company?: CompanyType;
   likes: LikeType[];
   post: {
     id: number;
   };
   content: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type PostType = {

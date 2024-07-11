@@ -32,6 +32,13 @@ class JobApi {
     return this.baseApi.sendRequest("GET", endpoint);
   }
 
+  getAllJobsByCompanyPaginated(companyId: number, page: number, limit: number) {
+    return this.baseApi.sendRequest(
+      "GET",
+      `/all-company-paginated/${companyId}?page=${page}&limit=${limit}`
+    );
+  }
+
   getAllJobs() {
     return this.baseApi.sendRequest("GET", "/all");
   }

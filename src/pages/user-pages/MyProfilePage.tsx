@@ -114,13 +114,13 @@ const MyProfilePage = () => {
             <Typography>{currentUser?.email}</Typography>
           </CardContent>
           <CardActions sx={{ marginLeft: "auto" }}>
-            <Button
-              variant={"contained"}
-              size="small"
-              onClick={handleEditProfile}
-            >
-              Edit Profile
-            </Button>
+            {/*<Button*/}
+            {/*  variant={"contained"}*/}
+            {/*  size="small"*/}
+            {/*  onClick={handleEditProfile}*/}
+            {/*>*/}
+            {/*  Edit Profile*/}
+            {/*</Button>*/}
             {currentUser && !currentUser.resumeFile?.fileKey && (
               <Button
                 variant={"contained"}

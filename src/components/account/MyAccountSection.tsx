@@ -104,16 +104,16 @@ const MyAccountSection = () => {
             </Typography>
           </Box>
         </CardContent>
-        <CardActions
-          sx={{
-            width: "100%",
-            justifyContent: "center",
-          }}
-        >
-          <Button variant="contained" size="small">
-            Edit Profile
-          </Button>
-        </CardActions>
+        {/*<CardActions*/}
+        {/*  sx={{*/}
+        {/*    width: "100%",*/}
+        {/*    justifyContent: "center",*/}
+        {/*  }}*/}
+        {/*>*/}
+        {/*  <Button variant="contained" size="small">*/}
+        {/*    Edit Profile*/}
+        {/*  </Button>*/}
+        {/*</CardActions>*/}
       </Card>
     </Box>
   );

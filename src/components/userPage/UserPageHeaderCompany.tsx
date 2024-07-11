@@ -47,11 +47,11 @@ const UserPageHeaderCompany = () => {
           {`${user.followers.length} connections`}
         </Typography>
       </CardContent>
-      <CardActions sx={{ marginLeft: "auto" }}>
-        <Button variant={"contained"} size="small">
-          Message
-        </Button>
-      </CardActions>
+      {/*<CardActions sx={{ marginLeft: "auto" }}>*/}
+      {/*  <Button variant={"contained"} size="small">*/}
+      {/*    Message*/}
+      {/*  </Button>*/}
+      {/*</CardActions>*/}
     </Card>
   );
 };

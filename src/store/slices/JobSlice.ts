@@ -56,6 +56,23 @@ export const getAllJobsPaginated = createAsyncThunk(
   }
 );
 
+export const getAllJobsByCompanyPaginated = createAsyncThunk(
+  "job/getAllJobsByCompanyPaginated",
+  async ({
+    companyId,
+    page,
+    limit,
+  }: {
+    companyId: number;
+    page: number;
+    limit: number;
+  }) => {
+    const jobApi = AppApi.getJobApi();
+
+    return await jobApi.getAllJobsByCompanyPaginated(companyId, page, limit);
+  }
+);
+
 export const getJobById = createAsyncThunk(
   "job/getJobById",
   async ({
@@ -147,6 +164,30 @@ export const JobSlice = createSlice({
       }
     );
     builder.addCase(getAllJobsPaginated.rejected, (state) => {
+      state.jobs = [];
+    });
+    //GET ALL JOBS BY COMPANY PAGINATED
+    builder.addCase(
+      getAllJobsByCompanyPaginated.fulfilled,
+      (
+        state,
+        action: PayloadAction<{
+          data: JobType[];
+          currentPage: number;
+          totalItems: number;
+        }>
+      ) => {
+        const { data, currentPage, totalItems } = action.payload;
+
+        if (currentPage === 1) {
+          state.jobs = [];
+        }
+
+        state.jobs = [...state.jobs, ...data];
+        state.totalJobsCount = totalItems;
+      }
+    );
+    builder.addCase(getAllJobsByCompanyPaginated.rejected, (state) => {
       state.jobs = [];
     });
     //GET ALL JOBS BY COMPANY

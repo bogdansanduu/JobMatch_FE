@@ -18,7 +18,6 @@ import {
 import CompanyPageHeader from "../../components/companyPage/CompanyPageHeader";
 import CompanyDescription from "../../components/companyPage/CompanyDescription";
 import AllJobsSectionForProfile from "../../components/job/AllJobsSectionForProfile";
-import { getAllJobsByCompany } from "../../store/slices/JobSlice";
 
 function a11yProps(index: number) {
   return {
@@ -68,7 +67,6 @@ const CompanyPage = () => {
       }
 
       await dispatch(getCompanyById(currentCompanyId));
-      await dispatch(getAllJobsByCompany(currentCompanyId));
 
       setLoading(false);
     })();

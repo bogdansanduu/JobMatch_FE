@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { getLoggedCompany, getLoggedUser } from "../../store/slices/AuthSlice";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
+import { formatDistanceToNow, parseISO } from "date-fns";
 
 interface CommentProps {
   comment: CommentType;
@@ -23,6 +24,15 @@ const Comment = ({ comment, isUser, isCompany }: CommentProps) => {
   const currentCompany = useAppSelector(getLoggedCompany);
 
   const dispatch = useAppDispatch();
+
+  const formatRelativeTime = (dateString: string) => {
+    if (!dateString) {
+      return "N/A";
+    }
+
+    const date = parseISO(dateString);
+    return formatDistanceToNow(date, { addSuffix: true });
+  };
 
   const alreadyLiked = !!comment.likes.find(
     (like) =>
@@ -85,9 +95,49 @@ const Comment = ({ comment, isUser, isCompany }: CommentProps) => {
         border: `1px solid ${GrayColors.Gray3}`,
       }}
     >
-      <Typography variant="body1" color={"text.primary"}>
-        {comment.author.firstName} {comment.author.lastName}
-      </Typography>
+      {comment.author && (
+        <Box
+          sx={{
+            display: "flex",
+            gap: "8px",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Typography variant="body1" color={"text.primary"}>
+            {comment.author.firstName} {comment.author.lastName}
+          </Typography>
+          <Typography
+            variant="body2"
+            color={"text.secondary"}
+            sx={{ marginLeft: "auto" }}
+          >
+            Posted: {formatRelativeTime(comment.createdAt)}
+          </Typography>
+        </Box>
+      )}
+      {comment.company && (
+        <Box
+          sx={{
+            display: "flex",
+            gap: "8px",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Typography variant="body1" color={"text.primary"}>
+            {comment.company.name}
+          </Typography>
+          <Typography
+            variant="body2"
+            color={"text.secondary"}
+            sx={{ marginLeft: "auto" }}
+          >
+            Posted: {formatRelativeTime(comment.createdAt)}
+          </Typography>
+        </Box>
+      )}
+
       <Typography variant="body2" color={"text.secondary"}>
         {comment.content}
       </Typography>

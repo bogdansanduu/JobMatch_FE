@@ -16,7 +16,6 @@ import {
 } from "../../router/styledComponents";
 import CompanyPageHeader from "../../components/companyPage/CompanyPageHeader";
 import CompanyPageDetails from "../../components/companyPage/CompanyPageDetails";
-import { getAllJobsByCompany } from "../../store/slices/JobSlice";
 import AllJobsSectionForProfile from "../../components/job/AllJobsSectionForProfile";
 import CompanyDescription from "../../components/companyPage/CompanyDescription";
 
@@ -63,7 +62,6 @@ const AdminCompanyProfile = () => {
       }
 
       await dispatch(getCompanyById(currentCompanyId));
-      await dispatch(getAllJobsByCompany(currentCompanyId));
 
       setLoading(false);
     })();

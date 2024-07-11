@@ -68,7 +68,6 @@ const UserCompanyPage = () => {
       }
 
       await dispatch(getCompanyById(currentCompanyId));
-      await dispatch(getAllJobsByCompany(currentCompanyId));
 
       setLoading(false);
     })();

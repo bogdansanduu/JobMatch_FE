@@ -70,7 +70,7 @@ const CompanyJobDetailsPage = () => {
           border: `1px solid ${GrayColors.Gray2}`,
         }}
       >
-        {jobApplications.length > 0 ? (
+        {Array.isArray(jobApplications) && jobApplications.length > 0 ? (
           jobApplications.map((jobApplication, index) => (
             <JobApplicationUser jobApplication={jobApplication} key={index} />
           ))

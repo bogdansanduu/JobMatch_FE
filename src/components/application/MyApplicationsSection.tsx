@@ -90,27 +90,29 @@ const MyApplicationsSection = () => {
         </Tabs>
       </Box>
       <Box hidden={value !== 0}>
-        {Array.isArray(jobApplications) && jobApplications.length > 0 ? (
-          jobApplications.map((jobApplication) => (
-            <JobCard
-              key={jobApplication.id}
-              job={jobApplication.job}
-              onClick={() => handleJobApplicationCardClick(jobApplication)}
-            />
-          ))
-        ) : (
-          <Typography
-            variant="body1"
-            color={"text.secondary"}
-            sx={{ padding: "8px" }}
-          >
-            No applied jobs
-          </Typography>
-        )}
+        <Box sx={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+          {Array.isArray(jobApplications) && jobApplications.length > 0 ? (
+            jobApplications.map((jobApplication) => (
+              <JobCard
+                key={jobApplication.id}
+                job={jobApplication.job}
+                onClick={() => handleJobApplicationCardClick(jobApplication)}
+              />
+            ))
+          ) : (
+            <Typography
+              variant="body1"
+              color={"text.secondary"}
+              sx={{ padding: "8px" }}
+            >
+              No applied jobs
+            </Typography>
+          )}
+        </Box>
       </Box>
 
       <Box hidden={value !== 1}>
-        <Box>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: "12px" }}>
           {Array.isArray(savedJobs) && savedJobs.length > 0 ? (
             savedJobs.map((savedJob) => (
               <JobCard

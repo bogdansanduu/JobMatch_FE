@@ -37,7 +37,6 @@ export class BaseApi {
     const loggedUser = store.getState().auth.loggedUser;
     const loggedCompany = store.getState().auth.loggedCompany;
 
-    //TODO move in constants
     if (loggedUser) {
       refreshUrl = "/auth/refresh-token";
     }
