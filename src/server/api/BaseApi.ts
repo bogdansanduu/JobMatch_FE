@@ -20,6 +20,8 @@ export class BaseApi {
       process.env.REACT_APP_API_URL || "http://localhost:8080"
     }/${url}`;
 
+    console.log(process.env.REACT_APP_API_URL);
+
     this.axiosInstance = wrapper(
       axios.create({
         baseURL: this.baseUrl,
