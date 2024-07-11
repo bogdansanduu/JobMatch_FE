@@ -55,6 +55,7 @@ const CreateCompanyAccount = () => {
   const currentUser = useAppSelector(getLoggedUser);
   const navigate = useNavigate();
 
+  const [navigateHome, setNavigateHome] = useState(false);
   const [account, setAccount] = useState<
     Record<FIELD_NAMES | LOCATION_NAMES, string>
   >({
@@ -206,16 +207,22 @@ const CreateCompanyAccount = () => {
         ownerId: currentUser.id,
         description: account.description,
       });
+
+      setNavigateHome(true);
     } catch (error) {
       const axiosError = error as AxiosError<{ error: string }>;
       const messageMessage =
         axiosError?.response?.data.error || "An error occurred";
 
       alert(messageMessage);
-    } finally {
-      await navigate(AppRoutes.Home);
     }
   };
+
+  useEffect(() => {
+    if (navigateHome) {
+      navigate(AppRoutes.Home);
+    }
+  }, [navigateHome]);
 
   return (
     <Box
