@@ -206,14 +206,14 @@ const CreateCompanyAccount = () => {
         ownerId: currentUser.id,
         description: account.description,
       });
-
-      navigate(AppRoutes.Home);
     } catch (error) {
       const axiosError = error as AxiosError<{ error: string }>;
       const messageMessage =
         axiosError?.response?.data.error || "An error occurred";
 
       alert(messageMessage);
+    } finally {
+      await navigate(AppRoutes.Home);
     }
   };
 
